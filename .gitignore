@@ -1,0 +1,3 @@
+.vscode/
+server/src/*.o
+server/server
