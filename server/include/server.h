@@ -14,4 +14,8 @@
 #include <sys/wait.h>
 #include <unistd.h>
 
+#include "game.h"
+
+#define PORT "8080"
+
 #endif
