@@ -1,5 +1,4 @@
 #include "server.h"
-char *names[] = {"John", "Paul", "George", "Ringo", "Mick"};
 
 int init_server() {
     // Create the socket
@@ -32,8 +31,12 @@ int init_server() {
 
 void *handle_client(void *arg) {
     int sockfd = *(int *)arg;
-    create_game(names[sockfd], sockfd, 100);
-    return NULL;
+    int interact_return = interact(sockfd);
+    if (interact_return < 0) {
+        puts("Error interacting with client");
+        perror("interact");
+        return NULL;
+    }
 }
 
 int main() {
@@ -45,27 +48,18 @@ int main() {
 
     // Create a new thread for each client
     int i = 0;
-    pthread_t threads[5];
-    while (i != 4) {
-        // struct sockaddr_in cli_addr;
-        // socklen_t clilen = sizeof(cli_addr);
-        // int newsockfd = accept(sockfd, (struct sockaddr *)&cli_addr,
-        // &clilen); if (newsockfd < 0) {
-        //     perror("accept");
-        //     return -1;
-        // }
+    while (1) {
+        struct sockaddr_in cli_addr;
+        socklen_t clilen = sizeof(cli_addr);
+        int newsockfd = accept(sockfd, (struct sockaddr *)&cli_addr, &clilen);
+        if (newsockfd < 0) {
+            perror("accept");
+            return -1;
+        }
 
         pthread_t tid;
-        pthread_create(&tid, NULL, handle_client, &i);
-        threads[i] = tid;
-        i++;
+        pthread_create(&tid, NULL, handle_client, &newsockfd);
     }
-    for (int i = 0; i < 4; i++) {
-        printf("Thread id : %d\n", (int)threads[i]);
-        pthread_join(threads[i], NULL);
-        printf("Joined thread %d\n", i);
-    }
-    puts("I'm here");
     print_games();
     return 0;
 

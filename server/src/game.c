@@ -1,7 +1,7 @@
 #include "game.h"
 
 int num_games = 0;
-int game_ids[MAX_GAMES];
+int game_status[MAX_GAMES];
 Game* games[MAX_GAMES];
 pthread_mutex_t game_mutex = PTHREAD_MUTEX_INITIALIZER;
 
@@ -10,8 +10,8 @@ int get_game_id() {
     // State could be changing in for loop, so lock
     pthread_mutex_lock(&game_mutex);
     for (int i = 0; i < MAX_GAMES; i++) {
-        if (game_ids[i] == 0) {
-            game_ids[i] = 1;
+        if (game_status[i] == 0) {
+            game_status[i] = 1;
             pthread_mutex_unlock(&game_mutex);
             return i;
         }
@@ -32,7 +32,7 @@ int create_game(char* player, int socket, int port) {
         return -1;
     }
     cur->id = id;
-    cur->port = port;
+    cur->player_ports[0] = port;
     cur->player_count = 1;
     strcpy(cur->players[0], player);
     cur->player_sockets[0] = socket;
@@ -84,12 +84,10 @@ int join_game(int id, int socket, int port, char* player) {
     strcpy(cur->players[id], player);
     cur->player_count++;
     cur->player_sockets[id] = socket;
-    cur->port = port;
+    cur->player_ports[id] = port;
 
     // We finished checking / modifying values
     pthread_mutex_unlock(&game_mutex);
-    puts("hello");
-
     return 0;
 }
 
@@ -103,13 +101,38 @@ int destroy_game(int id) {
     // We are changing values, therefore we need to lock the mutex
     pthread_mutex_lock(&game_mutex);
 
-    game_ids[id] = 0;
+    game_status[id] = 0;
     free(games[id]);
 
     // We finished modifying values
     pthread_mutex_unlock(&game_mutex);
     return 0;
-    puts("hello");
+}
+
+// Function to send games to the client
+int send_games(int sockfd) {
+    // First, send number of games
+    char num_games_str[10];
+    sprintf(num_games_str, "GAMES %d***", num_games);
+    if (send(sockfd, num_games_str, strlen(num_games_str), 0) < 0) {
+        puts("Error sending number of games");
+        return -1;
+    }
+
+    // Then, send each game
+    for (int i = 0; i < MAX_GAMES; i++) {
+        // Check if game exists (status = 1)
+        if (game_status[i] == 1) {
+            char game_str[100];
+            sprintf(game_str, "OGAME %d %d***", games[i]->id,
+                    games[i]->player_count);
+            if (send(sockfd, game_str, strlen(game_str), 0) < 0) {
+                puts("Error sending game");
+                return -1;
+            }
+        }
+    }
+    return 0;
 }
 
 void print_games() {
@@ -117,7 +140,7 @@ void print_games() {
     // the mutex
     pthread_mutex_lock(&game_mutex);
     for (int i = 0; i < MAX_GAMES; i++) {
-        if (game_ids[i] == 1) {
+        if (game_status[i] == 1) {
             printf("Game %d: ", i);
             for (int j = 0; j < MAX_PLAYERS; j++) {
                 if (games[i]->players[j] != NULL) {
