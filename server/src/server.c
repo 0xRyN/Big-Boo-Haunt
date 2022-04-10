@@ -35,8 +35,9 @@ void *handle_client(void *arg) {
     if (interact_return < 0) {
         puts("Error interacting with client");
         perror("interact");
-        return NULL;
     }
+    // TODO : Join threads at the end and check for errors
+    return NULL;
 }
 
 int main() {
@@ -47,13 +48,13 @@ int main() {
     }
 
     // Create a new thread for each client
-    int i = 0;
     while (1) {
         struct sockaddr_in cli_addr;
         socklen_t clilen = sizeof(cli_addr);
         int newsockfd = accept(sockfd, (struct sockaddr *)&cli_addr, &clilen);
         if (newsockfd < 0) {
             perror("accept");
+            goto error;
             return -1;
         }
 

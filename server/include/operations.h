@@ -44,13 +44,13 @@
 struct NEWPL {
     int opcode;
     char id[8 + 1];
-    char port[4 + 1];
+    int port;
 };
 
 struct REGIS {
     int opcode;
     char id[8 + 1];
-    char port[4 + 1];
+    int port;
     u_int8_t game_id;
 };
 

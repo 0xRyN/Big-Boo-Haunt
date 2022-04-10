@@ -74,7 +74,7 @@ int interact(int sockfd) {
         // Create a new game and register the user into it
         struct NEWPL newpl;
         newpl = parse_newpl(buffer);
-        int create_result = create_game(sockfd, newpl.port, newpl.id);
+        int create_result = create_game(newpl.id, sockfd, newpl.port);
         if (create_result < 0) {
             puts("Error creating game");
             return -1;
@@ -85,4 +85,6 @@ int interact(int sockfd) {
         puts("Invalid operation");
         return -1;
     }
+
+    return 0;
 }

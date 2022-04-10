@@ -8,8 +8,13 @@ struct NEWPL parse_newpl(char* str) {
     res.opcode = OP_NEWPL;
     memcpy(res.id, str + 6, 8);
     res.id[9] = '\0';
-    memcpy(res.port, str + 14, 4);
-    res.port[5] = '\0';
+
+    // Convert port to int
+    char port[5];
+    memcpy(port, str + 14, 4);
+    port[5] = '\0';
+    res.port = atoi(port);
+
     return res;
 }
 
@@ -19,14 +24,20 @@ struct REGIS parse_regis(char* str) {
     res.opcode = OP_REGIS;
     memcpy(res.id, str + 6, 8);
     res.id[9] = '\0';
-    memcpy(res.port, str + 14, 4);
-    res.port[5] = '\0';
+
+    // Convert port to int
+    char port[5];
+    memcpy(port, str + 14, 4);
+    port[5] = '\0';
+    res.port = atoi(port);
     res.game_id = str[18];
+
     return res;
 }
 
 int parse_operation(char* str) {
-    char op[5] = memcpy(op, str, 5);
+    char op[5];
+    memcpy(op, str, 5);
     if (strcmp(op, "NEWPL") == 0) {
         return OP_NEWPL;
     }

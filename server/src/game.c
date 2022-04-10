@@ -111,27 +111,30 @@ int destroy_game(int id) {
 
 // Function to send games to the client
 int send_games(int sockfd) {
-    // First, send number of games
-    char num_games_str[10];
-    sprintf(num_games_str, "GAMES %d***", num_games);
-    if (send(sockfd, num_games_str, strlen(num_games_str), 0) < 0) {
-        puts("Error sending number of games");
-        return -1;
-    }
+    // TODO: the games
 
-    // Then, send each game
-    for (int i = 0; i < MAX_GAMES; i++) {
-        // Check if game exists (status = 1)
-        if (game_status[i] == 1) {
-            char game_str[100];
-            sprintf(game_str, "OGAME %d %d***", games[i]->id,
-                    games[i]->player_count);
-            if (send(sockfd, game_str, strlen(game_str), 0) < 0) {
-                puts("Error sending game");
-                return -1;
-            }
-        }
-    }
+    // First, send number of games
+    // char num_games_str[10];
+    // sprintf(num_games_str, "GAMES %d***", num_games);
+    // if (send(sockfd, num_games_str, strlen(num_games_str), 0) < 0) {
+    //     puts("Error sending number of games");
+    //     return -1;
+    // }
+
+    // // Then, send each game
+    // for (int i = 0; i < MAX_GAMES; i++) {
+    //     // Check if game exists (status = 1)
+    //     if (game_status[i] == 1) {
+    //         char game_str[100];
+    //         sprintf(game_str, "OGAME %d %d***", games[i]->id,
+    //                 games[i]->player_count);
+    //         if (send(sockfd, game_str, strlen(game_str), 0) < 0) {
+    //             puts("Error sending game");
+    //             return -1;
+    //         }
+    //     }
+    // }
+    sockfd = sockfd;
     return 0;
 }
 

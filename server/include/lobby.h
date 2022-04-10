@@ -8,5 +8,10 @@
 #include "game.h"
 #include "operations.h"
 #include "parser.h"
+#include "recieve.h"
+
+int interact(int sockfd);
+int op_join_game(int sockfd, char *player, int port);
+int op_send_games(int sockfd);
 
 #endif
