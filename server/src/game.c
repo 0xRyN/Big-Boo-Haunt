@@ -19,12 +19,18 @@ int get_game_id() {
     return -1;
 }
 
+// Creates a new game (NEWPL) and adds the player to it
+// Will return the game ID if success, -1 otherwise
 int create_game(char* player, int socket, int port) {
     // Get the smallest id for the new game
     int id = get_game_id();
 
     // We are changing values, therefore we need to lock the mutex
     pthread_mutex_lock(&game_mutex);
+
+    // Increase current game counter
+    num_games++;
+
     // Fill in the Game struct
     games[id] = malloc(sizeof(Game));
     Game* cur = games[id];
@@ -41,10 +47,11 @@ int create_game(char* player, int socket, int port) {
     for (int i = 0; i < MAX_PLAYERS; i++) {
         cur->player_sockets[i] = -1;
     }
+
     // We finished modifying values
     pthread_mutex_unlock(&game_mutex);
 
-    return 0;
+    return id;
 }
 
 int join_game(int id, int socket, int port, char* player) {
@@ -101,6 +108,7 @@ int destroy_game(int id) {
     // We are changing values, therefore we need to lock the mutex
     pthread_mutex_lock(&game_mutex);
 
+    num_games--;
     game_status[id] = 0;
     free(games[id]);
 
@@ -116,7 +124,7 @@ int send_games(int sockfd) {
     // First, send number of games
     char num_games_str[11];
     uint8_t num_games_int = num_games;
-    snprintf(num_games_str, 11, "GAMES %c***", num_games_int);
+    snprintf(num_games_str, 11, "GAMES %hhu***", num_games_int);
     if (safe_send(sockfd, num_games_str, 10) < 0) {
         puts("Error sending number of games");
         return -1;
@@ -129,7 +137,7 @@ int send_games(int sockfd) {
             char game_str[13];
             uint8_t game_id = games[i]->id;
             uint8_t player_count = games[i]->player_count;
-            snprintf(game_str, 13, "OGAME %c %c***", game_id, player_count);
+            snprintf(game_str, 13, "OGAME %hhu %hhu***", game_id, player_count);
             if (safe_send(sockfd, game_str, 12) < 0) {
                 puts("Error sending game");
                 return -1;

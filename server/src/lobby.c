@@ -34,17 +34,21 @@ int interact(int sockfd) {
         return -1;
     }
 
+    puts("We sent out the games !");
+
     // Then, we wait for the client to send us his response
 
     // Allocate a buffer
-    char buffer[BUFSIZ];
+    char buffer[40];
 
     // Receive the message
-    int res = safe_receive(sockfd, buffer, BUFSIZ);
+    int res = safe_receive(sockfd, buffer, 40);
     if (res < 0) {
         puts("Error receiving message");
         return -1;
     }
+
+    puts("We recieved a message !");
 
     // Now, we need to parse the reponse, and act accordingly
     int op = parse_operation(buffer);
@@ -52,6 +56,8 @@ int interact(int sockfd) {
         puts("Invalid operation");
         return -1;
     }
+
+    puts("We parsed the operation !");
 
     // Only two operations allowed in lobby, NEWPL and REGIS
     if (op == OP_REGIS) {
@@ -64,6 +70,7 @@ int interact(int sockfd) {
             puts("Error joining game");
             return -1;
         }
+        puts("User joined the game !");
     }
 
     else if (op == OP_NEWPL) {
@@ -75,6 +82,16 @@ int interact(int sockfd) {
             puts("Error creating game");
             return -1;
         }
+        puts("We created a game !");
+        char res_buffer[40];
+        uint8_t int_id = create_result;
+        sprintf(res_buffer, "REGOK %hhu", int_id);
+        if (safe_send(sockfd, res_buffer, 7) < 0) {
+            puts("Error sending registration result");
+            return -1;
+        }
+        puts("We sent OK to user !");
+
     }
 
     else {
@@ -82,5 +99,6 @@ int interact(int sockfd) {
         return -1;
     }
 
+    close(sockfd);
     return 0;
 }
