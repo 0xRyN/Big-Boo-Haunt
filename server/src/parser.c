@@ -36,8 +36,9 @@ struct REGIS parse_regis(char* str) {
 }
 
 int parse_operation(char* str) {
-    char op[5];
+    char op[6];
     memcpy(op, str, 5);
+    op[6] = '\0';
     if (strcmp(op, "NEWPL") == 0) {
         return OP_NEWPL;
     }
