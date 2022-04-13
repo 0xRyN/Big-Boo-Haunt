@@ -114,27 +114,28 @@ int send_games(int sockfd) {
     // TODO: the games
 
     // First, send number of games
-    // char num_games_str[10];
-    // sprintf(num_games_str, "GAMES %d***", num_games);
-    // if (send(sockfd, num_games_str, strlen(num_games_str), 0) < 0) {
-    //     puts("Error sending number of games");
-    //     return -1;
-    // }
+    char num_games_str[11];
+    uint8_t num_games_int = num_games;
+    snprintf(num_games_str, 11, "GAMES %c***", num_games_int);
+    if (safe_send(sockfd, num_games_str, 10) < 0) {
+        puts("Error sending number of games");
+        return -1;
+    }
 
-    // // Then, send each game
-    // for (int i = 0; i < MAX_GAMES; i++) {
-    //     // Check if game exists (status = 1)
-    //     if (game_status[i] == 1) {
-    //         char game_str[100];
-    //         sprintf(game_str, "OGAME %d %d***", games[i]->id,
-    //                 games[i]->player_count);
-    //         if (send(sockfd, game_str, strlen(game_str), 0) < 0) {
-    //             puts("Error sending game");
-    //             return -1;
-    //         }
-    //     }
-    // }
-    sockfd = sockfd;
+    // Then, send each game
+    for (int i = 0; i < MAX_GAMES; i++) {
+        // Check if game exists (status = 1)
+        if (game_status[i] == 1) {
+            char game_str[13];
+            uint8_t game_id = games[i]->id;
+            uint8_t player_count = games[i]->player_count;
+            snprintf(game_str, 13, "OGAME %c %c***", game_id, player_count);
+            if (safe_send(sockfd, game_str, 12) < 0) {
+                puts("Error sending game");
+                return -1;
+            }
+        }
+    }
     return 0;
 }
 

@@ -9,6 +9,8 @@
 #include <sys/types.h>
 #include <unistd.h>
 
+#include "send.h"
+
 #define MAX_NAME 8
 #define MAX_PLAYERS 100
 #define MAX_GAMES 10

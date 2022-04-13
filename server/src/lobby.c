@@ -38,10 +38,6 @@ int interact(int sockfd) {
 
     // Allocate a buffer
     char buffer[BUFSIZ];
-    if (buffer == NULL) {
-        perror("malloc");
-        return -1;
-    }
 
     // Receive the message
     int res = safe_receive(sockfd, buffer, BUFSIZ);
