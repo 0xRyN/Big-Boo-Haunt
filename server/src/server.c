@@ -47,6 +47,12 @@ int main() {
         return -1;
     }
 
+    int init_return = init_games();
+    if (init_return < 0) {
+        puts("Error initializing games");
+        return -1;
+    }
+
     // Create a new thread for each client
     while (1) {
         struct sockaddr_in cli_addr;

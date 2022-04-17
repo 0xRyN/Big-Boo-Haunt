@@ -11,7 +11,7 @@ struct NEWPL parse_newpl(char* str) {
 
     // Convert port to int
     char port[5];
-    memcpy(port, str + 14, 4);
+    memcpy(port, str + 15, 4);
     port[4] = '\0';
     res.port = atoi(port);
 
@@ -27,10 +27,10 @@ struct REGIS parse_regis(char* str) {
 
     // Convert port to int
     char port[5];
-    memcpy(port, str + 14, 4);
+    memcpy(port, str + 15, 4);
     port[4] = '\0';
     res.port = atoi(port);
-    res.game_id = str[18];
+    res.game_id = str[20];
 
     return res;
 }

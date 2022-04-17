@@ -10,6 +10,8 @@
 #include <sys/types.h>
 #include <unistd.h>
 
+#include "game.h"
+
 int safe_receive(int sockfd, char *buffer, int buffer_size);
 
 #endif

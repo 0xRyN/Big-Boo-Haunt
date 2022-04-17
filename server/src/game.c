@@ -3,30 +3,46 @@
 int num_games = 0;
 int game_status[MAX_GAMES];
 Game* games[MAX_GAMES];
-pthread_mutex_t game_mutex = PTHREAD_MUTEX_INITIALIZER;
+pthread_mutex_t game_mutex;
+
+int init_games() {
+    // Init mutex
+    pthread_mutex_init(&game_mutex, NULL);
+
+    // Set all games' status to -1 (Not started)
+    for (int i = 0; i < MAX_GAMES; i++) {
+        game_status[i] = -1;
+    }
+
+    return 0;
+}
 
 // Will get the smallest ID that is not used
 int get_game_id() {
     // State could be changing in for loop, so lock
     pthread_mutex_lock(&game_mutex);
     for (int i = 0; i < MAX_GAMES; i++) {
-        if (game_status[i] == 0) {
+        if (game_status[i] == -1) {
             game_status[i] = 1;
             pthread_mutex_unlock(&game_mutex);
             return i;
         }
     }
+    pthread_mutex_unlock(&game_mutex);
     return -1;
 }
 
 // Creates a new game (NEWPL) and adds the player to it
 // Will return the game ID if success, -1 otherwise
 int create_game(char* player, int socket, int port) {
+    printf("Creating game for %s\n", player);
     // Get the smallest id for the new game
     int id = get_game_id();
 
     // We are changing values, therefore we need to lock the mutex
     pthread_mutex_lock(&game_mutex);
+
+    puts("hey");
 
     // Increase current game counter
     num_games++;
@@ -38,24 +54,25 @@ int create_game(char* player, int socket, int port) {
         return -1;
     }
     cur->id = id;
-    cur->player_ports[0] = port;
-    cur->player_count = 1;
-    strcpy(cur->players[0], player);
-    cur->player_sockets[0] = socket;
-
-    // Fill in the other players' sockets to -1 (no one is connected)
-    for (int i = 0; i < MAX_PLAYERS; i++) {
-        cur->player_sockets[i] = -1;
+    cur->players[0] = malloc(sizeof(Player));
+    if (cur->players[0] == NULL) {
+        perror("Error when allocating memory for player");
+        return -1;
     }
+    strcpy(cur->players[0]->id, player);
+    cur->players[0]->socket = socket;
+    cur->players[0]->port = port;
+    cur->player_count = 1;
 
     // We finished modifying values
     pthread_mutex_unlock(&game_mutex);
-
+    puts("Game created");
     return id;
 }
 
+// Makes the player join a game, returns player's index in the game
 int join_game(int id, int socket, int port, char* player) {
-    puts("hello");
+    printf("Player %s is joining game %d\n", player, id);
     // Check if the game exists
     if (id < 0 || id >= MAX_GAMES) {
         puts("Game does not exist (ID out of bounds)");
@@ -80,6 +97,10 @@ int join_game(int id, int socket, int port, char* player) {
     int player_id = -1;
     for (int i = 0; i < MAX_PLAYERS; i++) {
         if (cur->players[i] == NULL) {
+            cur->players[i] = malloc(sizeof(Player));
+            if (cur->players[i] == NULL) {
+                return -1;
+            }
             player_id = i;
             break;
         }
@@ -88,14 +109,17 @@ int join_game(int id, int socket, int port, char* player) {
         puts("Could not find free slot in game");
         return -1;
     }
-    strcpy(cur->players[id], player);
+    // Increment current game's player count
     cur->player_count++;
-    cur->player_sockets[id] = socket;
-    cur->player_ports[id] = port;
+
+    // Fill in the player's info (id, socket, port)
+    strcpy(cur->players[player_id]->id, player);
+    cur->players[player_id]->socket = socket;
+    cur->players[player_id]->port = port;
 
     // We finished checking / modifying values
     pthread_mutex_unlock(&game_mutex);
-    return 0;
+    return player_id;
 }
 
 int destroy_game(int id) {
@@ -107,6 +131,12 @@ int destroy_game(int id) {
     }
     // We are changing values, therefore we need to lock the mutex
     pthread_mutex_lock(&game_mutex);
+
+    for (int i = 0; i < MAX_PLAYERS; i++) {
+        if (games[id]->players[i] != NULL) {
+            free(games[id]->players[i]);
+        }
+    }
 
     num_games--;
     game_status[id] = 0;
@@ -145,23 +175,4 @@ int send_games(int sockfd) {
         }
     }
     return 0;
-}
-
-void print_games() {
-    // We are checking different values of the struct, therefore we need to lock
-    // the mutex
-    pthread_mutex_lock(&game_mutex);
-    for (int i = 0; i < MAX_GAMES; i++) {
-        if (game_status[i] == 1) {
-            printf("Game %d: ", i);
-            for (int j = 0; j < MAX_PLAYERS; j++) {
-                if (games[i]->players[j] != NULL) {
-                    printf("%s ", games[i]->players[j]);
-                }
-            }
-            printf("\n");
-        }
-    }
-    // We finished checking / modifying values
-    pthread_mutex_unlock(&game_mutex);
 }

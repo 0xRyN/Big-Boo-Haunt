@@ -15,14 +15,18 @@
 #define MAX_PLAYERS 100
 #define MAX_GAMES 10
 
+typedef struct Player {
+    char id[MAX_NAME + 1];
+    int socket;
+    int port;
+} Player;
 typedef struct Game {
     int id;
     int player_count;
-    char players[MAX_PLAYERS][MAX_NAME + 1];
-    char player_sockets[MAX_PLAYERS];
-    int player_ports[MAX_PLAYERS];
+    Player *players[MAX_PLAYERS];
 } Game;
 
+int init_games();
 int create_game(char *player, int socket, int port);
 int join_game(int id, int socket, int port, char *player);
 int destroy_game(int id);

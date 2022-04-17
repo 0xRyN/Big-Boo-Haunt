@@ -19,7 +19,9 @@ int safe_receive(int sockfd, char *buffer, int buffer_size) {
             return -1;
         }
         offset += bytes_read;
-        if (memcmp(buffer + offset - 3 - 1, "***", 3) == 0) {
+        printf("Last 3 bytes in hex : %x %x %x\n", buffer[offset - 3],
+               buffer[offset - 2], buffer[offset - 1]);
+        if (memcmp(buffer + offset - 3, "***", 3) == 0) {
             puts("We received the end of the message !");
             return offset;
         }
