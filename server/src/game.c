@@ -35,15 +35,11 @@ int get_game_id() {
 // Creates a new game (NEWPL) and adds the player to it
 // Will return the game ID if success, -1 otherwise
 int create_game(char* player, int socket, int port) {
-    printf("Creating game for %s\n", player);
     // Get the smallest id for the new game
     int id = get_game_id();
 
     // We are changing values, therefore we need to lock the mutex
     pthread_mutex_lock(&game_mutex);
-
-    puts("hey");
-
     // Increase current game counter
     num_games++;
 

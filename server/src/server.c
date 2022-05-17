@@ -36,6 +36,7 @@ void *handle_client(void *arg) {
         puts("Error interacting with client");
         perror("interact");
     }
+    close(sockfd);
     // TODO : Join threads at the end and check for errors
     return NULL;
 }

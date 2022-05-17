@@ -50,7 +50,7 @@ int interact(int sockfd) {
         if (res < 0) {
             puts("Client disconnected !");
             leave_game(player_id);
-            return -1;
+            return 0;
         }
 
         // Now, we need to parse the reponse, and act accordingly
@@ -63,7 +63,7 @@ int interact(int sockfd) {
         // Only a few operations allowed in lobby
         // NEWPL, REGIS, START, UNREG, SIZE?, LIST?, GAME?
         if (op == OP_REGIS) {
-            puts("REGIS");
+            // puts("REGIS");
             // Register the user into a game
             struct REGIS regis;
             regis = parse_regis(buffer);
@@ -88,7 +88,7 @@ int interact(int sockfd) {
         }
 
         else if (op == OP_NEWPL) {
-            puts("NEWPL");
+            // puts("NEWPL");
             // Create a new game and register the user into it
             struct NEWPL newpl;
             newpl = parse_newpl(buffer);
@@ -97,7 +97,6 @@ int interact(int sockfd) {
                 puts("Error creating game");
                 return -1;
             }
-            puts("Game created ! Sending response to client.");
             char res_buffer[40];
             uint8_t int_id = create_result;
             sprintf(res_buffer, "REGOK %hhu", int_id);
@@ -105,7 +104,6 @@ int interact(int sockfd) {
                 puts("Error sending registration result");
                 return -1;
             }
-            puts("Response sent !");
             has_joined = 1;
             player_id = 0;  // If he created the game, he is the first player
         }
