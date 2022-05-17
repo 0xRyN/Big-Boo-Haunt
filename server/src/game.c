@@ -122,6 +122,51 @@ int join_game(int id, int socket, int port, char* player) {
     return player_id;
 }
 
+int leave_game(int id) {
+    // Check if the game exists
+    if (id < 0 || id >= MAX_GAMES) {
+        puts("Game does not exist (ID out of bounds)");
+        return -1;
+    }
+    // We are checking different values of the struct, therefore we need to lock
+    // the mutex
+    pthread_mutex_lock(&game_mutex);
+    Game* cur = games[id];
+    if (cur == NULL) {
+        puts("Game does not exist (ID not allocated)");
+        return -1;
+    }
+
+    // Check if the game is full
+    if (cur->player_count <= 0) {
+        puts("Game is empty");
+        return -1;
+    }
+
+    // Remove the player from the game
+    int player_id = -1;
+    for (int i = 0; i < MAX_PLAYERS; i++) {
+        if (cur->players[i] != NULL) {
+            player_id = i;
+            break;
+        }
+    }
+    if (player_id == -1) {
+        puts("Could not find player in game");
+        return -1;
+    }
+    // Decrement current game's player count
+    cur->player_count--;
+
+    // Free the player's info
+    free(cur->players[player_id]);
+    cur->players[player_id] = NULL;
+
+    // We finished checking / modifying values
+    pthread_mutex_unlock(&game_mutex);
+    return 0;
+}
+
 int destroy_game(int id) {
     puts("hello");
     // Check if the game exists

@@ -17,7 +17,6 @@ int safe_receive(int sockfd, char *buffer, int buffer_size) {
         if (bytes_read == 0) {
             printf("Buffer is : %.*s\n", 10, buffer);
             puts("Connection closed !");
-            perror("Read 0 bytes");
             return -2;
         }
         offset += bytes_read;

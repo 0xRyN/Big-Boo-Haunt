@@ -49,6 +49,7 @@ int interact(int sockfd) {
         int res = safe_receive(sockfd, buffer, 80);
         if (res < 0) {
             puts("Client disconnected !");
+            leave_game(player_id);
             return -1;
         }
 
