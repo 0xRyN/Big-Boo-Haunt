@@ -48,7 +48,7 @@ int interact(int sockfd) {
         // Receive the message
         int res = safe_receive(sockfd, buffer, 80);
         if (res < 0) {
-            puts("Error receiving message");
+            puts("Client disconnected !");
             return -1;
         }
 

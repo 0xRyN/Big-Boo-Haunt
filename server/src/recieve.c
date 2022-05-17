@@ -2,6 +2,8 @@
 
 // Safe receive : receive a message from a socket until last 3 bytes are ***
 // Return the size of the message
+
+// If returns -2, the connection is closed
 int safe_receive(int sockfd, char *buffer, int buffer_size) {
     int offset = 0;
     while (1) {
@@ -16,7 +18,7 @@ int safe_receive(int sockfd, char *buffer, int buffer_size) {
             printf("Buffer is : %.*s\n", 10, buffer);
             puts("Connection closed !");
             perror("Read 0 bytes");
-            return -1;
+            return -2;
         }
         offset += bytes_read;
         printf("Last 3 bytes in hex : %x %x %x\n", buffer[offset - 3],
