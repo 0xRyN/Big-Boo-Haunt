@@ -2,6 +2,7 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.net.Socket;
 import java.nio.ByteBuffer;
+import java.util.Scanner;
  
 public class NEWPL {
     public static void main(String[] args) throws Exception {
@@ -27,6 +28,9 @@ public class NEWPL {
         read = socket.getInputStream().read(buffer);
         System.out.println(new String(buffer));
 
+        //Create scanner 
+        Scanner scanner = new Scanner(System.in);
+        scanner.next();
         socket.close();
         fos.close();
     }
