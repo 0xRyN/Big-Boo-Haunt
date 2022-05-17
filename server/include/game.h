@@ -29,8 +29,10 @@ typedef struct Game {
 int init_games();
 int create_game(char *player, int socket, int port);
 int join_game(int id, int socket, int port, char *player);
+int leave_game(int id);
 int destroy_game(int id);
 void print_games();
 int send_games(int sockfd);
+void print_games();
 
 #endif
