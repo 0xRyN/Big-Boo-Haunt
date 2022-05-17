@@ -224,7 +224,7 @@ void print_games() {
             for (int j = 0; j < MAX_PLAYERS; j++) {
                 if (games[i]->players[j] != NULL) {
                     printf("Player name : %s, id : %d\n",
-                           games[i]->players[j]->id, games[i]->players[i]->);
+                           games[i]->players[j]->id, j);
                 }
             }
             printf("-----------------\n\n");
