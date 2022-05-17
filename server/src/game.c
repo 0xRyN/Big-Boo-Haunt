@@ -144,14 +144,7 @@ int leave_game(int id) {
     }
 
     // Remove the player from the game
-    int player_id = -1;
-    for (int i = 0; i < MAX_PLAYERS; i++) {
-        if (cur->players[i] == id) {
-            player_id = i;
-            break;
-        }
-    }
-    if (player_id == -1) {
+    if (cur->players[id] == NULL) {
         puts("Could not find player in game");
         return -1;
     }
@@ -159,8 +152,8 @@ int leave_game(int id) {
     cur->player_count--;
 
     // Free the player's info
-    free(cur->players[player_id]);
-    cur->players[player_id] = NULL;
+    free(cur->players[id]);
+    cur->players[id] = NULL;
 
     // We finished checking / modifying values
     pthread_mutex_unlock(&game_mutex);
@@ -230,7 +223,8 @@ void print_games() {
             printf("Game %d\n", games[i]->id);
             for (int j = 0; j < MAX_PLAYERS; j++) {
                 if (games[i]->players[j] != NULL) {
-                    printf("Player : %s\n", games[i]->players[j]->id);
+                    printf("Player name : %s, id : %d\n",
+                           games[i]->players[j]->id, games[i]->players[i]->);
                 }
             }
             printf("-----------------\n\n");
