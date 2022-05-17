@@ -226,14 +226,14 @@ int send_games(int sockfd) {
 void print_games() {
     for (int i = 0; i < MAX_GAMES; i++) {
         if (game_status[i] == 1) {
-            print("-----------------\n");
-            print("Game %d\n", games[i]->id);
+            printf("-----------------\n");
+            printf("Game %d\n", games[i]->id);
             for (int j = 0; j < MAX_PLAYERS; j++) {
                 if (games[i]->players[j] != NULL) {
-                    print("Player : %s\n", games[i]->players[j]->id);
+                    printf("Player : %s\n", games[i]->players[j]->id);
                 }
             }
-            print("-----------------\n\n");
+            printf("-----------------\n\n");
         }
     }
 }
