@@ -66,7 +66,7 @@ int create_game(char* player, int socket, int port) {
 
     // We finished modifying values
     pthread_mutex_unlock(&game_mutex);
-    puts("Game created");
+    print_games();
     return id;
 }
 
@@ -119,6 +119,7 @@ int join_game(int id, int socket, int port, char* player) {
 
     // We finished checking / modifying values
     pthread_mutex_unlock(&game_mutex);
+    print_games();
     return player_id;
 }
 
