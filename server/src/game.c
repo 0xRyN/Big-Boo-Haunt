@@ -221,7 +221,8 @@ void print_games() {
     for (int i = 0; i < MAX_GAMES; i++) {
         if (game_status[i] == 1) {
             printf("-----------------\n");
-            printf("Game %d\n", games[i]->id);
+            printf("Game %d, player count : %d\n", games[i]->id,
+                   games[i]->player_count);
             for (int j = 0; j < MAX_PLAYERS; j++) {
                 if (games[i]->players[j] != NULL) {
                     printf("Player name : %s, id : %d\n",
