@@ -2,7 +2,7 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.net.Socket;
 import java.nio.ByteBuffer;
-
+ 
 public class NEWPL {
     public static void main(String[] args) throws Exception {
         Socket socket = new Socket("localhost", 8080);
@@ -13,8 +13,8 @@ public class NEWPL {
         System.out.println(new String(buffer));
 
         // Send message to server
-        ByteBuffer byteBuffer = ByteBuffer.allocate(23);
-        byteBuffer.put("NEWPL 12345678 1234 ".getBytes());
+        ByteBuffer byteBuffer = ByteBuffer.allocate(22);
+        byteBuffer.put("NEWPL 12345678 1234".getBytes());
         byteBuffer.put("***".getBytes());
         // Print the buffer in output.txt
         System.out.println(byteBuffer.array());
