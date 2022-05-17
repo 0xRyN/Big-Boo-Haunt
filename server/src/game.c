@@ -146,7 +146,7 @@ int leave_game(int id) {
     // Remove the player from the game
     int player_id = -1;
     for (int i = 0; i < MAX_PLAYERS; i++) {
-        if (cur->players[i] != NULL) {
+        if (cur->players[i] == id) {
             player_id = i;
             break;
         }
@@ -164,6 +164,7 @@ int leave_game(int id) {
 
     // We finished checking / modifying values
     pthread_mutex_unlock(&game_mutex);
+    print_games();
     return 0;
 }
 
@@ -220,4 +221,19 @@ int send_games(int sockfd) {
         }
     }
     return 0;
+}
+
+void print_games() {
+    for (int i = 0; i < MAX_GAMES; i++) {
+        if (game_status[i] == 1) {
+            print("-----------------\n");
+            print("Game %d\n", games[i]->id);
+            for (int j = 0; j < MAX_PLAYERS; j++) {
+                if (games[i]->players[j] != NULL) {
+                    print("Player : %s\n", games[i]->players[j]->id);
+                }
+            }
+            print("-----------------\n\n");
+        }
+    }
 }
