@@ -9,6 +9,7 @@
 
 struct REGIS parse_regis(char* str);
 struct NEWPL parse_newpl(char* str);
+struct LISTQ parse_listq(char* str);
 int parse_operation(char* str);
 
 #endif

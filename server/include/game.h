@@ -10,6 +10,8 @@
 #include <unistd.h>
 
 #include "send.h"
+#include "operations.h"
+#include "parser.h"
 
 #define MAX_NAME 8
 #define MAX_PLAYERS 10
@@ -38,5 +40,6 @@ int destroy_game(int id);
 void print_games();
 int send_games(int sockfd);
 void print_games();
+int send_game(int sockfd, char* buffer);
 
 #endif

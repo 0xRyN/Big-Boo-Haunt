@@ -39,6 +39,15 @@ struct REGIS parse_regis(char* str) {
     return res;
 }
 
+//Protocol : LISTQ id***
+struct LISTQ parse_listq(char* str) {
+    struct LISTQ res;
+    res.opcode = OP_LISTQ;
+    memcpy(&res.game_id, str + 6, 1);
+    return res;
+}
+
+
 int parse_operation(char* str) {
     char op[6];
     memcpy(op, str, 5);
@@ -49,6 +58,10 @@ int parse_operation(char* str) {
 
     else if (strcmp(op, "REGIS") == 0) {
         return OP_REGIS;
+    }
+
+    else if (strcmp(op, "LIST?") == 0) {
+        return OP_LISTQ;
     }
 
     // TODO: Add all operations

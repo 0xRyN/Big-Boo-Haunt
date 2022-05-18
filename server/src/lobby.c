@@ -107,7 +107,13 @@ int interact(int sockfd) {
             }
             has_joined = 1;
         }
-
+        else if (op == OP_LISTQ){
+           int send_res = send_game(sockfd, buffer);
+              if (send_res < 0) {
+                puts("Error sending game");
+                return -1;
+              }
+        }
         else if (op == OP_START) {
         }
 

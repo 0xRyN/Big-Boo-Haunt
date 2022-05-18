@@ -221,6 +221,36 @@ int send_games(int sockfd) {
     return 0;
 }
 
+
+int send_game(int sockfd ,char* buffer) {
+    struct LISTQ list;
+    list = parse_listq(buffer);
+    int game_id = list.game_id;
+    if (game_status[game_id] == 1) {
+        printf("-----------------\n");
+        printf("Game %d, player count : %d\n", games[game_id]->id,
+        games[game_id]->player_count);
+        printf("-----------------\n\n"); 
+
+
+        char* game_str[9];
+        snprintf(game_str, 9, "RAYANE/n");
+        if (safe_send(sockfd, game_str, 9) < 0) {
+                puts("Error sending game");
+                return -1;
+        }          
+    }else{
+        char* game_str[9];
+        snprintf(game_str, 9, "DUNNO***");
+        if (safe_send(sockfd, game_str, 9) < 0) {
+                puts("Error sending game");
+                return -1;
+        }  
+        return -1;
+    }
+    return 0;
+}
+
 void print_games() {
     printf("\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n");
     for (int i = 0; i < MAX_GAMES; i++) {
