@@ -12,7 +12,7 @@
 #include "send.h"
 
 #define MAX_NAME 8
-#define MAX_PLAYERS 100
+#define MAX_PLAYERS 10
 #define MAX_GAMES 10
 
 typedef struct Player {
@@ -25,11 +25,15 @@ typedef struct Game {
     int player_count;
     Player *players[MAX_PLAYERS];
 } Game;
+typedef struct PlayerInfo {
+    int player_id;
+    int game_id;
+} PlayerInfo;
 
 int init_games();
-int create_game(char *player, int socket, int port);
-int join_game(int id, int socket, int port, char *player);
-int leave_game(int id);
+PlayerInfo create_game(char *player, int socket, int port);
+PlayerInfo join_game(int id, int socket, int port, char *player);
+int leave_game(PlayerInfo info);
 int destroy_game(int id);
 void print_games();
 int send_games(int sockfd);

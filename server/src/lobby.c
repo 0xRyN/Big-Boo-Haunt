@@ -19,8 +19,8 @@ int op_join_game(int sockfd, char *player, int port) {
     }
 
     // Join game
-    int res = join_game(id, sockfd, port, player);
-    if (res < 0) {
+    PlayerInfo res = join_game(id, sockfd, port, player);
+    if (res.game_id < 0) {
         puts("Error joining game");
         return -1;
     }
@@ -31,7 +31,7 @@ int interact(int sockfd) {
     // Define flags for each user
     int has_joined = 0;
     int send_start = 0;
-    int player_id = -1;
+    PlayerInfo info = {.player_id = -1, .game_id = -1};
 
     // First, we send the games to the client
     if (op_send_games(sockfd) < 0) {
@@ -49,7 +49,7 @@ int interact(int sockfd) {
         int res = safe_receive(sockfd, buffer, 80);
         if (res < 0) {
             puts("Client disconnected !");
-            leave_game(player_id);
+            leave_game(info);
             return 0;
         }
 
@@ -67,12 +67,13 @@ int interact(int sockfd) {
             // Register the user into a game
             struct REGIS regis;
             regis = parse_regis(buffer);
-            int join_result =
+            PlayerInfo join_result =
                 join_game(regis.game_id, sockfd, regis.port, regis.id);
-            if (join_result < 0) {
+            if (join_result.game_id < 0) {
                 puts("Error joining game");
-                return -1;
+                return -1; //
             }
+            info = join_result;
 
             // We successfully joined the game, so we can send the response
             char res_buffer[40];
@@ -83,7 +84,6 @@ int interact(int sockfd) {
                 return -1;
             }
 
-            player_id = join_result;
             has_joined = 1;
         }
 
@@ -92,20 +92,20 @@ int interact(int sockfd) {
             // Create a new game and register the user into it
             struct NEWPL newpl;
             newpl = parse_newpl(buffer);
-            int create_result = create_game(newpl.id, sockfd, newpl.port);
-            if (create_result < 0) {
+            PlayerInfo create_result = create_game(newpl.id, sockfd, newpl.port);
+            if (create_result.game_id < 0) {
                 puts("Error creating game");
                 return -1;
             }
+            info = create_result;
             char res_buffer[40];
-            uint8_t int_id = create_result;
+            uint8_t int_id = create_result.game_id;
             sprintf(res_buffer, "REGOK %hhu", int_id);
             if (safe_send(sockfd, res_buffer, 7) < 0) {
                 puts("Error sending registration result");
                 return -1;
             }
             has_joined = 1;
-            player_id = 0;  // If he created the game, he is the first player
         }
 
         else if (op == OP_START) {

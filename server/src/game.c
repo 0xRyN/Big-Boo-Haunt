@@ -34,9 +34,11 @@ int get_game_id() {
 
 // Creates a new game (NEWPL) and adds the player to it
 // Will return the game ID if success, -1 otherwise
-int create_game(char* player, int socket, int port) {
+// RETURNS STRUCT WITH GAMEID = -1 IF FAILED
+PlayerInfo create_game(char* player, int socket, int port) {
     // Get the smallest id for the new game
     int id = get_game_id();
+    printf("Creating game with id %d\n", id);
 
     // We are changing values, therefore we need to lock the mutex
     pthread_mutex_lock(&game_mutex);
@@ -47,13 +49,13 @@ int create_game(char* player, int socket, int port) {
     games[id] = malloc(sizeof(Game));
     Game* cur = games[id];
     if (cur == NULL) {
-        return -1;
+        return (PlayerInfo){.player_id = -1, .game_id = -1};
     }
     cur->id = id;
     cur->players[0] = malloc(sizeof(Player));
     if (cur->players[0] == NULL) {
         perror("Error when allocating memory for player");
-        return -1;
+        return (PlayerInfo){.player_id = -1, .game_id = -1};
     }
     strcpy(cur->players[0]->id, player);
     cur->players[0]->socket = socket;
@@ -63,16 +65,18 @@ int create_game(char* player, int socket, int port) {
     // We finished modifying values
     pthread_mutex_unlock(&game_mutex);
     print_games();
-    return id;
+    PlayerInfo info = {.player_id = 0, .game_id = id};
+    return info;
 }
 
 // Makes the player join a game, returns player's index in the game
-int join_game(int id, int socket, int port, char* player) {
+// RETURNS STRUCT WITH GAMEID = -1 IF FAILED
+PlayerInfo join_game(int id, int socket, int port, char* player) { 
     printf("Player %s is joining game %d\n", player, id);
     // Check if the game exists
     if (id < 0 || id >= MAX_GAMES) {
         puts("Game does not exist (ID out of bounds)");
-        return -1;
+        return (PlayerInfo){.player_id = -1, .game_id = -1};
     }
     // We are checking different values of the struct, therefore we need to lock
     // the mutex
@@ -80,13 +84,13 @@ int join_game(int id, int socket, int port, char* player) {
     Game* cur = games[id];
     if (cur == NULL) {
         puts("Game does not exist (ID not allocated)");
-        return -1;
+        return (PlayerInfo){.player_id = -1, .game_id = -1};
     }
 
     // Check if the game is full
     if (cur->player_count >= MAX_PLAYERS) {
         puts("Game is full");
-        return -1;
+        return (PlayerInfo){.player_id = -1, .game_id = -1};
     }
 
     // Add the player to the game
@@ -95,7 +99,7 @@ int join_game(int id, int socket, int port, char* player) {
         if (cur->players[i] == NULL) {
             cur->players[i] = malloc(sizeof(Player));
             if (cur->players[i] == NULL) {
-                return -1;
+                return (PlayerInfo){.player_id = -1, .game_id = -1};
             }
             player_id = i;
             break;
@@ -103,7 +107,7 @@ int join_game(int id, int socket, int port, char* player) {
     }
     if (player_id == -1) {
         puts("Could not find free slot in game");
-        return -1;
+        return (PlayerInfo){.player_id = -1, .game_id = -1};
     }
     // Increment current game's player count
     cur->player_count++;
@@ -116,44 +120,47 @@ int join_game(int id, int socket, int port, char* player) {
     // We finished checking / modifying values
     pthread_mutex_unlock(&game_mutex);
     print_games();
-    return player_id;
+    PlayerInfo info = {.player_id = player_id, .game_id = id};
+    return info;
 }
 
-int leave_game(int id) {
+int leave_game(PlayerInfo info){
     // Check if the game exists
-    if (id < 0 || id >= MAX_GAMES) {
+    if (info.game_id < 0 || info.game_id >= MAX_GAMES) {
+        printf("%d\n", info.game_id);
         puts("Game does not exist (ID out of bounds)");
         return -1;
     }
     // We are checking different values of the struct, therefore we need to lock
     // the mutex
     pthread_mutex_lock(&game_mutex);
-    Game* cur = games[id];
+    Game* cur = games[info.game_id];
     if (cur == NULL) {
         puts("Game does not exist (ID not allocated)");
         return -1;
     }
-
-    // Check if the game is full
-    if (cur->player_count <= 0) {
-        puts("Game is empty");
+    
+    // Check if the player exists
+    if (info.player_id < 0 || info.player_id >= MAX_PLAYERS) {
+        puts("Player does not exist (ID out of bounds)");
+        return -1;
+    }
+    if (cur->players[info.player_id] == NULL) {
+        puts("Player does not exist (ID not allocated)");
         return -1;
     }
 
     // Remove the player from the game
-    if (cur->players[id] == NULL) {
-        puts("Could not find player in game");
-        return -1;
-    }
-    // Decrement current game's player count
+    free(cur->players[info.player_id]);
+    cur->players[info.player_id] = NULL;
     cur->player_count--;
-
-    // Free the player's info
-    free(cur->players[id]);
-    cur->players[id] = NULL;
-
+    
     // We finished checking / modifying values
     pthread_mutex_unlock(&game_mutex);
+    
+    if(cur->player_count == 0){
+        destroy_game(info.game_id);
+    }
     print_games();
     return 0;
 }
@@ -173,9 +180,10 @@ int destroy_game(int id) {
             free(games[id]->players[i]);
         }
     }
+    printf("Game %d destroyed\n", id);
 
     num_games--;
-    game_status[id] = 0;
+    game_status[id] = -1;
     free(games[id]);
 
     // We finished modifying values
@@ -214,13 +222,15 @@ int send_games(int sockfd) {
 }
 
 void print_games() {
+    printf("\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n");
     for (int i = 0; i < MAX_GAMES; i++) {
         if (game_status[i] == 1) {
             printf("-----------------\n");
             printf("Game %d, player count : %d\n", games[i]->id,
                    games[i]->player_count);
             for (int j = 0; j < MAX_PLAYERS; j++) {
-                if (games[i]->players[j] != NULL) {
+                
+                if (games[i] != NULL && games[i]->players[j] != NULL) {
                     printf("Player name : %s, id : %d\n",
                            games[i]->players[j]->id, j);
                 }
