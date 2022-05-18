@@ -60,8 +60,13 @@ int parse_operation(char* str) {
         return OP_REGIS;
     }
 
+<<<<<<< HEAD
     else if (strcmp(op, "LIST?") == 0) {
         return OP_LISTQ;
+=======
+    else if(strcmp(op, "UNREG") == 0) {
+        return OP_UNREG;
+>>>>>>> 96c1637de822e4cee3873f2fc8a4cda573eb8b64
     }
 
     // TODO: Add all operations
