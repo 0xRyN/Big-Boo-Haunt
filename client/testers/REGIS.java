@@ -2,6 +2,7 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.net.Socket;
 import java.nio.ByteBuffer;
+import java.util.Scanner;
 
 public class REGIS {
     public static void main(String[] args) throws Exception {
@@ -14,8 +15,8 @@ public class REGIS {
         System.out.println(new String(buffer));
 
         // Send message to server
-        ByteBuffer byteBuffer = ByteBuffer.allocate(24);
-        byteBuffer.put("REGIS player02 1234 ".getBytes());
+        ByteBuffer byteBuffer = ByteBuffer.allocate(23);
+        byteBuffer.put("REGIS player04 1234".getBytes());
         byteBuffer.put((byte) 0);
         byteBuffer.put("***".getBytes());
         // Print the buffer in output.txt
@@ -29,6 +30,9 @@ public class REGIS {
         read = socket.getInputStream().read(buffer);
         System.out.println(new String(buffer));
 
+        // Create scanner
+        Scanner scanner = new Scanner(System.in);
+        scanner.next();
         socket.close();
         fos.close();
     }
