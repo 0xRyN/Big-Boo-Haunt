@@ -14,6 +14,7 @@ public class REGIS {
         int read = socket.getInputStream().read(buffer);
         System.out.println(new String(buffer));
 
+        
         // Send message to server
         ByteBuffer byteBuffer = ByteBuffer.allocate(23);
         byteBuffer.put("REGIS player04 1234".getBytes());

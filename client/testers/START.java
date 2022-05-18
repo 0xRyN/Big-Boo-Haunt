@@ -14,17 +14,31 @@ public class START {
 
         while(true){
             String a = scanner.nextLine();
-            System.out.println(a);
+            //System.out.println(a);
             ByteBuffer byteBuffer = ByteBuffer.allocate(a.length());
-            byteBuffer.put(a.getBytes());
+            if(a.split(" ")[0].equals("NEWPL")){
+                byteBuffer = ByteBuffer.allocate(a.length());
+                byteBuffer.put(a.getBytes());
+            }
+            else if(a.equals("UNREG***")){
+                byteBuffer = ByteBuffer.allocate(a.length());
+                byteBuffer.put(a.getBytes());
+            }
+            else if(a.split(" ")[0] == "START"){
+                byteBuffer = ByteBuffer.allocate(a.length());
+                byteBuffer.put(a.getBytes());
+            }
             //System.out.println(byteBuffer.array());
-            System.out.println("2");
-
-            socket.getOutputStream().write(byteBuffer.array());
+            if(byteBuffer.remaining() == 0){
+                socket.getOutputStream().write(byteBuffer.array());
     
-            buffer = new byte[1024];
-            read = socket.getInputStream().read(buffer);
-            System.out.println(new String(buffer));
+                buffer = new byte[1024];
+                read = socket.getInputStream().read(buffer);
+                System.out.println(new String(buffer));
+            }
+            else{
+                System.out.println("Invalid command");
+            }
         }
         //socket.close();
 

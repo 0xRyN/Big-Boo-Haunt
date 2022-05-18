@@ -51,6 +51,10 @@ int parse_operation(char* str) {
         return OP_REGIS;
     }
 
+    else if(strcmp(op, "UNREG") == 0) {
+        return OP_UNREG;
+    }
+
     // TODO: Add all operations
 
     else {

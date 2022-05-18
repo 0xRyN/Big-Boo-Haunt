@@ -128,8 +128,34 @@ int interact(int sockfd) {
                 return -1;
             }
 
-            
+
             has_joined = 1;
+        }
+
+        else if (op == OP_UNREG) {
+            // Unregister the user from the game
+            if(has_joined == 0) {
+                // Write an error message to the client
+                char res_buffer[40];
+                sprintf(res_buffer, "DUNNO***");
+                if(safe_send(sockfd, res_buffer, 8) < 0) {
+                    puts("Error sending registration result");
+                    // Stop the connection with the client
+                    return -1;
+                }
+                continue;
+            }
+            //Leave the game 
+            leave_game(info);
+            char res_buffer[40];
+            uint8_t int_id = info.game_id;
+            sprintf(res_buffer, "UNROK %hhu***", int_id);
+
+            if (safe_send(sockfd, res_buffer, 10) < 0) {
+                puts("Error sending registration result");
+                return -1;
+            }
+            has_joined = 0;
         }
 
         else if (op == OP_START) {
