@@ -131,7 +131,6 @@ int interact(int sockfd) {
 
             has_joined = 1;
         }
-<<<<<<< HEAD
         else if (op == OP_LISTQ){
            int send_res = send_game(sockfd, buffer);
               if (send_res < 0) {
@@ -139,7 +138,6 @@ int interact(int sockfd) {
                 return -1;
               }
         }
-=======
 
         else if (op == OP_UNREG) {
             // Unregister the user from the game
@@ -167,7 +165,6 @@ int interact(int sockfd) {
             has_joined = 0;
         }
 
->>>>>>> 96c1637de822e4cee3873f2fc8a4cda573eb8b64
         else if (op == OP_START) {
         }
 
