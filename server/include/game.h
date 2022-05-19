@@ -16,7 +16,7 @@
 #define MAX_NAME 8
 #define MAX_PLAYERS 10
 #define MAX_GAMES 10
-#define MIN_PLAYERS 2
+#define MIN_PLAYERS 0
 
 typedef struct Player {
     char id[MAX_NAME + 1];
@@ -50,5 +50,6 @@ void print_games();
 int send_game(int sockfd, char *buffer);
 int ask_size(int sockfd, char *buffer);
 int increment_amout_of_ready_players(PlayerInfo info);
+Game* get_game(int id);
 
 #endif

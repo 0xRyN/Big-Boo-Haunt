@@ -219,7 +219,6 @@ int destroy_game(int id) {
 
     for (int i = 0; i < MAX_PLAYERS; i++) {
         if (games[id]->players[i] != NULL) {
-            printf("Freeing adress %p, pid = %s\n", games[id]->players[i], games[id]->players[i]->id);
             free(games[id]->players[i]);
         }
     }
@@ -364,6 +363,10 @@ int send_game(int sockfd, char* buffer) {
         }
     }
     return 0;
+}
+
+Game* get_game(int id){
+    return games[id];
 }
 
 void print_games() {

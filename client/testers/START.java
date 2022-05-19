@@ -59,6 +59,13 @@ public class START {
                     }
                     System.out.println();
                 }
+                /*else if(a.equals("START***")){
+                    System.out.println("CA VA START ATTENTION");
+                    socket.getOutputStream().write(byteBuffer.array());
+                    buffer = new byte[1024];
+                    read = socket.getInputStream().read(buffer);
+                    System.out.println(new String(buffer));
+                }*/
                 else{
                     socket.getOutputStream().write(byteBuffer.array());
                     buffer = new byte[1024];
