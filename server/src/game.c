@@ -271,9 +271,9 @@ int increment_amout_of_ready_players(PlayerInfo info) {
     cur->players[info.player_id]->is_ready = 1;
     cur->amout_of_ready_players++;
 
-    if (cur->amout_of_ready_players == cur->player_count &&
-        cur->player_count > 3) {
+    if (cur->amout_of_ready_players == cur->player_count && cur->player_count > MIN_PLAYERS) {
         game_status[info.game_id] = 2;
+        return 1;
         // WELCO m h w f ip port***
         //  IP PORT ??
         // printf("WELCO %s %s %s %s %s %d***\n", cur->id, cur->mazeHeight,

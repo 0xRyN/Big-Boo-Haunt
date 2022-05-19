@@ -186,7 +186,15 @@ int interact(int sockfd) {
                 }
                 continue;
             }
-            increment_amout_of_ready_players(info);
+            int increment_result = increment_amout_of_ready_players(info);
+            if(increment_result < 0){
+                puts("Error incrementing amount of ready players");
+                return -1;
+            }
+            else if(increment_result == 1){
+                //TODO : start the game
+                // We can start the game
+            }
         }
 
         else if (op == OP_SIZEQ) {
