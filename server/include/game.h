@@ -48,5 +48,7 @@ void print_games();
 int send_games(int sockfd);
 void print_games();
 int send_game(int sockfd, char *buffer);
+int ask_size(int sockfd, char *buffer);
+int increment_amout_of_ready_players(PlayerInfo info);
 
 #endif

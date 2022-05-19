@@ -55,6 +55,7 @@ PlayerInfo create_game(char* player, int socket, int port) {
     cur->players[0] = malloc(sizeof(Player));
     cur->mazeID = 1;
 
+    // TODO : Remove this from here.
     // Read file called 1 in Maze folder and print the amount of lines
     FILE* fp;
     char* line = NULL;
@@ -271,7 +272,8 @@ int increment_amout_of_ready_players(PlayerInfo info) {
     cur->players[info.player_id]->is_ready = 1;
     cur->amout_of_ready_players++;
 
-    if (cur->amout_of_ready_players == cur->player_count && cur->player_count > MIN_PLAYERS) {
+    if (cur->amout_of_ready_players == cur->player_count &&
+        cur->player_count > MIN_PLAYERS) {
         game_status[info.game_id] = 2;
         return 1;
         // WELCO m h w f ip port***

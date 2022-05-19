@@ -6,6 +6,7 @@
 #include <string.h>
 
 #include "game.h"
+#include "in-game.h"
 #include "operations.h"
 #include "parser.h"
 #include "recieve.h"

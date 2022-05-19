@@ -70,7 +70,6 @@ int interact(int sockfd) {
             PlayerInfo join_result =
                 join_game(regis.game_id, sockfd, regis.port, regis.id);
             if (join_result.game_id < 0) {
-                
                 puts("Error joining game");
                 char res_buffer[40];
                 sprintf(res_buffer, "REGNO***");
@@ -78,8 +77,7 @@ int interact(int sockfd) {
                     puts("Error sending registration result");
                     return -1;
                 }
-            }
-            else{
+            } else {
                 info = join_result;
 
                 // We successfully joined the game, so we can send the response
@@ -187,13 +185,12 @@ int interact(int sockfd) {
                 continue;
             }
             int increment_result = increment_amout_of_ready_players(info);
-            if(increment_result < 0){
+            if (increment_result < 0) {
                 puts("Error incrementing amount of ready players");
                 return -1;
-            }
-            else if(increment_result == 1){
-                //TODO : start the game
-                // We can start the game
+            } else if (increment_result == 1) {
+                return ig_interact(sockfd, info);
+                // We are now in game.
             }
         }
 
