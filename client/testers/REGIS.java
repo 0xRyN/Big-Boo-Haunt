@@ -17,8 +17,8 @@ public class REGIS {
         
         // Send message to server
         ByteBuffer byteBuffer = ByteBuffer.allocate(23);
-        byteBuffer.put("REGIS player04 1234".getBytes());
-        byteBuffer.put((byte) 1);
+        byteBuffer.put("REGIS player02 1234".getBytes());
+        byteBuffer.put((byte) 0);
         byteBuffer.put("***".getBytes());
         // Print the buffer in output.txt
         System.out.println(byteBuffer.array());

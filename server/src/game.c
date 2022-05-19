@@ -221,26 +221,39 @@ int send_games(int sockfd) {
     return 0;
 }
 
+int nbPlayers(int id){
+    return games[id]->player_count;
+}
 
 int send_game(int sockfd ,char* buffer) {
     struct LISTQ list;
     list = parse_listq(buffer);
     int game_id = list.game_id;
     if (game_status[game_id] == 1) {
-        printf("-----------------\n");
-        printf("Game %d, player count : %d\n", games[game_id]->id,
-        games[game_id]->player_count);
-        printf("-----------------\n\n"); 
-
-
-        char* game_str[9];
-        snprintf(game_str, 9, "RAYANE/n");
-        if (safe_send(sockfd, game_str, 9) < 0) {
-                puts("Error sending game");
-                return -1;
-        }          
+        //Print game_id amount of players
+        char game_str[13];
+        uint8_t game_id = games[game_id]->id;
+        uint8_t player_count = games[game_id]->player_count;
+        snprintf(game_str, 13, "LIST! %hhu %hhu***", game_id, player_count);
+        if (safe_send(sockfd, game_str, 12) < 0) {
+            puts("Error sending game");
+            return -1;
+        }
+        for(int i = 0; i < MAX_PLAYERS; i++){
+            // CHECK IF THE GAME HAVE PLAYERS IN IT
+            if(games[game_id]->players[i] != NULL){ // TODO VOIR PQ FAUT BOUCLER PR N MESSAGE ET PAS DANS SENDGAMES
+                //printf("PLAYR %s***\n",games[game_id]->players[i]->id);
+                char res_buffer[18];
+                snprintf(res_buffer, 18, "PLAYR %s***", games[game_id]->players[i]->id);
+                if (safe_send(sockfd, res_buffer, 17) < 0) {
+                    puts("Error sending game");
+                    return -1;
+                }
+            }
+        }
+          
     }else{
-        char* game_str[9];
+        char game_str[9];
         snprintf(game_str, 9, "DUNNO***");
         if (safe_send(sockfd, game_str, 9) < 0) {
                 puts("Error sending game");
