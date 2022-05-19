@@ -54,6 +54,27 @@ PlayerInfo create_game(char* player, int socket, int port) {
     cur->id = id;
     cur->players[0] = malloc(sizeof(Player));
     cur->labbyID = 1;
+    
+    // Read file called 1 in Maze folder and print the amount of lines
+    FILE *fp;
+    char *line = NULL;
+    size_t len = 0;
+    ssize_t read;
+    int size = 0;
+    fp = fopen("Maze/1.txt", "r"); // TODO : Au lieu de 1 mettre game_id
+    if (fp == NULL)
+    exit(EXIT_FAILURE);
+    int width = 0;    
+    while ((read = getline(&line, &len, fp)) != -1) {
+        width = read;
+        size++;
+    }
+    fclose(fp);
+    if (line)
+        free(line);
+    cur->labbyWidth = width;
+    cur->labbyHeight = size;
+
     if (cur->players[0] == NULL) {
         perror("Error when allocating memory for player");
         return (PlayerInfo){.player_id = -1, .game_id = -1};
@@ -250,6 +271,12 @@ int increment_amout_of_ready_players(PlayerInfo info) {
     cur->players[info.player_id]->is_ready = 1;
     cur->amout_of_ready_players++;
 
+    if(cur->amout_of_ready_players == cur->player_count && cur->player_count > 3){
+        game_status[info.game_id] = 2;
+        //WELCO m h w f ip port***
+        // IP PORT ??
+        printf("WELCO %s %s %s %s %s %d***\n", cur->id, cur->labbyHeight, cur->labbyWidth, cur->amountOfGhosts, cur->players[4]->id, cur->players[4]->port);
+    }
     // We finished checking / modifying values
     pthread_mutex_unlock(&game_mutex);
     print_games();
@@ -259,33 +286,28 @@ int increment_amout_of_ready_players(PlayerInfo info) {
 int ask_size(int sockfd ,char* buffer){
     struct SIZEQ list;
     list = parse_sizeq(buffer);
-    // Read file called 1 in Maze folder and print the amount of lines
-    FILE *fp;
-    char *line = NULL;
-    size_t len = 0;
-    ssize_t read;
-    int size = 0;
-    fp = fopen("Maze/1.txt", "r");
-    if (fp == NULL)
-        exit(EXIT_FAILURE);
-    int width = 0;    
-    while ((read = getline(&line, &len, fp)) != -1) {
-        width = read;
-        size++;
+    int game_id = list.game_id;
+    if (game_status[game_id] == 1) {
+
+        // Send the size of the maze
+        char size_str[17];
+        uint8_t height_int = games[list.game_id]->labbyHeight;
+        uint8_t width_int = games[list.game_id]->labbyWidth;
+        snprintf(size_str, 17, "SIZE! %d %hhu %hhu***",games[list.game_id]->id, height_int, width_int);
+        if (safe_send(sockfd, size_str, 16) < 0) {
+            puts("Error sending size");
+            return -1;
+        }
     }
-    fclose(fp);
-    if (line)
-        free(line);
-    // Send the size of the maze
-    char size_str[17];
-    uint8_t size_int = size;
-    snprintf(size_str, 17, "SIZE! %d %hhu %d***",games[list.game_id]->id, size_int, width);
-    if (safe_send(sockfd, size_str, 16) < 0) {
-        puts("Error sending size");
-        return -1;
+    else{
+        char game_str[9];
+        snprintf(game_str, 9, "DUNNO***");
+        if (safe_send(sockfd, game_str, 9) < 0) {
+                puts("Error sending game");
+                return -1;
+        }  
     }
     return 0;
-
 }
 
 int send_game(int sockfd ,char* buffer) {

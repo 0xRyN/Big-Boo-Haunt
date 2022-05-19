@@ -29,6 +29,9 @@ typedef struct Game {
     Player *players[MAX_PLAYERS];
     int amout_of_ready_players;
     int labbyID;
+    int labbyWidth;
+    int labbyHeight;
+    int amountOfGhosts;
 } Game;
 typedef struct PlayerInfo {
     int player_id;

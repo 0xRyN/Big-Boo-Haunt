@@ -18,7 +18,7 @@ public class LIST {
         // Send message to server
         ByteBuffer byteBuffer = ByteBuffer.allocate(10);
         byteBuffer.put("SIZE? ".getBytes());
-        byteBuffer.put((byte) 0);
+        byteBuffer.put((byte) 1);
         byteBuffer.put("***".getBytes());
         // Print the buffer in output.txt
         //System.out.println(byteBuffer.array());
