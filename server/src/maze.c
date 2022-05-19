@@ -74,7 +74,15 @@ int move_up(int player_id){
     for(y = 0; y < MAZE_H; y++){
         for(x = 0; x < MAZE_W; x++){
             if(maze[y][x] == player_id){
-                if(maze[y-1][x] == -2){
+                //here we check if the player hit a ghost 
+                //if he hit on the ghost disappear 
+                //and the function return 2
+                if(maze[y-1][x] == -3){
+                    maze[y][x] = -2;
+                    maze[y-1][x] = player_id;
+                    return 2;
+                }
+                else if(maze[y-1][x] == -2){
                     maze[y][x] = -2;
                     maze[y-1][x] = player_id;
                     return 0;
@@ -89,7 +97,13 @@ int move_down(int player_id){
     int x, y;
     for(y = 0; y < MAZE_H; y++){
         for(x = 0; x < MAZE_W; x++){
-            if(maze[y][x] == player_id){
+            //check if it's -3 and if it's -3 we return 2
+            if(maze[y+1][x] == -3){
+                maze[y][x] = -2;
+                maze[y+1][x] = player_id;
+                return 2;
+            }
+            else if(maze[y][x] == player_id){
                 if(maze[y+1][x] == -2){
                     maze[y][x] = -2;
                     maze[y+1][x] = player_id;
@@ -106,7 +120,12 @@ int move_left(int player_id){
     for(y = 0; y < MAZE_H; y++){
         for(x = 0; x < MAZE_W; x++){
             if(maze[y][x] == player_id){
-                if(maze[y][x-1] == -2){
+                if(maze[y][x-1] == -3){
+                    maze[y][x] = -2;
+                    maze[y][x-1] = player_id;
+                    return 2;
+                }
+                else if(maze[y][x-1] == -2){
                     maze[y][x] = -2;
                     maze[y][x-1] = player_id;
                     return 0;
@@ -122,7 +141,12 @@ int move_right(int player_id){
     for(y = 0; y < MAZE_H; y++){
         for(x = 0; x < MAZE_W; x++){
             if(maze[y][x] == player_id){
-                if(maze[y][x+1] == -2){
+                if(maze[y][x+1] == -3){
+                    maze[y][x] = -2;
+                    maze[y][x+1] = player_id;
+                    return 2;
+                }
+                else if(maze[y][x+1] == -2){
                     maze[y][x] = -2;
                     maze[y][x+1] = player_id;
                     return 0;
