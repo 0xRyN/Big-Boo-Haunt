@@ -180,6 +180,20 @@ int interact(int sockfd) {
             increment_amout_of_ready_players(info);
         }
 
+        else if(op == OP_SIZEQ){
+            int send_res = ask_size(sockfd, buffer);
+            if (send_res < 0) {
+                char res_buffer[40];
+                sprintf(res_buffer, "DUNNO***");
+                if(safe_send(sockfd, res_buffer, 8) < 0) {
+                    puts("Error sending registration result");
+                    // Stop the connection with the client
+                    return -1;
+                }
+                continue;
+            }
+        }
+
         else {
             puts("Invalid operation");
             return -1;

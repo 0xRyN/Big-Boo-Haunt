@@ -60,4 +60,8 @@ struct LISTQ {
     u_int8_t game_id;
 };
 
+struct SIZEQ {
+    int opcode;
+    u_int8_t game_id;
+};
 #endif

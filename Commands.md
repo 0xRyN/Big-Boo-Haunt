@@ -10,8 +10,8 @@ OK START***// Pour dire que le joueur est pret si tt le monde start partie comme
 OK UNREG****// POUR SE DESENREGISTRER DE LA PARTIE DS LAQUELLE ON EST ::E::
 OK UNROK m***// Désenregistrement effectué de m ::R::
 OK DUNNO*** // Erreur lors du deregister car client n est ds aucune partie ::R::
-SIZE? m***// DEMANDER AU SERVEUR TAILLE DU LABBY
-SIZE! m h w***// REPONSE A SIZE si m n'existe pas DUNNO
+OK SIZE? m***// DEMANDER AU SERVEUR TAILLE DU LABBY
+OK SIZE! m h w***// REPONSE A SIZE si m n'existe pas DUNNO
 OK LIST? m***// Demander la liste des joueurs de la partie m
 OK LIST! m s***// Retourne la liste des joueurs de la partie m sous la forme de s messages : PLAYR ID*** si m n'existe pas DUNNO
 OK PLAYR id***// Pour list des joueurs

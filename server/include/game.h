@@ -28,6 +28,7 @@ typedef struct Game {
     int player_count;
     Player *players[MAX_PLAYERS];
     int amout_of_ready_players;
+    int labbyID;
 } Game;
 typedef struct PlayerInfo {
     int player_id;

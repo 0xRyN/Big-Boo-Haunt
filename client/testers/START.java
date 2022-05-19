@@ -16,15 +16,7 @@ public class START {
             String a = scanner.nextLine();
             //System.out.println(a);
             ByteBuffer byteBuffer = ByteBuffer.allocate(a.length());
-            if(a.split(" ")[0].equals("NEWPL")){
-                byteBuffer = ByteBuffer.allocate(a.length());
-                byteBuffer.put(a.getBytes());
-            }
-            else if(a.equals("UNREG***")){
-                byteBuffer = ByteBuffer.allocate(a.length());
-                byteBuffer.put(a.getBytes());
-            }
-            else if(a.equals("START***")){
+            if(a.equals("UNREG***") || a.equals("START***") || a.split(" ")[0].equals("NEWPL")){
                 byteBuffer = ByteBuffer.allocate(a.length());
                 byteBuffer.put(a.getBytes());
             }
@@ -36,7 +28,7 @@ public class START {
                 byteBuffer.put((byte) val);
                 byteBuffer.put("***".getBytes());
             }
-            else if(a.split(" ")[0].equals("LIST?")){
+            else if(a.split(" ")[0].equals("LIST?") || a.split(" ")[0].equals("SIZE?")){
                 byteBuffer = ByteBuffer.allocate(a.length());
                 String start = a.split(" ")[0]+" ";
                 byteBuffer.put(start.getBytes());

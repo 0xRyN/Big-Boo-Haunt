@@ -47,6 +47,13 @@ struct LISTQ parse_listq(char* str) {
     return res;
 }
 
+struct SIZEQ parse_sizeq(char* str) {
+    struct SIZEQ res;
+    res.opcode = OP_SIZEQ;
+    memcpy(&res.game_id, str + 6, 1);
+    return res;
+}
+
 
 int parse_operation(char* str) {
     char op[6];
@@ -68,6 +75,10 @@ int parse_operation(char* str) {
     }
     else if(strcmp(op, "START") == 0) {
         return OP_START;
+    }
+
+    else if(strcmp(op, "SIZE?") == 0) {
+        return OP_SIZEQ;
     }
 
     // TODO: Add all operations

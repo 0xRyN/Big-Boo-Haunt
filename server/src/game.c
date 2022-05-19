@@ -53,6 +53,7 @@ PlayerInfo create_game(char* player, int socket, int port) {
     }
     cur->id = id;
     cur->players[0] = malloc(sizeof(Player));
+    cur->labbyID = 1;
     if (cur->players[0] == NULL) {
         perror("Error when allocating memory for player");
         return (PlayerInfo){.player_id = -1, .game_id = -1};
@@ -69,6 +70,8 @@ PlayerInfo create_game(char* player, int socket, int port) {
     PlayerInfo info = {.player_id = 0, .game_id = id};
     return info;
 }
+
+
 
 // Makes the player join a game, returns player's index in the game
 // RETURNS STRUCT WITH GAMEID = -1 IF FAILED
@@ -227,6 +230,7 @@ int send_games(int sockfd) {
     return 0;
 }
 
+
 int increment_amout_of_ready_players(PlayerInfo info) {
     // Check if the game exists
     if (info.game_id < 0 || info.game_id >= MAX_GAMES) {
@@ -252,6 +256,37 @@ int increment_amout_of_ready_players(PlayerInfo info) {
     return 0;
 }
 
+int ask_size(int sockfd ,char* buffer){
+    struct SIZEQ list;
+    list = parse_sizeq(buffer);
+    // Read file called 1 in Maze folder and print the amount of lines
+    FILE *fp;
+    char *line = NULL;
+    size_t len = 0;
+    ssize_t read;
+    int size = 0;
+    fp = fopen("Maze/1.txt", "r");
+    if (fp == NULL)
+        exit(EXIT_FAILURE);
+    int width = 0;    
+    while ((read = getline(&line, &len, fp)) != -1) {
+        width = read;
+        size++;
+    }
+    fclose(fp);
+    if (line)
+        free(line);
+    // Send the size of the maze
+    char size_str[17];
+    uint8_t size_int = size;
+    snprintf(size_str, 17, "SIZE! %d %hhu %d***",games[list.game_id]->id, size_int, width);
+    if (safe_send(sockfd, size_str, 16) < 0) {
+        puts("Error sending size");
+        return -1;
+    }
+    return 0;
+
+}
 
 int send_game(int sockfd ,char* buffer) {
     struct LISTQ list;
