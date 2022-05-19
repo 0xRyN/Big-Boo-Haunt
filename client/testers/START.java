@@ -36,6 +36,13 @@ public class START {
                 byteBuffer.put((byte) val);
                 byteBuffer.put("***".getBytes());
             }
+            else if(a.split(" ")[0].equals("LIST?")){
+                byteBuffer = ByteBuffer.allocate(a.length());
+                String start = a.split(" ")[0]+" ";
+                byteBuffer.put(start.getBytes());
+                byteBuffer.put((byte) Integer.parseInt(Character.toString(a.split(" ")[1].charAt(0))));
+                byteBuffer.put("***".getBytes());
+            }
             //System.out.println(byteBuffer.array());
             if(byteBuffer.remaining() == 0){
                 socket.getOutputStream().write(byteBuffer.array());
