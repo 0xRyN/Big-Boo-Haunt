@@ -16,7 +16,7 @@ public class START {
             String a = scanner.nextLine();
             //System.out.println(a);
             ByteBuffer byteBuffer = ByteBuffer.allocate(a.length());
-            if(a.equals("UNREG***") || a.equals("START***") || a.split(" ")[0].equals("NEWPL")){
+            if(a.equals("UNREG***") || a.equals("START***") || a.split(" ")[0].equals("NEWPL") || a.split(" ")[0].equals("GAME?***")){
                 byteBuffer = ByteBuffer.allocate(a.length());
                 byteBuffer.put(a.getBytes());
             }

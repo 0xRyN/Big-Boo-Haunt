@@ -30,7 +30,7 @@ int op_join_game(int sockfd, char *player, int port) {
 int interact(int sockfd) {
     // Define flags for each user
     int has_joined = 0;
-    int send_start = 0;
+    //int send_start = 0;
     PlayerInfo info = {.player_id = -1, .game_id = -1};
 
     // First, we send the games to the client
@@ -192,6 +192,10 @@ int interact(int sockfd) {
                 }
                 continue;
             }
+        }
+
+        else if(op == OP_GAMEQ){
+            int send_res = send_games(sockfd);
         }
 
         else {

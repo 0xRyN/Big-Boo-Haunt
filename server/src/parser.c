@@ -81,6 +81,10 @@ int parse_operation(char* str) {
         return OP_SIZEQ;
     }
 
+        else if(strcmp(op, "GAME?") == 0) {
+        return OP_GAMEQ;
+    }
+
     // TODO: Add all operations
 
     else {
