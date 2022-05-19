@@ -49,8 +49,15 @@ PlayerInfo create_game(char* player, int socket, int port) {
     games[id] = malloc(sizeof(Game));
     Game* cur = games[id];
     if (cur == NULL) {
+        pthread_mutex_unlock(&game_mutex);
         return (PlayerInfo){.player_id = -1, .game_id = -1};
     }
+
+    // Fill in the Player struct
+    for(int i = 0; i < MAX_PLAYERS; i++) {
+        cur->players[i] = NULL;
+    }
+
     cur->id = id;
     cur->players[0] = malloc(sizeof(Player));
     cur->mazeID = 1;
@@ -76,6 +83,7 @@ PlayerInfo create_game(char* player, int socket, int port) {
 
     if (cur->players[0] == NULL) {
         perror("Error when allocating memory for player");
+        pthread_mutex_unlock(&game_mutex);
         return (PlayerInfo){.player_id = -1, .game_id = -1};
     }
     strcpy(cur->players[0]->id, player);
@@ -98,7 +106,6 @@ PlayerInfo join_game(int id, int socket, int port, char* player) {
     // Check if the game exists
     if (id < 0 || id >= MAX_GAMES) {
         puts("Game does not exist (ID out of bounds)");
-        pthread_mutex_unlock(&game_mutex);
         return (PlayerInfo){.player_id = -1, .game_id = -1};
     }
     // We are checking different values of the struct, therefore we need to lock
@@ -164,22 +171,24 @@ int leave_game(PlayerInfo info) {
     Game* cur = games[info.game_id];
     if (cur == NULL) {
         puts("Game does not exist (ID not allocated)");
+        pthread_mutex_unlock(&game_mutex);
         return -1;
     }
 
     // Check if the player exists
     if (info.player_id < 0 || info.player_id >= MAX_PLAYERS) {
         puts("Player does not exist (ID out of bounds)");
+        pthread_mutex_unlock(&game_mutex);
         return -1;
     }
     if (cur->players[info.player_id] == NULL) {
         puts("Player does not exist (ID not allocated)");
+        pthread_mutex_unlock(&game_mutex);
         return -1;
     }
 
     // check if the player was ready
     if (cur->players[info.player_id]->is_ready == 1) {
-        printf("jsuis la");
         cur->amout_of_ready_players--;
     }
     // Remove the player from the game
@@ -202,6 +211,7 @@ int destroy_game(int id) {
     // Check if the game exists
     if (id < 0 || id >= MAX_GAMES) {
         puts("Game does not exist (ID out of bounds)");
+        pthread_mutex_unlock(&game_mutex);
         return -1;
     }
     // We are changing values, therefore we need to lock the mutex
@@ -209,6 +219,7 @@ int destroy_game(int id) {
 
     for (int i = 0; i < MAX_PLAYERS; i++) {
         if (games[id]->players[i] != NULL) {
+            printf("Freeing adress %p, pid = %s\n", games[id]->players[i], games[id]->players[i]->id);
             free(games[id]->players[i]);
         }
     }
@@ -265,6 +276,7 @@ int increment_amout_of_ready_players(PlayerInfo info) {
     Game* cur = games[info.game_id];
     if (cur == NULL) {
         puts("Game does not exist (ID not allocated)");
+        pthread_mutex_unlock(&game_mutex);
         return -1;
     }
 
@@ -275,6 +287,7 @@ int increment_amout_of_ready_players(PlayerInfo info) {
     if (cur->amout_of_ready_players == cur->player_count &&
         cur->player_count > MIN_PLAYERS) {
         game_status[info.game_id] = 2;
+        pthread_mutex_unlock(&game_mutex);
         return 1;
         // WELCO m h w f ip port***
         //  IP PORT ??

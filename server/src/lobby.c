@@ -50,6 +50,8 @@ int interact(int sockfd) {
         if (res < 0) {
             puts("Client disconnected !");
             leave_game(info);
+            info.player_id = -1;
+            info.game_id = -1;
             return 0;
         }
 

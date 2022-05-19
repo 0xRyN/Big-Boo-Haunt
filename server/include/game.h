@@ -16,7 +16,7 @@
 #define MAX_NAME 8
 #define MAX_PLAYERS 10
 #define MAX_GAMES 10
-#define MIN_PLAYERS 4
+#define MIN_PLAYERS 2
 
 typedef struct Player {
     char id[MAX_NAME + 1];
