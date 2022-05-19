@@ -53,27 +53,25 @@ PlayerInfo create_game(char* player, int socket, int port) {
     }
     cur->id = id;
     cur->players[0] = malloc(sizeof(Player));
-    cur->labbyID = 1;
-    
+    cur->mazeID = 1;
+
     // Read file called 1 in Maze folder and print the amount of lines
-    FILE *fp;
-    char *line = NULL;
+    FILE* fp;
+    char* line = NULL;
     size_t len = 0;
     ssize_t read;
     int size = 0;
-    fp = fopen("Maze/1.txt", "r"); // TODO : Au lieu de 1 mettre game_id
-    if (fp == NULL)
-    exit(EXIT_FAILURE);
-    int width = 0;    
+    fp = fopen("Maze/1.txt", "r");  // TODO : Au lieu de 1 mettre game_id
+    if (fp == NULL) exit(EXIT_FAILURE);
+    int width = 0;
     while ((read = getline(&line, &len, fp)) != -1) {
         width = read;
         size++;
     }
     fclose(fp);
-    if (line)
-        free(line);
-    cur->labbyWidth = width;
-    cur->labbyHeight = size;
+    if (line) free(line);
+    cur->mazeWidth = width;
+    cur->mazeHeight = size;
 
     if (cur->players[0] == NULL) {
         perror("Error when allocating memory for player");
@@ -92,11 +90,9 @@ PlayerInfo create_game(char* player, int socket, int port) {
     return info;
 }
 
-
-
 // Makes the player join a game, returns player's index in the game
 // RETURNS STRUCT WITH GAMEID = -1 IF FAILED
-PlayerInfo join_game(int id, int socket, int port, char* player) { 
+PlayerInfo join_game(int id, int socket, int port, char* player) {
     printf("Player %s is joining game %d\n", player, id);
     // Check if the game exists
     if (id < 0 || id >= MAX_GAMES) {
@@ -149,7 +145,7 @@ PlayerInfo join_game(int id, int socket, int port, char* player) {
     return info;
 }
 
-int leave_game(PlayerInfo info){
+int leave_game(PlayerInfo info) {
     // Check if the game exists
     if (info.game_id < 0 || info.game_id >= MAX_GAMES) {
         printf("%d\n", info.game_id);
@@ -164,7 +160,7 @@ int leave_game(PlayerInfo info){
         puts("Game does not exist (ID not allocated)");
         return -1;
     }
-    
+
     // Check if the player exists
     if (info.player_id < 0 || info.player_id >= MAX_PLAYERS) {
         puts("Player does not exist (ID out of bounds)");
@@ -184,11 +180,11 @@ int leave_game(PlayerInfo info){
     free(cur->players[info.player_id]);
     cur->players[info.player_id] = NULL;
     cur->player_count--;
-    
+
     // We finished checking / modifying values
     pthread_mutex_unlock(&game_mutex);
-    
-    if(cur->player_count == 0){
+
+    if (cur->player_count == 0) {
         destroy_game(info.game_id);
     }
     print_games();
@@ -251,7 +247,6 @@ int send_games(int sockfd) {
     return 0;
 }
 
-
 int increment_amout_of_ready_players(PlayerInfo info) {
     // Check if the game exists
     if (info.game_id < 0 || info.game_id >= MAX_GAMES) {
@@ -271,11 +266,14 @@ int increment_amout_of_ready_players(PlayerInfo info) {
     cur->players[info.player_id]->is_ready = 1;
     cur->amout_of_ready_players++;
 
-    if(cur->amout_of_ready_players == cur->player_count && cur->player_count > 3){
+    if (cur->amout_of_ready_players == cur->player_count &&
+        cur->player_count > 3) {
         game_status[info.game_id] = 2;
-        //WELCO m h w f ip port***
-        // IP PORT ??
-        //printf("WELCO %s %s %s %s %s %d***\n", cur->id, cur->labbyHeight, cur->labbyWidth, cur->amountOfGhosts, cur->players[4]->id, cur->players[4]->port);
+        // WELCO m h w f ip port***
+        //  IP PORT ??
+        // printf("WELCO %s %s %s %s %s %d***\n", cur->id, cur->mazeHeight,
+        // cur->mazeWidth, cur->amountOfGhosts, cur->players[4]->id,
+        // cur->players[4]->port);
     }
     // We finished checking / modifying values
     pthread_mutex_unlock(&game_mutex);
@@ -283,39 +281,38 @@ int increment_amout_of_ready_players(PlayerInfo info) {
     return 0;
 }
 
-int ask_size(int sockfd ,char* buffer){
+int ask_size(int sockfd, char* buffer) {
     struct SIZEQ list;
     list = parse_sizeq(buffer);
     int game_id = list.game_id;
     if (game_status[game_id] == 1) {
-
         // Send the size of the maze
         char size_str[17];
-        uint8_t height_int = games[list.game_id]->labbyHeight;
-        uint8_t width_int = games[list.game_id]->labbyWidth;
-        snprintf(size_str, 17, "SIZE! %d %hhu %hhu***",games[list.game_id]->id, height_int, width_int);
+        uint8_t height_int = games[list.game_id]->mazeHeight;
+        uint8_t width_int = games[list.game_id]->mazeWidth;
+        snprintf(size_str, 17, "SIZE! %d %hhu %hhu***", games[list.game_id]->id,
+                 height_int, width_int);
         if (safe_send(sockfd, size_str, 16) < 0) {
             puts("Error sending size");
             return -1;
         }
-    }
-    else{
+    } else {
         char game_str[9];
         snprintf(game_str, 9, "DUNNO***");
         if (safe_send(sockfd, game_str, 9) < 0) {
-                puts("Error sending game");
-                return -1;
-        }  
+            puts("Error sending game");
+            return -1;
+        }
     }
     return 0;
 }
 
-int send_game(int sockfd ,char* buffer) {
+int send_game(int sockfd, char* buffer) {
     struct LISTQ list;
     list = parse_listq(buffer);
     int game_id = list.game_id;
     if (game_status[game_id] == 1) {
-        //Print game_id amount of players
+        // Print game_id amount of players
         char game_str[13];
         uint8_t game_id = games[game_id]->id;
         uint8_t player_count = games[game_id]->player_count;
@@ -324,40 +321,45 @@ int send_game(int sockfd ,char* buffer) {
             puts("Error sending game");
             return -1;
         }
-        for(int i = 0; i < MAX_PLAYERS; i++){
+        for (int i = 0; i < MAX_PLAYERS; i++) {
             // CHECK IF THE GAME HAVE PLAYERS IN IT
-            if(games[game_id]->players[i] != NULL){ // TODO VOIR PQ FAUT BOUCLER PR N MESSAGE ET PAS DANS SENDGAMES
-                //printf("PLAYR %s***\n",games[game_id]->players[i]->id);
+            if (games[game_id]->players[i] !=
+                NULL) {  // TODO VOIR PQ FAUT BOUCLER PR N MESSAGE ET PAS DANS
+                         // SENDGAMES
+                // printf("PLAYR %s***\n",games[game_id]->players[i]->id);
                 char res_buffer[18];
-                snprintf(res_buffer, 18, "PLAYR %s***", games[game_id]->players[i]->id);
+                snprintf(res_buffer, 18, "PLAYR %s***",
+                         games[game_id]->players[i]->id);
                 if (safe_send(sockfd, res_buffer, 17) < 0) {
                     puts("Error sending game");
                     return -1;
                 }
             }
         }
-          
-    }else{
+
+    } else {
         char game_str[9];
         snprintf(game_str, 9, "DUNNO***");
         if (safe_send(sockfd, game_str, 9) < 0) {
-                puts("Error sending game");
-                return -1;
-        }  
+            puts("Error sending game");
+            return -1;
+        }
         return -1;
     }
     return 0;
 }
 
 void print_games() {
-    printf("\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n");
+    printf(
+        "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n"
+        "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n");
     for (int i = 0; i < MAX_GAMES; i++) {
         if (game_status[i] == 1) {
             printf("-----------------\n");
             printf("Game %d, player count : %d areready %d/%d\n", games[i]->id,
-                   games[i]->player_count, games[i]->amout_of_ready_players, games[i]->player_count);
+                   games[i]->player_count, games[i]->amout_of_ready_players,
+                   games[i]->player_count);
             for (int j = 0; j < MAX_PLAYERS; j++) {
-                
                 if (games[i] != NULL && games[i]->players[j] != NULL) {
                     printf("Player name : %s, id : %d\n",
                            games[i]->players[j]->id, j);

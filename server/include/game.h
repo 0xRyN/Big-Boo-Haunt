@@ -9,9 +9,9 @@
 #include <sys/types.h>
 #include <unistd.h>
 
-#include "send.h"
 #include "operations.h"
 #include "parser.h"
+#include "send.h"
 
 #define MAX_NAME 8
 #define MAX_PLAYERS 10
@@ -28,9 +28,9 @@ typedef struct Game {
     int player_count;
     Player *players[MAX_PLAYERS];
     int amout_of_ready_players;
-    int labbyID;
-    int labbyWidth;
-    int labbyHeight;
+    int mazeID;
+    int mazeWidth;
+    int mazeHeight;
     int amountOfGhosts;
 } Game;
 typedef struct PlayerInfo {
@@ -46,6 +46,6 @@ int destroy_game(int id);
 void print_games();
 int send_games(int sockfd);
 void print_games();
-int send_game(int sockfd, char* buffer);
+int send_game(int sockfd, char *buffer);
 
 #endif
