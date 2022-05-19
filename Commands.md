@@ -20,7 +20,7 @@ OK GAME?***// Retourne les parties non commencées avec des joueurs inscrits non
 PENDANT PARTIE : 
 
 WELCO m h w f ip port***// Quand la partie commence 
-POSIT 
+POSIT id x y*** // id/ x = 00 y = 00 ::server vers client::
 UPMOV
 DOMOV
 LEMOV
