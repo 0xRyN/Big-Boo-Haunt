@@ -295,9 +295,9 @@ int ask_size(int sockfd, char* buffer) {
     if (game_status[game_id] == 1) {
         // Send the size of the maze
         char size_str[17];
-        uint8_t height_int = games[list.game_id]->mazeHeight;
-        uint8_t width_int = games[list.game_id]->mazeWidth;
-        snprintf(size_str, 17, "SIZE! %d %hhu %hhu***", games[list.game_id]->id,
+        uint16_t height_int = games[list.game_id]->mazeHeight;
+        uint16_t width_int = games[list.game_id]->mazeWidth;
+        snprintf(size_str, 17, "SIZE! %d %hu %hu***", games[list.game_id]->id,
                  height_int, width_int);
         if (safe_send(sockfd, size_str, 16) < 0) {
             puts("Error sending size");
