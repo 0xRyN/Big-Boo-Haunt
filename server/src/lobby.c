@@ -70,21 +70,30 @@ int interact(int sockfd) {
             PlayerInfo join_result =
                 join_game(regis.game_id, sockfd, regis.port, regis.id);
             if (join_result.game_id < 0) {
+                
                 puts("Error joining game");
-                return -1;  //
+                char res_buffer[40];
+                sprintf(res_buffer, "REGNO***");
+                if (safe_send(sockfd, res_buffer, 8) < 0) {
+                    puts("Error sending registration result");
+                    return -1;
+                }
             }
-            info = join_result;
+            else{
+                info = join_result;
 
-            // We successfully joined the game, so we can send the response
-            char res_buffer[40];
-            uint8_t int_id = regis.game_id;
-            sprintf(res_buffer, "REGOK %hhu", int_id);
-            if (safe_send(sockfd, res_buffer, 7) < 0) {
-                puts("Error sending registration result");
-                return -1;
+                // We successfully joined the game, so we can send the response
+                char res_buffer[40];
+                uint8_t int_id = regis.game_id;
+                sprintf(res_buffer, "REGOK %hhu***", int_id);
+                if (safe_send(sockfd, res_buffer, 10) < 0) {
+                    puts("Error sending registration result");
+                    return -1;
+                }
+
+                has_joined = 1;
             }
 
-            has_joined = 1;
         }
 
         // Create a new game and register the user into it

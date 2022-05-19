@@ -97,6 +97,7 @@ PlayerInfo join_game(int id, int socket, int port, char* player) {
     // Check if the game exists
     if (id < 0 || id >= MAX_GAMES) {
         puts("Game does not exist (ID out of bounds)");
+        pthread_mutex_unlock(&game_mutex);
         return (PlayerInfo){.player_id = -1, .game_id = -1};
     }
     // We are checking different values of the struct, therefore we need to lock
@@ -105,12 +106,14 @@ PlayerInfo join_game(int id, int socket, int port, char* player) {
     Game* cur = games[id];
     if (cur == NULL) {
         puts("Game does not exist (ID not allocated)");
+        pthread_mutex_unlock(&game_mutex);
         return (PlayerInfo){.player_id = -1, .game_id = -1};
     }
 
     // Check if the game is full
     if (cur->player_count >= MAX_PLAYERS) {
         puts("Game is full");
+        pthread_mutex_unlock(&game_mutex);
         return (PlayerInfo){.player_id = -1, .game_id = -1};
     }
 
@@ -120,6 +123,7 @@ PlayerInfo join_game(int id, int socket, int port, char* player) {
         if (cur->players[i] == NULL) {
             cur->players[i] = malloc(sizeof(Player));
             if (cur->players[i] == NULL) {
+                pthread_mutex_unlock(&game_mutex);
                 return (PlayerInfo){.player_id = -1, .game_id = -1};
             }
             player_id = i;
@@ -128,6 +132,7 @@ PlayerInfo join_game(int id, int socket, int port, char* player) {
     }
     if (player_id == -1) {
         puts("Could not find free slot in game");
+        pthread_mutex_unlock(&game_mutex);
         return (PlayerInfo){.player_id = -1, .game_id = -1};
     }
     // Increment current game's player count
@@ -325,8 +330,6 @@ int send_game(int sockfd, char* buffer) {
             // CHECK IF THE GAME HAVE PLAYERS IN IT
             if (games[game_id]->players[i] !=
                 NULL) {  // TODO VOIR PQ FAUT BOUCLER PR N MESSAGE ET PAS DANS
-                         // SENDGAMES
-                // printf("PLAYR %s***\n",games[game_id]->players[i]->id);
                 char res_buffer[18];
                 snprintf(res_buffer, 18, "PLAYR %s***",
                          games[game_id]->players[i]->id);
@@ -344,7 +347,6 @@ int send_game(int sockfd, char* buffer) {
             puts("Error sending game");
             return -1;
         }
-        return -1;
     }
     return 0;
 }

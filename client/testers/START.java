@@ -7,9 +7,15 @@ import java.util.Scanner;
 public class START {
    public static void main(String[] args) throws Exception {
       Socket socket = new Socket("localhost", 8080);
-      byte[] buffer = new byte[1024];
+      byte[] buffer = new byte[10];
       int read = socket.getInputStream().read(buffer);
-      System.out.println(new String(buffer));
+      System.out.print(new String(buffer));
+      for(int i =0 ;i < Integer.parseInt(Character.toString((new String(buffer)).split(" ")[1].charAt(0))); i++) {
+        buffer = new byte[12];
+        read = socket.getInputStream().read(buffer);
+        System.out.println(new String(buffer));
+      }
+      System.out.println();
       Scanner scanner = new Scanner(System.in);
 
         while(true){
@@ -37,11 +43,29 @@ public class START {
             }
             //System.out.println(byteBuffer.array());
             if(byteBuffer.remaining() == 0){
-                socket.getOutputStream().write(byteBuffer.array());
-    
-                buffer = new byte[1024];
-                read = socket.getInputStream().read(buffer);
-                System.out.println(new String(buffer));
+                if(a.split(" ")[0].equals("LIST?")){
+                    socket.getOutputStream().write(byteBuffer.array());
+                    buffer = new byte[12];
+                    read = socket.getInputStream().read(buffer);
+                    String tmpRep = new String(buffer);
+                    System.out.print(tmpRep);
+                    if(tmpRep.charAt(0) == 'L'){
+                        int amount = Integer.parseInt(Character.toString((new String(buffer)).split(" ")[2].charAt(0)));
+                        for(int i = 0; i < amount; i++){
+                            buffer = new byte[17];
+                            read = socket.getInputStream().read(buffer);
+                            System.out.print(new String(buffer));
+                        }
+                    }
+                    System.out.println();
+                }
+                else{
+                    socket.getOutputStream().write(byteBuffer.array());
+                    buffer = new byte[1024];
+                    read = socket.getInputStream().read(buffer);
+                    System.out.println(new String(buffer));
+                }
+
             }
             else{
                 System.out.print(a.split(" ")[0]);
