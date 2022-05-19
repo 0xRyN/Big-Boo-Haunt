@@ -61,6 +61,7 @@ PlayerInfo create_game(char* player, int socket, int port) {
     cur->players[0]->socket = socket;
     cur->players[0]->port = port;
     cur->player_count = 1;
+    cur->amout_of_ready_players = 0;
 
     // We finished modifying values
     pthread_mutex_unlock(&game_mutex);
@@ -150,6 +151,11 @@ int leave_game(PlayerInfo info){
         return -1;
     }
 
+    // check if the player was ready
+    if (cur->players[info.player_id]->is_ready == 1) {
+        printf("jsuis la");
+        cur->amout_of_ready_players--;
+    }
     // Remove the player from the game
     free(cur->players[info.player_id]);
     cur->players[info.player_id] = NULL;
@@ -221,9 +227,31 @@ int send_games(int sockfd) {
     return 0;
 }
 
-int nbPlayers(int id){
-    return games[id]->player_count;
+int increment_amout_of_ready_players(PlayerInfo info) {
+    // Check if the game exists
+    if (info.game_id < 0 || info.game_id >= MAX_GAMES) {
+        puts("Game does not exist (ID out of bounds)");
+        return -1;
+    }
+    // We are checking different values of the struct, therefore we need to lock
+    // the mutex
+    pthread_mutex_lock(&game_mutex);
+    Game* cur = games[info.game_id];
+    if (cur == NULL) {
+        puts("Game does not exist (ID not allocated)");
+        return -1;
+    }
+
+    // Increment the amount of ready players
+    cur->players[info.player_id]->is_ready = 1;
+    cur->amout_of_ready_players++;
+
+    // We finished checking / modifying values
+    pthread_mutex_unlock(&game_mutex);
+    print_games();
+    return 0;
 }
+
 
 int send_game(int sockfd ,char* buffer) {
     struct LISTQ list;
@@ -269,8 +297,8 @@ void print_games() {
     for (int i = 0; i < MAX_GAMES; i++) {
         if (game_status[i] == 1) {
             printf("-----------------\n");
-            printf("Game %d, player count : %d\n", games[i]->id,
-                   games[i]->player_count);
+            printf("Game %d, player count : %d areready %d/%d\n", games[i]->id,
+                   games[i]->player_count, games[i]->amout_of_ready_players, games[i]->player_count);
             for (int j = 0; j < MAX_PLAYERS; j++) {
                 
                 if (games[i] != NULL && games[i]->players[j] != NULL) {

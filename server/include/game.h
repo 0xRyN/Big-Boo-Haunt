@@ -21,11 +21,13 @@ typedef struct Player {
     char id[MAX_NAME + 1];
     int socket;
     int port;
+    int is_ready;
 } Player;
 typedef struct Game {
     int id;
     int player_count;
     Player *players[MAX_PLAYERS];
+    int amout_of_ready_players;
 } Game;
 typedef struct PlayerInfo {
     int player_id;

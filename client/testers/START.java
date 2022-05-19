@@ -24,9 +24,17 @@ public class START {
                 byteBuffer = ByteBuffer.allocate(a.length());
                 byteBuffer.put(a.getBytes());
             }
-            else if(a.split(" ")[0] == "START"){
+            else if(a.equals("START***")){
                 byteBuffer = ByteBuffer.allocate(a.length());
                 byteBuffer.put(a.getBytes());
+            }
+            else if(a.split(" ")[0].equals("REGIS")){
+                byteBuffer = ByteBuffer.allocate(a.length()-1);
+                String start = a.split(" ")[0]+" "+a.split(" ")[1]+" "+a.split(" ")[2];
+                byteBuffer.put(start.getBytes());
+                int val = Integer.parseInt(Character.toString(a.split(" ")[3].charAt(0)));
+                byteBuffer.put((byte) val);
+                byteBuffer.put("***".getBytes());
             }
             //System.out.println(byteBuffer.array());
             if(byteBuffer.remaining() == 0){
@@ -37,6 +45,7 @@ public class START {
                 System.out.println(new String(buffer));
             }
             else{
+                System.out.print(a.split(" ")[0]);
                 System.out.println("Invalid command");
             }
         }

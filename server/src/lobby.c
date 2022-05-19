@@ -166,6 +166,18 @@ int interact(int sockfd) {
         }
 
         else if (op == OP_START) {
+            if(has_joined == 0) {
+                // Write an error message to the client
+                char res_buffer[40];
+                sprintf(res_buffer, "DUNNO***");
+                if(safe_send(sockfd, res_buffer, 8) < 0) {
+                    puts("Error sending registration result");
+                    // Stop the connection with the client
+                    return -1;
+                }
+                continue;
+            }
+            increment_amout_of_ready_players(info);
         }
 
         else {

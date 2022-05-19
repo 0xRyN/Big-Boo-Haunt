@@ -5,7 +5,7 @@ import java.nio.ByteBuffer;
 import java.util.Scanner;
 
 
-public class LIST {
+public class READY {
     public static void main(String[] args) throws Exception {
 
 
@@ -16,10 +16,8 @@ public class LIST {
         System.out.println(new String(buffer));
 
         // Send message to server
-        ByteBuffer byteBuffer = ByteBuffer.allocate(10);
-        byteBuffer.put("LIST? ".getBytes());
-        byteBuffer.put((byte) 0);
-        byteBuffer.put("***".getBytes());
+        ByteBuffer byteBuffer = ByteBuffer.allocate(8);
+        byteBuffer.put("START***".getBytes());
         // Print the buffer in output.txt
         //System.out.println(byteBuffer.array());
         File file = new File("output.txt");

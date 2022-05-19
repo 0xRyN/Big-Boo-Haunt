@@ -66,6 +66,9 @@ int parse_operation(char* str) {
     else if(strcmp(op, "UNREG") == 0) {
         return OP_UNREG;
     }
+    else if(strcmp(op, "START") == 0) {
+        return OP_START;
+    }
 
     // TODO: Add all operations
 
