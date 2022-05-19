@@ -30,7 +30,7 @@ int op_join_game(int sockfd, char *player, int port) {
 int interact(int sockfd) {
     // Define flags for each user
     int has_joined = 0;
-    //int send_start = 0;
+    // int send_start = 0;
     PlayerInfo info = {.player_id = -1, .game_id = -1};
 
     // First, we send the games to the client
@@ -71,7 +71,7 @@ int interact(int sockfd) {
                 join_game(regis.game_id, sockfd, regis.port, regis.id);
             if (join_result.game_id < 0) {
                 puts("Error joining game");
-                return -1; //
+                return -1;  //
             }
             info = join_result;
 
@@ -89,13 +89,12 @@ int interact(int sockfd) {
 
         // Create a new game and register the user into it
         else if (op == OP_NEWPL) {
-            
             // Check if the player is already in a lobby or in a game
-            if(has_joined) {
+            if (has_joined) {
                 // Write an error message to the client
                 char res_buffer[40];
                 sprintf(res_buffer, "REGNO***");
-                if(safe_send(sockfd, res_buffer, 8) < 0) {
+                if (safe_send(sockfd, res_buffer, 8) < 0) {
                     puts("Error sending registration result");
                     // Stop the connection with the client
                     return -1;
@@ -107,9 +106,11 @@ int interact(int sockfd) {
             struct NEWPL newpl;
             newpl = parse_newpl(buffer);
             // Create a new game
-            PlayerInfo create_result = create_game(newpl.id, sockfd, newpl.port);
+            PlayerInfo create_result =
+                create_game(newpl.id, sockfd, newpl.port);
 
-            // IF the game was not created, we send an error message to the client
+            // IF the game was not created, we send an error message to the
+            // client
             if (create_result.game_id < 0) {
                 puts("Error creating game");
                 // Stop the connection with the client
@@ -122,16 +123,15 @@ int interact(int sockfd) {
             uint8_t int_id = create_result.game_id;
             sprintf(res_buffer, "REGOK %hhu***", int_id);
 
-            // Send the response to the client and if there is an error, stop the connection
+            // Send the response to the client and if there is an error, stop
+            // the connection
             if (safe_send(sockfd, res_buffer, 10) < 0) {
                 puts("Error sending registration result");
                 return -1;
             }
 
-
             has_joined = 1;
-        }
-        else if (op == OP_LISTQ){
+        } else if (op == OP_LISTQ) {
             int send_res = send_game(sockfd, buffer);
             if (send_res < 0) {
                 puts("Error sending game");
@@ -141,18 +141,18 @@ int interact(int sockfd) {
 
         else if (op == OP_UNREG) {
             // Unregister the user from the game
-            if(has_joined == 0) {
+            if (has_joined == 0) {
                 // Write an error message to the client
                 char res_buffer[40];
                 sprintf(res_buffer, "DUNNO***");
-                if(safe_send(sockfd, res_buffer, 8) < 0) {
+                if (safe_send(sockfd, res_buffer, 8) < 0) {
                     puts("Error sending registration result");
                     // Stop the connection with the client
                     return -1;
                 }
                 continue;
             }
-            //Leave the game 
+            // Leave the game
             leave_game(info);
             char res_buffer[40];
             uint8_t int_id = info.game_id;
@@ -166,11 +166,11 @@ int interact(int sockfd) {
         }
 
         else if (op == OP_START) {
-            if(has_joined == 0) {
+            if (has_joined == 0) {
                 // Write an error message to the client
                 char res_buffer[40];
                 sprintf(res_buffer, "DUNNO***");
-                if(safe_send(sockfd, res_buffer, 8) < 0) {
+                if (safe_send(sockfd, res_buffer, 8) < 0) {
                     puts("Error sending registration result");
                     // Stop the connection with the client
                     return -1;
@@ -180,12 +180,12 @@ int interact(int sockfd) {
             increment_amout_of_ready_players(info);
         }
 
-        else if(op == OP_SIZEQ){
+        else if (op == OP_SIZEQ) {
             int send_res = ask_size(sockfd, buffer);
             if (send_res < 0) {
                 char res_buffer[40];
                 sprintf(res_buffer, "DUNNO***");
-                if(safe_send(sockfd, res_buffer, 8) < 0) {
+                if (safe_send(sockfd, res_buffer, 8) < 0) {
                     puts("Error sending registration result");
                     // Stop the connection with the client
                     return -1;
@@ -194,8 +194,11 @@ int interact(int sockfd) {
             }
         }
 
-        else if(op == OP_GAMEQ){
+        else if (op == OP_GAMEQ) {
             int send_res = send_games(sockfd);
+            if (send_res < 0) {
+                puts("Error sending registration result");
+            }
         }
 
         else {
