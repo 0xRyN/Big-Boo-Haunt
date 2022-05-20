@@ -11,6 +11,7 @@ struct REGIS parse_regis(char* str);
 struct NEWPL parse_newpl(char* str);
 struct LISTQ parse_listq(char* str);
 struct SIZEQ parse_sizeq(char* str);
+struct PLMOV parse_plmov(char* str);
 int parse_operation(char* str);
 
 #endif

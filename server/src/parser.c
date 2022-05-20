@@ -54,6 +54,13 @@ struct SIZEQ parse_sizeq(char* str) {
     return res;
 }
 
+struct PLMOV parse_plmov(char* str) {
+    struct PLMOV res;
+    strncpy(res.distance, str + 6, 3);
+    printf("%s\n", res.distance);
+    return res;
+}
+
 int parse_operation(char* str) {
     char op[6];
     memcpy(op, str, 5);

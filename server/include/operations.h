@@ -63,4 +63,9 @@ struct SIZEQ {
     int opcode;
     u_int8_t game_id;
 };
+
+struct PLMOV {
+    char distance[3 + 1];
+};
+
 #endif

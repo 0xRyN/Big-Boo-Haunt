@@ -87,6 +87,53 @@ int greet_player(PlayerInfo info) {
     return 0;
 }
 
+// Send player position to player after move.
+// If position is 1 digit, add 00 before.
+// If position is 2 digits, add 0 before.
+
+int send_player_position(PlayerInfo info, int return_val) {
+    Game *game = get_game(info.game_id);
+    char buffer[80];
+    char pos_x[3 + 1];
+    char pos_y[3 + 1];
+
+    sprintf(pos_x, "%d", game->players[info.player_id]->x);
+    sprintf(pos_y, "%d", game->players[info.player_id]->y);
+
+    // If position is 1 digit, add 00 before.
+    if (game->players[info.player_id]->x < 10) {
+        sprintf(pos_x, "00%d", game->players[info.player_id]->x);
+    }
+    if (game->players[info.player_id]->y < 10) {
+        sprintf(pos_y, "00%d", game->players[info.player_id]->y);
+    }
+    // If position is 2 digits, add 0 before.
+    if (game->players[info.player_id]->x < 100 &&
+        game->players[info.player_id]->x >= 10) {
+        sprintf(pos_x, "0%d", game->players[info.player_id]->x);
+    }
+    if (game->players[info.player_id]->y < 100 &&
+        game->players[info.player_id]->y >= 10) {
+        sprintf(pos_y, "0%d", game->players[info.player_id]->y);
+    }
+
+    // Send position to player
+    if (return_val == 2) {
+        sprintf(buffer, "MOVEF %s %s***", pos_x, pos_y);
+    }
+
+    else {
+        sprintf(buffer, "MOVE! %s %s***", pos_x, pos_y);
+    }
+
+    if (safe_send(game->players[info.player_id]->socket, buffer,
+                  strlen(buffer)) < 0) {
+        puts("Error sending position");
+        return -1;
+    }
+    return return_val;
+}
+
 int ig_interact(int sockfd, PlayerInfo info, int increment_result) {
     //
     Game *game = get_game(info.game_id);
@@ -124,32 +171,91 @@ int ig_interact(int sockfd, PlayerInfo info, int increment_result) {
             }
 
             else if (op == OP_UPMOV) {
-                int mov_res = move_up(info.player_id, &(game->maze));
-                if (mov_res == -1) {
-                    puts("Can't move up");
+                int return_val = 0;
+                struct PLMOV plmov;
+                plmov = parse_plmov(buffer);
+                int to_move = atoi(plmov.distance);
+                for (int i = 0; i < to_move; i++) {
+                    int move_res = move_up(info.player_id, &(game->maze));
+
+                    if (move_res == -1) {
+                        puts("Error moving up - colliding a wall");
+                        break;
+                    }
+
+                    else if (move_res == -2) {
+                        puts("Colliding a ghost");
+                        return_val = 2;
+                    }
                 }
+
+                send_player_position(info, return_val);
             }
 
             else if (op == OP_DOMOV) {
-                int mov_res = move_down(info.player_id, &(game->maze));
-                if (mov_res == -1) {
-                    puts("Can't move down");
+                int return_val = 0;
+                struct PLMOV plmov;
+                plmov = parse_plmov(buffer);
+                int to_move = atoi(plmov.distance);
+                for (int i = 0; i < to_move; i++) {
+                    int move_res = move_down(info.player_id, &(game->maze));
+
+                    if (move_res == -1) {
+                        puts("Error moving up - colliding a wall");
+                        break;
+                    }
+
+                    else if (move_res == -2) {
+                        puts("Colliding a ghost");
+                        return_val = 2;
+                    }
                 }
+
+                send_player_position(info, return_val);
             }
 
             else if (op == OP_LEMOV) {
-                int mov_res = move_left(info.player_id, &(game->maze));
-                if (mov_res == -1) {
-                    puts("Can't move left");
+                int return_val = 0;
+                struct PLMOV plmov;
+                plmov = parse_plmov(buffer);
+                int to_move = atoi(plmov.distance);
+                for (int i = 0; i < to_move; i++) {
+                    int move_res = move_left(info.player_id, &(game->maze));
+
+                    if (move_res == -1) {
+                        puts("Error moving up - colliding a wall");
+                        break;
+                    }
+
+                    else if (move_res == -2) {
+                        puts("Colliding a ghost");
+                        return_val = 2;
+                    }
                 }
+
+                send_player_position(info, return_val);
             }
 
-            else if (op = OP_RIMOV) {
-                int mov_res = move_right(info.player_id, &(game->maze));
-                if (mov_res == -1) {
-                    puts("Can't move right");
+            else if (op == OP_RIMOV) {
+                int return_val = 0;
+                struct PLMOV plmov;
+                plmov = parse_plmov(buffer);
+                int to_move = atoi(plmov.distance);
+                for (int i = 0; i < to_move; i++) {
+                    int move_res = move_right(info.player_id, &(game->maze));
+
+                    if (move_res == -1) {
+                        puts("Error moving up - colliding a wall");
+                        break;
+                    }
+
+                    else if (move_res == -2) {
+                        puts("Colliding a ghost");
+                        return_val = 2;
+                    }
                 }
 
+                send_player_position(info, return_val);
             } else {
                 multicast_send("224.1.1.0", "5400",
                                "T'es dans ma partie ou quoi lol!! XD");
