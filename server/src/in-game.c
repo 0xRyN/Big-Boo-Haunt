@@ -119,6 +119,14 @@ int ig_interact(int sockfd, PlayerInfo info, int increment_result) {
                     puts("Error sending registration result");
                     return -1;
                 }
+            } else if (op == OP_UPMOV) {
+                /* code */
+            } else if (op == OP_DOMOV) {
+                /* code */
+            } else if (op == OP_LEMOV) {
+                /* code */
+            } else if (op = OP_RIMOV) {
+                /* code */
             } else {
                 multicast_send("224.1.1.0", "5400",
                                "T'es dans ma partie ou quoi lol!! XD");
