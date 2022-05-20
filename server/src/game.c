@@ -288,11 +288,6 @@ int increment_amout_of_ready_players(PlayerInfo info) {
         game_status[info.game_id] = 2;
         pthread_mutex_unlock(&game_mutex);
         return 1;
-        // WELCO m h w f ip port***
-        //  IP PORT ??
-        // printf("WELCO %s %s %s %s %s %d***\n", cur->id, cur->mazeHeight,
-        // cur->mazeWidth, cur->amountOfGhosts, cur->players[4]->id,
-        // cur->players[4]->port);
     }
     // We finished checking / modifying values
     pthread_mutex_unlock(&game_mutex);

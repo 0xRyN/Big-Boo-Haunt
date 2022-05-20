@@ -189,11 +189,10 @@ int interact(int sockfd) {
             if (increment_result < 0) {
                 puts("Error incrementing amount of ready players");
                 return -1;
-            } else if (increment_result == 1) {
-                // We can start the game
-                return ig_interact(sockfd, info);
-                // We are now in game.
             }
+            // We can start the game
+            return ig_interact(sockfd, info, increment_result);
+            // We are now in game.
         }
 
         else if (op == OP_SIZEQ) {
