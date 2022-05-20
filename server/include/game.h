@@ -12,6 +12,7 @@
 #include "operations.h"
 #include "parser.h"
 #include "send.h"
+#include "maze.h"
 
 #define MAX_NAME 8
 #define MAX_PLAYERS 10
@@ -33,6 +34,7 @@ typedef struct Game {
     int mazeWidth;   // PUT INTO U_INT16_T
     int mazeHeight;  // PUT INTO U_INT16_T
     int amountOfGhosts;
+    Maze maze;
 } Game;
 typedef struct PlayerInfo {
     int player_id;

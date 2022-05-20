@@ -21,18 +21,22 @@ int parse_maze(char *file_name, Maze maze) {
     for (i = 0; i < MAZE_H; i++) {
         for (j = 0; j < MAZE_W; j++) {
             c = fgetc(fp);
+            //printf("%c", c);
             if (c == '\n') {
                 j--;
                 continue;
             }
             if (c == '0') {
+                puts("je suis ici\n");
                 maze.maze[i][j] = -2;
+                printf("%d\n", maze.maze[i][j]);
             } else if (c == '1') {
                 maze.maze[i][j] = -1;
             }
         }
     }
     fclose(fp);
+    //print_maze(maze);
     return 0;
 }    
 
@@ -53,7 +57,7 @@ int put_player_id(int player_id, Maze maze){
     return 0;
 }
 
-//function that put n ghosst as -3 randomly in the maze
+//function that put n ghost as -3 randomly in the maze
 int put_ghosts(int n,Maze maze){
     maze.nb_ghost=n;
     int x, y;
@@ -61,6 +65,8 @@ int put_ghosts(int n,Maze maze){
     while(count < n){
         x = rand() % MAZE_W;
         y = rand() % MAZE_H;
+        printf("x: %d\n", x);
+        printf("y: %d\n", y);
         if(maze.maze[y][x] == -2){
             maze.maze[y][x] = -3;
             count++;

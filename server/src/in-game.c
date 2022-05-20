@@ -15,10 +15,34 @@ char *get_free_port() {
     return port;
 }
 
+int init_maze(Game *game, int nb_ghosts) {
+    Maze temp_maze;
+    printf("init_maze1\n");
+    printf("init_maze2\n");
+    parse_maze("Maze/1.txt", temp_maze);
+    printf("init_maze3\n");
+    //print_maze(game->maze);
+    //put_ghosts(nb_ghosts, maze);
+    printf("init_maze4\n");
+    print_maze(temp_maze);
+    game->maze = temp_maze;
+    
+    //for evry player in game put all the player_id in the maze with put_player_id
+    for (int i = 0; i < MAX_PLAYERS; i++) {
+        if(game->players[i]!=NULL){
+            put_player_id(i, temp_maze);
+        }
+    }
+    
+    return 0;
+}
+
 int greet_player(PlayerInfo info) {
     //
     Game *game = get_game(info.game_id);
     char *ip = get_free_ip();
+    init_maze(game, 5);
+    //print_maze(game->maze);
     // Generate random number between 1000 and 9999
     char *port = get_free_port();
     last_digit_ip++;
