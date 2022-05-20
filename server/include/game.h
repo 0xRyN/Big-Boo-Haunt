@@ -30,8 +30,8 @@ typedef struct Game {
     Player *players[MAX_PLAYERS];
     int amout_of_ready_players;
     int mazeID;
-    int mazeWidth;
-    int mazeHeight;
+    int mazeWidth;   // PUT INTO U_INT16_T
+    int mazeHeight;  // PUT INTO U_INT16_T
     int amountOfGhosts;
 } Game;
 typedef struct PlayerInfo {
@@ -50,6 +50,6 @@ void print_games();
 int send_game(int sockfd, char *buffer);
 int ask_size(int sockfd, char *buffer);
 int increment_amout_of_ready_players(PlayerInfo info);
-Game* get_game(int id);
+Game *get_game(int id);
 
 #endif

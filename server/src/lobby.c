@@ -93,7 +93,6 @@ int interact(int sockfd) {
 
                 has_joined = 1;
             }
-
         }
 
         // Create a new game and register the user into it

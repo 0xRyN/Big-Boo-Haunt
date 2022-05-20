@@ -2,7 +2,7 @@
 
 int num_games = 0;
 int game_status[MAX_GAMES];
-Game* games[MAX_GAMES];
+Game *games[MAX_GAMES];
 pthread_mutex_t game_mutex;
 
 int init_games() {
@@ -35,7 +35,7 @@ int get_game_id() {
 // Creates a new game (NEWPL) and adds the player to it
 // Will return the game ID if success, -1 otherwise
 // RETURNS STRUCT WITH GAMEID = -1 IF FAILED
-PlayerInfo create_game(char* player, int socket, int port) {
+PlayerInfo create_game(char *player, int socket, int port) {
     // Get the smallest id for the new game
     int id = get_game_id();
     printf("Creating game with id %d\n", id);
@@ -47,14 +47,14 @@ PlayerInfo create_game(char* player, int socket, int port) {
 
     // Fill in the Game struct
     games[id] = malloc(sizeof(Game));
-    Game* cur = games[id];
+    Game *cur = games[id];
     if (cur == NULL) {
         pthread_mutex_unlock(&game_mutex);
         return (PlayerInfo){.player_id = -1, .game_id = -1};
     }
 
     // Fill in the Player struct
-    for(int i = 0; i < MAX_PLAYERS; i++) {
+    for (int i = 0; i < MAX_PLAYERS; i++) {
         cur->players[i] = NULL;
     }
 
@@ -64,8 +64,8 @@ PlayerInfo create_game(char* player, int socket, int port) {
 
     // TODO : Remove this from here.
     // Read file called 1 in Maze folder and print the amount of lines
-    FILE* fp;
-    char* line = NULL;
+    FILE *fp;
+    char *line = NULL;
     size_t len = 0;
     ssize_t read;
     int size = 0;
@@ -101,7 +101,7 @@ PlayerInfo create_game(char* player, int socket, int port) {
 
 // Makes the player join a game, returns player's index in the game
 // RETURNS STRUCT WITH GAMEID = -1 IF FAILED
-PlayerInfo join_game(int id, int socket, int port, char* player) {
+PlayerInfo join_game(int id, int socket, int port, char *player) {
     printf("Player %s is joining game %d\n", player, id);
     // Check if the game exists
     if (id < 0 || id >= MAX_GAMES) {
@@ -111,7 +111,7 @@ PlayerInfo join_game(int id, int socket, int port, char* player) {
     // We are checking different values of the struct, therefore we need to lock
     // the mutex
     pthread_mutex_lock(&game_mutex);
-    Game* cur = games[id];
+    Game *cur = games[id];
     if (cur == NULL) {
         puts("Game does not exist (ID not allocated)");
         pthread_mutex_unlock(&game_mutex);
@@ -168,7 +168,7 @@ int leave_game(PlayerInfo info) {
     // We are checking different values of the struct, therefore we need to lock
     // the mutex
     pthread_mutex_lock(&game_mutex);
-    Game* cur = games[info.game_id];
+    Game *cur = games[info.game_id];
     if (cur == NULL) {
         puts("Game does not exist (ID not allocated)");
         pthread_mutex_unlock(&game_mutex);
@@ -272,7 +272,7 @@ int increment_amout_of_ready_players(PlayerInfo info) {
     // We are checking different values of the struct, therefore we need to lock
     // the mutex
     pthread_mutex_lock(&game_mutex);
-    Game* cur = games[info.game_id];
+    Game *cur = games[info.game_id];
     if (cur == NULL) {
         puts("Game does not exist (ID not allocated)");
         pthread_mutex_unlock(&game_mutex);
@@ -300,7 +300,7 @@ int increment_amout_of_ready_players(PlayerInfo info) {
     return 0;
 }
 
-int ask_size(int sockfd, char* buffer) {
+int ask_size(int sockfd, char *buffer) {
     struct SIZEQ list;
     list = parse_sizeq(buffer);
     int game_id = list.game_id;
@@ -326,7 +326,7 @@ int ask_size(int sockfd, char* buffer) {
     return 0;
 }
 
-int send_game(int sockfd, char* buffer) {
+int send_game(int sockfd, char *buffer) {
     struct LISTQ list;
     list = parse_listq(buffer);
     int game_id = list.game_id;
@@ -353,7 +353,6 @@ int send_game(int sockfd, char* buffer) {
                 }
             }
         }
-
     } else {
         char game_str[9];
         snprintf(game_str, 9, "DUNNO***");
@@ -365,9 +364,7 @@ int send_game(int sockfd, char* buffer) {
     return 0;
 }
 
-Game* get_game(int id){
-    return games[id];
-}
+Game *get_game(int id) { return games[id]; }
 
 void print_games() {
     printf(

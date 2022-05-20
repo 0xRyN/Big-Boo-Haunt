@@ -3,6 +3,9 @@ import java.io.FileOutputStream;
 import java.net.Socket;
 import java.nio.ByteBuffer;
 import java.util.Scanner;
+import java.io.*;
+import java.net.*;
+
 
 public class REGIS {
     public static void main(String[] args) throws Exception {

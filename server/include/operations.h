@@ -54,7 +54,6 @@ struct REGIS {
     u_int8_t game_id;
 };
 
-
 struct LISTQ {
     int opcode;
     u_int8_t game_id;
