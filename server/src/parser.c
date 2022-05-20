@@ -39,7 +39,7 @@ struct REGIS parse_regis(char* str) {
     return res;
 }
 
-//Protocol : LISTQ id***
+// Protocol : LISTQ id***
 struct LISTQ parse_listq(char* str) {
     struct LISTQ res;
     res.opcode = OP_LISTQ;
@@ -53,7 +53,6 @@ struct SIZEQ parse_sizeq(char* str) {
     memcpy(&res.game_id, str + 6, 1);
     return res;
 }
-
 
 int parse_operation(char* str) {
     char op[6];
@@ -69,20 +68,50 @@ int parse_operation(char* str) {
 
     else if (strcmp(op, "LIST?") == 0) {
         return OP_LISTQ;
-    }    
-    else if(strcmp(op, "UNREG") == 0) {
+    } else if (strcmp(op, "UNREG") == 0) {
         return OP_UNREG;
-    }
-    else if(strcmp(op, "START") == 0) {
+    } else if (strcmp(op, "START") == 0) {
         return OP_START;
     }
 
-    else if(strcmp(op, "SIZE?") == 0) {
+    else if (strcmp(op, "SIZE?") == 0) {
         return OP_SIZEQ;
     }
 
-        else if(strcmp(op, "GAME?") == 0) {
+    else if (strcmp(op, "GAME?") == 0) {
         return OP_GAMEQ;
+    }
+
+    else if (strcmp(op, "UPMOV") == 0) {
+        return OP_UPMOV;
+    }
+
+    else if (strcmp(op, "LEMOV") == 0) {
+        return OP_LEMOV;
+    }
+
+    else if (strcmp(op, "RIMOV") == 0) {
+        return OP_RIMOV;
+    }
+
+    else if (strcmp(op, "DOMOV") == 0) {
+        return OP_DOMOV;
+    }
+
+    else if (strcmp(op, "IQUIT") == 0) {
+        return OP_IQUIT;
+    }
+
+    else if (strcmp(op, "GLIS?") == 0) {
+        return OP_GLISQ;
+    }
+
+    else if (strcmp(op, "MALL?") == 0) {
+        return OP_MALLQ;
+    }
+
+    else if (strcmp(op, "SEND?") == 0) {
+        return OP_SENDQ;
     }
 
     // TODO: Add all operations
