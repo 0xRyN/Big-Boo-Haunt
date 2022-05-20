@@ -108,7 +108,9 @@ int ig_interact(int sockfd, PlayerInfo info, int increment_result) {
         if (op < 0) {
             puts("Invalid operation");
             return -1;
-        } else {
+        }
+
+        else {
             if (op == OP_MALLQ) {
                 printf("message all :\n");
                 multicast_send("224.1.1.0", "5400", buffer);
@@ -119,14 +121,35 @@ int ig_interact(int sockfd, PlayerInfo info, int increment_result) {
                     puts("Error sending registration result");
                     return -1;
                 }
-            } else if (op == OP_UPMOV) {
-                /* code */
-            } else if (op == OP_DOMOV) {
-                /* code */
-            } else if (op == OP_LEMOV) {
-                /* code */
-            } else if (op = OP_RIMOV) {
-                /* code */
+            }
+
+            else if (op == OP_UPMOV) {
+                int mov_res = move_up(info.player_id, &(game->maze));
+                if (mov_res == -1) {
+                    puts("Can't move up");
+                }
+            }
+
+            else if (op == OP_DOMOV) {
+                int mov_res = move_down(info.player_id, &(game->maze));
+                if (mov_res == -1) {
+                    puts("Can't move down");
+                }
+            }
+
+            else if (op == OP_LEMOV) {
+                int mov_res = move_left(info.player_id, &(game->maze));
+                if (mov_res == -1) {
+                    puts("Can't move left");
+                }
+            }
+
+            else if (op = OP_RIMOV) {
+                int mov_res = move_right(info.player_id, &(game->maze));
+                if (mov_res == -1) {
+                    puts("Can't move right");
+                }
+
             } else {
                 multicast_send("224.1.1.0", "5400",
                                "T'es dans ma partie ou quoi lol!! XD");
