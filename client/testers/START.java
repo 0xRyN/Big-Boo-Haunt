@@ -1,5 +1,7 @@
 import java.io.File;
 import java.io.FileOutputStream;
+import java.net.InetAddress;
+import java.net.MulticastSocket;
 import java.net.Socket;
 import java.nio.ByteBuffer;
 import java.util.Scanner;
@@ -61,8 +63,20 @@ public class START {
                     socket.getOutputStream().write(byteBuffer.array());
                     buffer = new byte[1024];
                     read = socket.getInputStream().read(buffer);
-                    System.out.println(new String(buffer));
-
+                    String buffContent = new String(buffer);
+                    System.out.println(buffContent);
+                    // get ip and port in new String(buffer) from the message "WELCO m h w f ip
+                    // port***"
+                    String[] buffargs = buffContent.split(" ");
+                    String ip = buffargs[5].replace("#", "");
+                    int port = Integer.parseInt(buffargs[6].replace("*", ""));
+                    System.out.println("Ecouter l'ip et le port : " + ip + ":" + port);
+                    // Create new bradcast item
+                    InetAddress group = InetAddress.getByName(ip);
+                    MulticastSocket s = new MulticastSocket(port);
+                    s.joinGroup(group);
+                    Broadcast broadcast = new Broadcast(s);
+                    broadcast.run();
                 } else {
                     socket.getOutputStream().write(byteBuffer.array());
                     buffer = new byte[1024];
