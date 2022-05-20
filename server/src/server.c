@@ -33,13 +33,14 @@ int init_server() {
 }
 
 void *handle_client(void *arg) {
-    int sockfd = *(int *)arg;
-    int interact_return = interact(sockfd);
+    Thread_Args *args = (Thread_Args *)arg;
+    int interact_return = interact(args);
     if (interact_return < 0) {
         puts("Error interacting with client");
         perror("interact");
     }
-    close(sockfd);
+    close(args->sockfd);
+    free(args);
     // TODO : Join threads at the end and check for errors
     return NULL;
 }
@@ -68,8 +69,12 @@ int main() {
             return -1;
         }
 
+        Thread_Args *args = malloc(sizeof(Thread_Args));
+        args->sockfd = newsockfd;
+        args->client_addr = cli_addr;
+
         pthread_t tid;
-        pthread_create(&tid, NULL, handle_client, &newsockfd);
+        pthread_create(&tid, NULL, handle_client, args);
     }
     print_games();
     return 0;

@@ -26,6 +26,7 @@ typedef struct Player {
     int is_ready;
     int x;
     int y;
+    struct sockaddr_in *addr;
 } Player;
 typedef struct Game {
     int id;
@@ -44,8 +45,10 @@ typedef struct PlayerInfo {
 } PlayerInfo;
 
 int init_games();
-PlayerInfo create_game(char *player, int socket, int port);
-PlayerInfo join_game(int id, int socket, int port, char *player);
+PlayerInfo create_game(char *player, int socket, int port,
+                       struct sockaddr_in *addr);
+PlayerInfo join_game(int id, int socket, int port, char *player,
+                     struct sockaddr_in *addr);
 int leave_game(PlayerInfo info);
 int destroy_game(int id);
 void print_games();

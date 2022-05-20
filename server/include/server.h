@@ -16,6 +16,7 @@
 
 #include "game.h"
 #include "lobby.h"
+#include "thread-args.h"
 
 #define PORT "8080"
 

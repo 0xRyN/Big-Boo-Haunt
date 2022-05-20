@@ -10,24 +10,25 @@ int op_send_games(int sockfd) {
     return 0;
 }
 
-int op_join_game(int sockfd, char *player, int port) {
-    // Get game ID
-    int id;
-    if (recv(sockfd, &id, sizeof(int), 0) < 0) {
-        puts("Error receiving game ID");
-        return -1;
-    }
+// int op_join_game(int sockfd, char *player, int port) {
+//     // Get game ID
+//     int id;
+//     if (recv(sockfd, &id, sizeof(int), 0) < 0) {
+//         puts("Error receiving game ID");
+//         return -1;
+//     }
 
-    // Join game
-    PlayerInfo res = join_game(id, sockfd, port, player);
-    if (res.game_id < 0) {
-        puts("Error joining game");
-        return -1;
-    }
-    return 0;
-}
+//     // Join game
+//     PlayerInfo res = join_game(id, sockfd, port, player, );
+//     if (res.game_id < 0) {
+//         puts("Error joining game");
+//         return -1;
+//     }
+//     return 0;
+// }
 
-int interact(int sockfd) {
+int interact(Thread_Args *args) {
+    int sockfd = args->sockfd;
     // Define flags for each user
     int has_joined = 0;
     // int send_start = 0;
@@ -70,7 +71,8 @@ int interact(int sockfd) {
             struct REGIS regis;
             regis = parse_regis(buffer);
             PlayerInfo join_result =
-                join_game(regis.game_id, sockfd, regis.port, regis.id);
+                join_game(regis.game_id, sockfd, regis.port, regis.id,
+                          &(args->client_addr));
             if (join_result.game_id < 0) {
                 puts("Error joining game");
                 char res_buffer[40];
@@ -115,7 +117,7 @@ int interact(int sockfd) {
             newpl = parse_newpl(buffer);
             // Create a new game
             PlayerInfo create_result =
-                create_game(newpl.id, sockfd, newpl.port);
+                create_game(newpl.id, sockfd, newpl.port, &(args->client_addr));
 
             // IF the game was not created, we send an error message to the
             // client
