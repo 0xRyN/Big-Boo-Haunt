@@ -74,15 +74,19 @@ public class START {
                         String[] buffargs = buffContent.split(" ");
                         String ip = buffargs[5].substring(0, 9);
                         int port = Integer.parseInt(buffargs[6].substring(0, 4));
-                        System.out.println("Ecouter l'ip et le port : " + ip + ":" + port);
+                        // System.out.println("Ecouter l'ip et le port : " + ip + ":" + port);
                         // Create new bradcast item
                         InetAddress group = InetAddress.getByName(ip);
                         MulticastSocket s = new MulticastSocket(port);
                         s.joinGroup(group);
                         Broadcast broadcast = new Broadcast(s);
                         broadcast.start();
-                        System.out.println("Started broadcast");
+                        // System.out.println("Started broadcast");
                         is_ingame = true;
+                        buffer = new byte[1024];
+                        read = socket.getInputStream().read(buffer);
+                        buffContent = new String(buffer);
+                        System.out.println(buffContent);
                     } else {
                         socket.getOutputStream().write(byteBuffer.array());
                         buffer = new byte[1024];
@@ -98,12 +102,22 @@ public class START {
                 String a = scanner.nextLine();
                 // System.out.println(a);
                 ByteBuffer byteBuffer = ByteBuffer.allocate(a.length());
-                byteBuffer.put(a.getBytes());
+                if (a.split(" ")[0].equals("MALL?")) {
+                    byteBuffer = ByteBuffer.allocate(a.length());
+                    byteBuffer.put(a.getBytes());
+                    socket.getOutputStream().write(byteBuffer.array());
+                    buffer = new byte[1024];
+                    read = socket.getInputStream().read(buffer);
+                    System.out.println(new String(buffer));
+                } else {
+                    byteBuffer.put(a.getBytes());
 
-                socket.getOutputStream().write(byteBuffer.array());
-                buffer = new byte[1024];
-                read = socket.getInputStream().read(buffer);
-                System.out.println(new String(buffer));
+                    socket.getOutputStream().write(byteBuffer.array());
+                    buffer = new byte[1024];
+                    read = socket.getInputStream().read(buffer);
+                    System.out.println(new String(buffer));
+                }
+
             }
 
         }

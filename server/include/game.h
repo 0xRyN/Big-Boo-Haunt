@@ -9,10 +9,10 @@
 #include <sys/types.h>
 #include <unistd.h>
 
+#include "maze.h"
 #include "operations.h"
 #include "parser.h"
 #include "send.h"
-#include "maze.h"
 
 #define MAX_NAME 8
 #define MAX_PLAYERS 10
@@ -24,6 +24,8 @@ typedef struct Player {
     int socket;
     int port;
     int is_ready;
+    int x;
+    int y;
 } Player;
 typedef struct Game {
     int id;

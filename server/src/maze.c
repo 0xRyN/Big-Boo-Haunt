@@ -35,7 +35,7 @@ int parse_maze(char *file_name, Maze *maze) {
 }
 
 // function that put a player_id randomly in the maze
-int put_player_id(int player_id, Maze *maze) {
+int **put_player_id(int player_id, Maze *maze) {
     maze->nb_players = maze->nb_players + 1;
     int x, y;
     int count = 0;
@@ -47,7 +47,12 @@ int put_player_id(int player_id, Maze *maze) {
             count++;
         }
     }
-    return 0;
+    int **pos = malloc(2 * sizeof(int *));
+    pos[0] = malloc(sizeof(int));
+    pos[1] = malloc(sizeof(int));
+    *(pos[0]) = x;
+    *(pos[1]) = y;
+    return pos;
 }
 
 // function that put n ghost as -3 randomly in the maze
@@ -58,8 +63,6 @@ int put_ghosts(int n, Maze *maze) {
     while (count < n) {
         x = rand() % MAZE_W;
         y = rand() % MAZE_H;
-        printf("x: %d\n", x);
-        printf("y: %d\n", y);
         if (maze->grid[y][x] == -2) {
             maze->grid[y][x] = -3;
             count++;

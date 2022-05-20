@@ -23,7 +23,16 @@ int init_maze(Game *game, int nb_ghosts) {
     print_maze(game->maze);
     for (int i = 0; i < MAX_PLAYERS; i++) {
         if (game->players[i] != NULL) {
-            put_player_id(i, &(game->maze));
+            int **pos = put_player_id(i, &(game->maze));
+            game->players[i]->x = *(pos[0]);
+            game->players[i]->y = *(pos[1]);
+            printf("x: %d\n", game->players[i]->x);
+            printf("y: %d\n", game->players[i]->y);
+            free(pos[0]);
+            free(pos[1]);
+            free(pos);
+            printf("POSITION X: %d\n", game->players[i]->x);
+            printf("POSITION Y: %d\n", game->players[i]->y);
         }
     }
     print_maze(game->maze);
@@ -62,6 +71,14 @@ int greet_player(PlayerInfo info) {
                 puts("Error sending greeting");
                 return -1;
             }
+            char buffer2[80];
+            sprintf(buffer2, "POSIT %d %d %d***", info.player_id,
+                    game->players[j]->x, game->players[j]->y);
+            if (safe_send(game->players[j]->socket, buffer2, strlen(buffer2)) <
+                0) {
+                puts("Error sending greeting");
+                return -1;
+            }
         }
     }
     free(ip);
@@ -78,8 +95,8 @@ int ig_interact(int sockfd, PlayerInfo info, int increment_result) {
     }
     while (1) {
         printf("Waiting for message\n");
-        char buffer[80];
-        int res = safe_receive(sockfd, buffer, 80);
+        char buffer[100];
+        int res = safe_receive(sockfd, buffer, 100);
         if (res < 0) {
             puts("Client disconnected !");
             leave_game(info);
@@ -92,13 +109,25 @@ int ig_interact(int sockfd, PlayerInfo info, int increment_result) {
             puts("Invalid operation");
             return -1;
         } else {
-            multicast_send("224.1.1.0", "5400",
-                           "T'es dans ma partie ou quoi lol!! XD");
-            char res_buffer[40];
-            sprintf(res_buffer, "REGOK***");
-            if (safe_send(sockfd, res_buffer, 8) < 0) {
-                puts("Error sending registration result");
-                return -1;
+            if (op == OP_MALLQ) {
+                printf("message all :\n");
+                multicast_send("224.1.1.0", "5400", buffer);
+                char res_buffer[40];
+
+                sprintf(res_buffer, "MALL!***");
+                if (safe_send(sockfd, res_buffer, 8) < 0) {
+                    puts("Error sending registration result");
+                    return -1;
+                }
+            } else {
+                multicast_send("224.1.1.0", "5400",
+                               "T'es dans ma partie ou quoi lol!! XD");
+                char res_buffer[40];
+                sprintf(res_buffer, "REGOK***");
+                if (safe_send(sockfd, res_buffer, 8) < 0) {
+                    puts("Error sending registration result");
+                    return -1;
+                }
             }
             printf("ICI\n");
         }
