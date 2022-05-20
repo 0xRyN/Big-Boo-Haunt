@@ -109,6 +109,13 @@ public class START {
                     buffer = new byte[1024];
                     read = socket.getInputStream().read(buffer);
                     System.out.println(new String(buffer));
+                } else if (a.split(" ")[0].equals("UPMOV") || a.split(" ")[0].equals("DOMOV")
+                        || a.split(" ")[0].equals("LEMOV") || a.split(" ")[0].equals("RIMOV")) {
+                    byteBuffer = ByteBuffer.allocate(a.length());
+                    String start = a.split(" ")[0] + " ";
+                    byteBuffer.put(start.getBytes());
+                    byteBuffer.put((byte) Integer.parseInt(Character.toString(a.split(" ")[1].charAt(0))));
+                    byteBuffer.put("***".getBytes());
                 } else {
                     byteBuffer.put(a.getBytes());
 
