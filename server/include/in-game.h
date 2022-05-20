@@ -2,6 +2,7 @@
 #define __IN_GAME_H__
 
 #include "game.h"
+#include "multicast.h"
 #include "recieve.h"
 #include "send.h"
 

@@ -1,10 +1,11 @@
 import java.net.*;
-public class Broadcast implements Runnable {
+
+public class Broadcast extends Thread {
     private static DatagramPacket packet;
     private static MulticastSocket socket;
     private static byte[] buffer;
 
-    public Broadcast(MulticastSocket socket){
+    public Broadcast(MulticastSocket socket) {
         Broadcast.packet = new DatagramPacket(new byte[1024], 1024);
         Broadcast.socket = socket;
         Broadcast.buffer = new byte[1024];
@@ -12,7 +13,7 @@ public class Broadcast implements Runnable {
 
     @Override
     public void run() {
-        while(true){
+        while (true) {
             try {
                 socket.receive(packet);
                 buffer = packet.getData();
@@ -22,5 +23,5 @@ public class Broadcast implements Runnable {
             }
         }
     }
-    
+
 }

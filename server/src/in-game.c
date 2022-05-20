@@ -57,7 +57,30 @@ int ig_interact(int sockfd, PlayerInfo info, int increment_result) {
         greet_player(info);
     }
     while (1) {
+        printf("Waiting for message\n");
         char buffer[80];
-
-        return 0;
+        int res = safe_receive(sockfd, buffer, 80);
+        if (res < 0) {
+            puts("Client disconnected !");
+            leave_game(info);
+            info.player_id = -1;
+            info.game_id = -1;
+            return 0;
+        }
+        int op = parse_operation(buffer);
+        if (op < 0) {
+            puts("Invalid operation");
+            return -1;
+        } else {
+            multicast_send("224.1.1.0", "5400",
+                           "T'es dans ma partie ou quoi lol!! XD");
+            char res_buffer[40];
+            sprintf(res_buffer, "REGOK***");
+            if (safe_send(sockfd, res_buffer, 8) < 0) {
+                puts("Error sending registration result");
+                return -1;
+            }
+            printf("ICI\n");
+        }
     }
+}
