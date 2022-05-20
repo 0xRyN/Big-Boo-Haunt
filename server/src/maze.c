@@ -36,6 +36,7 @@ int parse_maze(char *file_name, Maze *maze) {
 
 // function that put a player_id randomly in the maze
 int **put_player_id(int player_id, Maze *maze) {
+    srand(time(NULL));
     maze->nb_players = maze->nb_players + 1;
     int x, y;
     int count = 0;
@@ -57,6 +58,7 @@ int **put_player_id(int player_id, Maze *maze) {
 
 // function that put n ghost as -3 randomly in the maze
 int put_ghosts(int n, Maze *maze) {
+    srand(time(NULL));
     maze->nb_ghost = n;
     int x, y;
     int count = 0;
