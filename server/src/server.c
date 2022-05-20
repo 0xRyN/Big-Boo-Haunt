@@ -7,6 +7,9 @@ int init_server() {
         perror("socket");
         return -1;
     }
+    int option = 1;
+    setsockopt(sockfd, SOL_SOCKET, SO_REUSEADDR, &option,
+               sizeof(option));  // TO REMOVE
 
     // Bind the socket to the port
     struct sockaddr_in serv_addr;

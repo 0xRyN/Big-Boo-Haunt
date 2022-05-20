@@ -68,8 +68,8 @@ public class START {
                     // get ip and port in new String(buffer) from the message "WELCO m h w f ip
                     // port***"
                     String[] buffargs = buffContent.split(" ");
-                    String ip = buffargs[5].replace("#", "");
-                    int port = Integer.parseInt(buffargs[6].replace("*", ""));
+                    String ip = buffargs[5].substring(0, 9);
+                    int port = Integer.parseInt(buffargs[6].substring(0, 4));
                     System.out.println("Ecouter l'ip et le port : " + ip + ":" + port);
                     // Create new bradcast item
                     InetAddress group = InetAddress.getByName(ip);

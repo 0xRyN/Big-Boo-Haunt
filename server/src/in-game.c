@@ -9,20 +9,31 @@ char *get_free_ip() {
     return ip;
 }
 
+char *get_free_port() {
+    char *port = malloc(6);
+    sprintf(port, "540%d", last_digit_ip);
+    return port;
+}
+
 int greet_player(PlayerInfo info) {
     //
     Game *game = get_game(info.game_id);
     char *ip = get_free_ip();
     // Generate random number between 1000 and 9999
-    int portGame = rand() % 10000 + 1000;
-    char port[5];
-    sprintf(port, "%d", portGame);
+    char *port = get_free_port();
     for (int j = 0; j < MAX_PLAYERS; j++) {
         if (game != NULL && game->players[j] != NULL) {
             char buffer[80];
+            printf("info.player_id: %d\n", info.player_id);
+            printf("mazeHeight: %d\n", game->mazeHeight);
+            printf("mazeWidth: %d\n", game->mazeWidth);
+            printf("amountOfGhosts: %d\n", game->amountOfGhosts);
+            printf("ip: %s\n", ip);
+            printf("port: %s\n", port);
             sprintf(buffer, "WELCO %d %hu %hu %d %s %s***", info.game_id,
                     game->mazeHeight, game->mazeWidth, game->amountOfGhosts, ip,
                     port);
+            printf("%s***\n", port);
             if (safe_send(game->players[j]->socket, buffer, strlen(buffer)) <
                 0) {
                 free(ip);
@@ -33,6 +44,7 @@ int greet_player(PlayerInfo info) {
         }
     }
     free(ip);
+    free(port);
 
     return 0;
 }
