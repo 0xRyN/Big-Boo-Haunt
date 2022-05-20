@@ -74,23 +74,23 @@ int put_ghosts(int n, Maze *maze) {
 }
 
 // function move_up to move the player_id up if possible
-int move_up(int player_id, Maze maze) {
+int move_up(int player_id, Maze* maze) {
     int x, y;
     for (y = 0; y < MAZE_H; y++) {
         for (x = 0; x < MAZE_W; x++) {
-            if (maze.grid[y][x] == player_id) {
+            if (maze-> grid[y][x] == player_id) {
                 // here we check if the player hit a ghost
                 // if he hit on the ghost disappear
                 // and the function return 2
                 if(y-1 < 0){
                     return -1;
-                }else if (maze.grid[y - 1][x] == -3) {
-                    maze.grid[y][x] = -2;
-                    maze.grid[y - 1][x] = player_id;
+                }else if (maze-> grid[y - 1][x] == -3) {
+                    maze-> grid[y][x] = -2;
+                    maze-> grid[y - 1][x] = player_id;
                     return 2;
-                } else if (maze.grid[y - 1][x] == -2) {
-                    maze.grid[y][x] = -2;
-                    maze.grid[y - 1][x] = player_id;
+                } else if (maze-> grid[y - 1][x] == -2) {
+                    maze-> grid[y][x] = -2;
+                    maze-> grid[y - 1][x] = player_id;
                     return 0;
                 }
             }
@@ -99,21 +99,21 @@ int move_up(int player_id, Maze maze) {
     return -1;
 }
 // function move_down to move the player_id down if possible
-int move_down(int player_id, Maze maze) {
+int move_down(int player_id, Maze* maze) {
     int x, y;
     for (y = 0; y < MAZE_H; y++) {
         for (x = 0; x < MAZE_W; x++) {
             // check if it's -3 and if it's -3 we return 2
             if(y+1 >= MAZE_H){
                 return -1;
-            }else if (maze.grid[y + 1][x] == -3) {
-                maze.grid[y][x] = -2;
-                maze.grid[y + 1][x] = player_id;
+            }else if (maze-> grid[y + 1][x] == -3) {
+                maze-> grid[y][x] = -2;
+                maze-> grid[y + 1][x] = player_id;
                 return 2;
-            } else if (maze.grid[y][x] == player_id) {
-                if (maze.grid[y + 1][x] == -2) {
-                    maze.grid[y][x] = -2;
-                    maze.grid[y + 1][x] = player_id;
+            } else if (maze-> grid[y][x] == player_id) {
+                if (maze-> grid[y + 1][x] == -2) {
+                    maze-> grid[y][x] = -2;
+                    maze-> grid[y + 1][x] = player_id;
                     return 0;
                 }
             }
@@ -122,20 +122,20 @@ int move_down(int player_id, Maze maze) {
     return -1;
 }
 // function move_left to move the player_id left if possible
-int move_left(int player_id, Maze maze) {
+int move_left(int player_id, Maze* maze) {
     int x, y;
     for (y = 0; y < MAZE_H; y++) {
         for (x = 0; x < MAZE_W; x++) {
-            if (maze.grid[y][x] == player_id) {
+            if (maze-> grid[y][x] == player_id) {
                 if(x-1 < 0){
                     return -1;
-                }else if (maze.grid[y][x - 1] == -3) {
-                    maze.grid[y][x] = -2;
-                    maze.grid[y][x - 1] = player_id;
+                }else if (maze-> grid[y][x - 1] == -3) {
+                    maze-> grid[y][x] = -2;
+                    maze-> grid[y][x - 1] = player_id;
                     return 2;
-                } else if (maze.grid[y][x - 1] == -2) {
-                    maze.grid[y][x] = -2;
-                    maze.grid[y][x - 1] = player_id;
+                } else if (maze-> grid[y][x - 1] == -2) {
+                    maze-> grid[y][x] = -2;
+                    maze-> grid[y][x - 1] = player_id;
                     return 0;
                 }
             }
@@ -144,20 +144,20 @@ int move_left(int player_id, Maze maze) {
     return -1;
 }
 // function move_right to move the player_id right if possible
-int move_right(int player_id, Maze maze) {
+int move_right(int player_id, Maze* maze) {
     int x, y;
     for (y = 0; y < MAZE_H; y++) {
         for (x = 0; x < MAZE_W; x++) {
-            if (maze.grid[y][x] == player_id) {
+            if (maze-> grid[y][x] == player_id) {
                 if(x+1>=MAZE_W){
                     return -1;
-                }else if (maze.grid[y][x + 1] == -3) {
-                    maze.grid[y][x] = -2;
-                    maze.grid[y][x + 1] = player_id;
+                }else if (maze-> grid[y][x + 1] == -3) {
+                    maze-> grid[y][x] = -2;
+                    maze-> grid[y][x + 1] = player_id;
                     return 2;
-                } else if (maze.grid[y][x + 1] == -2) {
-                    maze.grid[y][x] = -2;
-                    maze.grid[y][x + 1] = player_id;
+                } else if (maze-> grid[y][x + 1] == -2) {
+                    maze-> grid[y][x] = -2;
+                    maze-> grid[y][x + 1] = player_id;
                     return 0;
                 }
             }
@@ -165,6 +165,80 @@ int move_right(int player_id, Maze maze) {
     }
     return -1;
 }
+
+
+int move_up_ghost(Maze* maze, int x, int y){
+    //move up the ghost at the position x y int the maze
+    if(y-1 < 0){
+        return -1;
+    }else if (maze-> grid[y - 1][x] == -2) {
+        maze-> grid[y][x] = -2;
+        maze-> grid[y - 1][x] = -3;
+        return 0;
+    }
+    return -1;
+}
+int move_down_ghost(Maze* maze, int x, int y){
+    //move down the ghost at the position x y int the maze
+    if(y+1 >= MAZE_H){
+        return -1;
+    }else if (maze-> grid[y + 1][x] == -2) {
+        maze-> grid[y][x] = -2;
+        maze-> grid[y + 1][x] = -3;
+        return 0;
+    }
+    return -1;
+}
+int move_left_ghost(Maze* maze, int x, int y){
+    //move left the ghost at the position x y int the maze
+    if(x-1 < 0){
+        return -1;
+    }else if (maze-> grid[y][x - 1] == -2) {
+        maze-> grid[y][x] = -2;
+        maze-> grid[y][x - 1] = -3;
+        return 0;
+    }
+    return -1;
+}
+int move_right_ghost(Maze* maze, int x, int y){
+    //move right the ghost at the position x y int the maze
+    if(x+1>=MAZE_W){
+        return -1;
+    }else if (maze-> grid[y][x + 1] == -2) {
+        maze-> grid[y][x] = -2;
+        maze-> grid[y][x + 1] = -3;
+        return 0;
+    }
+    return -1;
+}
+
+//move randomly all the ghosts
+int move_ghosts(Maze* maze){
+    int x, y;
+    for (y = 0; y < MAZE_H; y++) {
+        for (x = 0; x < MAZE_W; x++) {
+            if (maze-> grid[y][x] == -3) {
+                int random = rand() % 4;
+                switch (random) {
+                    case 0:
+                        move_up_ghost(maze, x, y);
+                        break;
+                    case 1:
+                        move_down_ghost(maze, x, y);
+                        break;
+                    case 2:
+                        move_left_ghost(maze, x, y);
+                        break;
+                    case 3:
+                        move_right_ghost(maze, x, y);
+                        break;
+                }
+            }
+        }
+    }
+    return 0;
+}
+
 
 // main function that print the maze
 void print_maze(Maze maze) {
@@ -180,7 +254,7 @@ void print_maze(Maze maze) {
             } else {
                 printf("%d ", maze.grid[j][i]);
             }
-            // printf("%d", maze.grid[i][j]);
+            // printf("%d", maze-> grid[i][j]);
         }
         printf("\n");
     }
