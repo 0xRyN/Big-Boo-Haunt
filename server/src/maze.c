@@ -82,7 +82,9 @@ int move_up(int player_id, Maze maze) {
                 // here we check if the player hit a ghost
                 // if he hit on the ghost disappear
                 // and the function return 2
-                if (maze.grid[y - 1][x] == -3) {
+                if(y-1 < 0){
+                    return -1;
+                }else if (maze.grid[y - 1][x] == -3) {
                     maze.grid[y][x] = -2;
                     maze.grid[y - 1][x] = player_id;
                     return 2;
@@ -102,7 +104,9 @@ int move_down(int player_id, Maze maze) {
     for (y = 0; y < MAZE_H; y++) {
         for (x = 0; x < MAZE_W; x++) {
             // check if it's -3 and if it's -3 we return 2
-            if (maze.grid[y + 1][x] == -3) {
+            if(y+1 >= MAZE_H){
+                return -1;
+            }else if (maze.grid[y + 1][x] == -3) {
                 maze.grid[y][x] = -2;
                 maze.grid[y + 1][x] = player_id;
                 return 2;
@@ -123,7 +127,9 @@ int move_left(int player_id, Maze maze) {
     for (y = 0; y < MAZE_H; y++) {
         for (x = 0; x < MAZE_W; x++) {
             if (maze.grid[y][x] == player_id) {
-                if (maze.grid[y][x - 1] == -3) {
+                if(x-1 < 0){
+                    return -1;
+                }else if (maze.grid[y][x - 1] == -3) {
                     maze.grid[y][x] = -2;
                     maze.grid[y][x - 1] = player_id;
                     return 2;
@@ -143,7 +149,9 @@ int move_right(int player_id, Maze maze) {
     for (y = 0; y < MAZE_H; y++) {
         for (x = 0; x < MAZE_W; x++) {
             if (maze.grid[y][x] == player_id) {
-                if (maze.grid[y][x + 1] == -3) {
+                if(x+1>=MAZE_W){
+                    return -1;
+                }else if (maze.grid[y][x + 1] == -3) {
                     maze.grid[y][x] = -2;
                     maze.grid[y][x + 1] = player_id;
                     return 2;
