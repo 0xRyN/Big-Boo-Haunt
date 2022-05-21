@@ -399,6 +399,7 @@ int ig_interact(int sockfd, PlayerInfo info, int increment_result) {
                 memcpy(firstres, "GLIS! ", 6);
                 memcpy(firstres + 6, &amount_players, 1);
                 memcpy(firstres + 7, "***", 3);
+                firstres[10] = '\0';
                 if (safe_send(sockfd, firstres, strlen(firstres)) < 0) {
                     puts("Error sending message");
                     return -1;
@@ -445,7 +446,7 @@ int ig_interact(int sockfd, PlayerInfo info, int increment_result) {
 
                         char resbuffer[30];
                         sprintf(resbuffer, "GPLYR %s %s %s %s***",
-                                game->players[i]->id, score, x, y);
+                                game->players[i]->id, x, y, score);
                         if (safe_send(sockfd, resbuffer, strlen(resbuffer)) <
                             0) {
                             puts("Error sending message");
