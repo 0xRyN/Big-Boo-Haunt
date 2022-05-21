@@ -256,7 +256,7 @@ int ig_interact(int sockfd, PlayerInfo info, int increment_result) {
                 plmov = parse_plmov(buffer);
                 int to_move = atoi(plmov.distance);
                 for (int i = 0; i < to_move; i++) {
-                    int move_res = move_up(info.player_id, &(game->maze));
+                    int move_res = move_up(info.player_id, &(game->maze), game->players[info.player_id]->x, game->players[info.player_id]->y);
 
                     if (move_res == -1) {
                         puts("Error moving up - colliding a wall");
@@ -269,9 +269,12 @@ int ig_interact(int sockfd, PlayerInfo info, int increment_result) {
                         game->amountOfGhosts--;
                         return_val = 2;
                     }
-                    game->players[info.player_id]->y - 1;
+                    game->players[info.player_id]->y = game->players[info.player_id]->y - 1;
                 }
+                printf("player is=%d and player x= %d\n",info.player_id, game->players[info.player_id]->x);
                 send_player_position(info, return_val);
+                print_maze(game->maze);
+                continue;
             }
 
             else if (op == OP_DOMOV) {
@@ -280,7 +283,7 @@ int ig_interact(int sockfd, PlayerInfo info, int increment_result) {
                 plmov = parse_plmov(buffer);
                 int to_move = atoi(plmov.distance);
                 for (int i = 0; i < to_move; i++) {
-                    int move_res = move_down(info.player_id, &(game->maze));
+                    int move_res = move_down(info.player_id, &(game->maze), game->players[info.player_id]->x, game->players[info.player_id]->y);
 
                     if (move_res == -1) {
                         puts("Error moving up - colliding a wall");
@@ -293,9 +296,12 @@ int ig_interact(int sockfd, PlayerInfo info, int increment_result) {
                         game->amountOfGhosts--;
                         return_val = 2;
                     }
-                    game->players[info.player_id]->y + 1;
+                    game->players[info.player_id]->y = game->players[info.player_id]->y + 1;
                 }
+                printf("player is=%d and player x= %d\n",info.player_id, game->players[info.player_id]->x);
                 send_player_position(info, return_val);
+                print_maze(game->maze);
+                continue;
             }
 
             else if (op == OP_LEMOV) {
@@ -304,7 +310,7 @@ int ig_interact(int sockfd, PlayerInfo info, int increment_result) {
                 plmov = parse_plmov(buffer);
                 int to_move = atoi(plmov.distance);
                 for (int i = 0; i < to_move; i++) {
-                    int move_res = move_left(info.player_id, &(game->maze));
+                    int move_res = move_left(info.player_id, &(game->maze), game->players[info.player_id]->x, game->players[info.player_id]->y);
 
                     if (move_res == -1) {
                         puts("Error moving up - colliding a wall");
@@ -317,9 +323,12 @@ int ig_interact(int sockfd, PlayerInfo info, int increment_result) {
                         game->amountOfGhosts--;
                         return_val = 2;
                     }
-                    game->players[info.player_id]->x - 1;
+                    game->players[info.player_id]->x = game->players[info.player_id]->x - 1;
                 }
+                printf("player is=%d and player x= %d\n",info.player_id, game->players[info.player_id]->x);
                 send_player_position(info, return_val);
+                print_maze(game->maze);
+                continue;
             }
 
             else if (op == OP_RIMOV) {
@@ -328,8 +337,7 @@ int ig_interact(int sockfd, PlayerInfo info, int increment_result) {
                 plmov = parse_plmov(buffer);
                 int to_move = atoi(plmov.distance);
                 for (int i = 0; i < to_move; i++) {
-                    int move_res = move_right(info.player_id, &(game->maze));
-
+                    int move_res = move_right(info.player_id, &(game->maze), game->players[info.player_id]->x, game->players[info.player_id]->y);
                     if (move_res == -1) {
                         puts("Error moving up - colliding a wall");
                         break;
@@ -342,10 +350,13 @@ int ig_interact(int sockfd, PlayerInfo info, int increment_result) {
                         game->amountOfGhosts--;
                         return_val = 2;
                     }
-                    game->players[info.player_id]->x + 1;
+                    game->players[info.player_id]->x = game->players[info.player_id]->x + 1;
+                    
                 }
-
+                printf("player is=%d and player x= %d\n",info.player_id, game->players[info.player_id]->x);
                 send_player_position(info, return_val);
+                print_maze(game->maze);
+                continue;
             }
 
             else if (op == OP_SENDQ) {
