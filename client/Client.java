@@ -248,6 +248,11 @@ class Client {
             read = socket.getInputStream().read(buffer2);
             String start2 = new String(buffer2);
             System.out.println(new String(buffer2));
+            InetAddress group = InetAddress.getByName(ip_parsed);
+            MulticastSocket s = new MulticastSocket(port_parsed);
+            s.joinGroup(group);
+            Broadcast broadcast = new Broadcast(s);
+            broadcast.start();
         } catch (Exception e) {
             e.printStackTrace();
         }
