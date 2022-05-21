@@ -11,9 +11,8 @@ struct NEWPL parse_newpl(char* str) {
 
     // Convert port to int
     char port[5];
-    memcpy(port, str + 15, 4);
+    memcpy(res.port, str + 15, 4);
     port[4] = '\0';
-    res.port = atoi(port);
 
     return res;
 }
@@ -27,9 +26,8 @@ struct REGIS parse_regis(char* str) {
 
     // Convert port to int
     char port[5];
-    memcpy(port, str + 15, 4);
+    memcpy(res.port, str + 15, 4);
     port[4] = '\0';
-    res.port = atoi(port);
     u_int8_t game_id;
     memcpy(&game_id, str + 19, 1);
     puts("I am here - here");
@@ -58,6 +56,8 @@ struct SENDQ parse_sendq(char* str) {
     struct SENDQ res;
     res.opcode = OP_SENDQ;
     char* token;
+    memcpy(res.id, str + 6, 8);
+    res.id[8] = '\0';
     token = strtok(str, "***");
     strcpy(res.message, token + 15);
     return res;

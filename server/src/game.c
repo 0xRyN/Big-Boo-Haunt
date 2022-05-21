@@ -35,7 +35,7 @@ int get_game_id() {
 // Creates a new game (NEWPL) and adds the player to it
 // Will return the game ID if success, -1 otherwise
 // RETURNS STRUCT WITH GAMEID = -1 IF FAILED
-PlayerInfo create_game(char *player, int socket, int port,
+PlayerInfo create_game(char *player, int socket, char *port,
                        struct sockaddr_in *addr) {
     // Get the smallest id for the new game
     int id = get_game_id();
@@ -89,7 +89,8 @@ PlayerInfo create_game(char *player, int socket, int port,
     }
     strcpy(cur->players[0]->id, player);
     cur->players[0]->socket = socket;
-    cur->players[0]->port = port;
+    memcpy(cur->players[0]->port, port, 4);
+    cur->players[0]->port[4] = '\0';
     cur->players[0]->addr = addr;
     cur->player_count = 1;
     cur->amout_of_ready_players = 0;
@@ -103,7 +104,7 @@ PlayerInfo create_game(char *player, int socket, int port,
 
 // Makes the player join a game, returns player's index in the game
 // RETURNS STRUCT WITH GAMEID = -1 IF FAILED
-PlayerInfo join_game(int id, int socket, int port, char *player,
+PlayerInfo join_game(int id, int socket, char *port, char *player,
                      struct sockaddr_in *addr) {
     printf("Player %s is joining game %d\n", player, id);
     // Check if the game exists
@@ -152,7 +153,8 @@ PlayerInfo join_game(int id, int socket, int port, char *player,
     // Fill in the player's info (id, socket, port)
     strcpy(cur->players[player_id]->id, player);
     cur->players[player_id]->socket = socket;
-    cur->players[player_id]->port = port;
+    memcpy(cur->players[0]->port, port, 4);
+    cur->players[0]->port[4] = '\0';
     cur->players[player_id]->addr = addr;
 
     // We finished checking / modifying values

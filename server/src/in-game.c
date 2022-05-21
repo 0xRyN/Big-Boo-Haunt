@@ -258,17 +258,38 @@ int ig_interact(int sockfd, PlayerInfo info, int increment_result) {
                 send_player_position(info, return_val);
             } else if (op == OP_SENDQ) {
                 char resbuffer[200];
-                struct MSGPARSE msgparse;
-                msgparse = parse_msg(buffer);
+                struct SENDQ msgparse;
+                msgparse = parse_sendq(buffer);
                 char repbuffer[8];
-                if (multicast_send("") < 0) {
-                    sprintf(resbuffer, "NSEND***", msgparse.message);
+                int is_here = 0;
+                char port[4];
+                char ip[15];
+                for (int i = 0; i < MAX_PLAYERS; i++) {
+                    printf("%s ET %s\n", game->players[i]->id, msgparse.id);
+                    if (game->players[i] != NULL) {
+                        if (strcmp(game->players[i]->id, msgparse.id) == 0) {
+                            is_here = 1;
+                            printf("port : %s\n", game->players[i]->port);
+                            sprintf(port, "%s", game->players[i]->port);
+                            printf("ip : %s\n",
+                                   inet_ntoa(game->players[i]->addr->sin_addr));
+                            sprintf(
+                                ip, "%s",
+                                inet_ntoa(game->players[i]->addr->sin_addr));
+                            break;
+                        }
+                    }
+                }
+                printf("%s\n", msgparse.message);
+                if (is_here == 1 &&
+                    multicast_send(ip, port, msgparse.message) < 0) {
+                    sprintf(resbuffer, "!SEND***");
                     if (safe_send(sockfd, resbuffer, strlen(resbuffer)) < 0) {
                         puts("Error sending message");
                         return -1;
                     }
                 } else {
-                    sprintf(resbuffer, "SEND!***", msgparse.message);
+                    sprintf(resbuffer, "SEND!***");
                     if (safe_send(sockfd, resbuffer, strlen(resbuffer)) < 0) {
                         puts("Error sending message");
                         return -1;
