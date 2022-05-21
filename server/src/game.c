@@ -247,9 +247,11 @@ int send_games(int sockfd) {
     // TODO: the games
 
     // First, send number of games
-    char num_games_str[11];
+    char num_games_str[10];
     uint8_t num_games_int = num_gameplayable;
-    snprintf(num_games_str, 11, "GAMES %hhu***", num_games_int);
+    memcpy(num_games_str, "GAMES ", 6);
+    memcpy(num_games_str + 6, &num_games_int, 1);
+    memcpy(num_games_str + 7, "***", 3);
     if (safe_send(sockfd, num_games_str, 10) < 0) {
         puts("Error sending number of games");
         return -1;
