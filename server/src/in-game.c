@@ -256,7 +256,27 @@ int ig_interact(int sockfd, PlayerInfo info, int increment_result) {
                 }
 
                 send_player_position(info, return_val);
-            } else {
+            } else if (op == OP_SENDQ) {
+                char resbuffer[200];
+                struct MSGPARSE msgparse;
+                msgparse = parse_msg(buffer);
+                char repbuffer[8];
+                if (multicast_send("") < 0) {
+                    sprintf(resbuffer, "NSEND***", msgparse.message);
+                    if (safe_send(sockfd, resbuffer, strlen(resbuffer)) < 0) {
+                        puts("Error sending message");
+                        return -1;
+                    }
+                } else {
+                    sprintf(resbuffer, "SEND!***", msgparse.message);
+                    if (safe_send(sockfd, resbuffer, strlen(resbuffer)) < 0) {
+                        puts("Error sending message");
+                        return -1;
+                    }
+                }
+            }
+
+            else {
                 multicast_send("224.1.1.0", "5400",
                                "T'es dans ma partie ou quoi lol!! XD");
                 char res_buffer[40];
