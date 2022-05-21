@@ -73,14 +73,36 @@ int greet_player(PlayerInfo info) {
                 puts("Error sending greeting");
                 return -1;
             }
-            char buffer2[80];
-            /*sprintf(buffer2, "POSIT %d %d %d***", info.player_id,
-                    game->players[j]->x, game->players[j]->y);
+            char buffer2[26];
+            char pos_x[3 + 1];
+            char pos_y[3 + 1];
+            sprintf(pos_x, "%d", game->players[info.player_id]->x);
+            sprintf(pos_y, "%d", game->players[info.player_id]->y);
+
+            // If position is 1 digit, add 00 before.
+            if (game->players[info.player_id]->x < 10) {
+                sprintf(pos_x, "00%d", game->players[info.player_id]->x);
+            }
+            if (game->players[info.player_id]->y < 10) {
+                sprintf(pos_y, "00%d", game->players[info.player_id]->y);
+            }
+            // If position is 2 digits, add 0 before.
+            if (game->players[info.player_id]->x < 100 &&
+                game->players[info.player_id]->x >= 10) {
+                sprintf(pos_x, "0%d", game->players[info.player_id]->x);
+            }
+            if (game->players[info.player_id]->y < 100 &&
+                game->players[info.player_id]->y >= 10) {
+                sprintf(pos_y, "0%d", game->players[info.player_id]->y);
+            }
+
+            sprintf(buffer2, "POSIT %s %s %s***",
+                    game->players[info.player_id]->id, pos_x, pos_y);
             if (safe_send(game->players[j]->socket, buffer2, strlen(buffer2)) <
                 0) {
                 puts("Error sending greeting");
                 return -1;
-            }*/
+            }
         }
     }
     free(ip);

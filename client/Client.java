@@ -244,6 +244,10 @@ class Client {
             String fin = new String(buffer, 36, read - 36);
             System.out.println(
                     start + m + space + h + space2 + w + space3 + f + space4 + ip_parsed + space5 + port_parsed + fin);
+            byte[] buffer2 = new byte[25];
+            read = socket.getInputStream().read(buffer2);
+            String start2 = new String(buffer2);
+            System.out.println(new String(buffer2));
         } catch (Exception e) {
             e.printStackTrace();
         }
