@@ -1,144 +1,201 @@
-==1736== Memcheck, a memory error detector
-==1736== Copyright (C) 2002-2017, and GNU GPL'd, by Julian Seward et al.
-==1736== Using Valgrind-3.15.0 and LibVEX; rerun with -h for copyright info
-==1736== Command: ./server
-==1736== Parent PID: 13394
-==1736== 
-==1736== Thread 2:
-==1736== Conditional jump or move depends on uninitialised value(s)
-==1736==    at 0x48ED958: __vfprintf_internal (vfprintf-internal.c:1687)
-==1736==    by 0x48D7D3E: printf (printf.c:33)
-==1736==    by 0x10A9C0: greet_player (in-game.c:60)
-==1736==    by 0x10AE80: ig_interact (in-game.c:141)
-==1736==    by 0x10DB75: interact (lobby.c:196)
-==1736==    by 0x10D3F7: handle_client (server.c:37)
-==1736==    by 0x485B608: start_thread (pthread_create.c:477)
-==1736==    by 0x4995132: clone (clone.S:95)
-==1736== 
-==1736== Use of uninitialised value of size 8
-==1736==    at 0x48D169B: _itoa_word (_itoa.c:179)
-==1736==    by 0x48ED574: __vfprintf_internal (vfprintf-internal.c:1687)
-==1736==    by 0x48D7D3E: printf (printf.c:33)
-==1736==    by 0x10A9C0: greet_player (in-game.c:60)
-==1736==    by 0x10AE80: ig_interact (in-game.c:141)
-==1736==    by 0x10DB75: interact (lobby.c:196)
-==1736==    by 0x10D3F7: handle_client (server.c:37)
-==1736==    by 0x485B608: start_thread (pthread_create.c:477)
-==1736==    by 0x4995132: clone (clone.S:95)
-==1736== 
-==1736== Conditional jump or move depends on uninitialised value(s)
-==1736==    at 0x48D16AD: _itoa_word (_itoa.c:179)
-==1736==    by 0x48ED574: __vfprintf_internal (vfprintf-internal.c:1687)
-==1736==    by 0x48D7D3E: printf (printf.c:33)
-==1736==    by 0x10A9C0: greet_player (in-game.c:60)
-==1736==    by 0x10AE80: ig_interact (in-game.c:141)
-==1736==    by 0x10DB75: interact (lobby.c:196)
-==1736==    by 0x10D3F7: handle_client (server.c:37)
-==1736==    by 0x485B608: start_thread (pthread_create.c:477)
-==1736==    by 0x4995132: clone (clone.S:95)
-==1736== 
-==1736== Conditional jump or move depends on uninitialised value(s)
-==1736==    at 0x48EE228: __vfprintf_internal (vfprintf-internal.c:1687)
-==1736==    by 0x48D7D3E: printf (printf.c:33)
-==1736==    by 0x10A9C0: greet_player (in-game.c:60)
-==1736==    by 0x10AE80: ig_interact (in-game.c:141)
-==1736==    by 0x10DB75: interact (lobby.c:196)
-==1736==    by 0x10D3F7: handle_client (server.c:37)
-==1736==    by 0x485B608: start_thread (pthread_create.c:477)
-==1736==    by 0x4995132: clone (clone.S:95)
-==1736== 
-==1736== Conditional jump or move depends on uninitialised value(s)
-==1736==    at 0x48ED6EE: __vfprintf_internal (vfprintf-internal.c:1687)
-==1736==    by 0x48D7D3E: printf (printf.c:33)
-==1736==    by 0x10A9C0: greet_player (in-game.c:60)
-==1736==    by 0x10AE80: ig_interact (in-game.c:141)
-==1736==    by 0x10DB75: interact (lobby.c:196)
-==1736==    by 0x10D3F7: handle_client (server.c:37)
-==1736==    by 0x485B608: start_thread (pthread_create.c:477)
-==1736==    by 0x4995132: clone (clone.S:95)
-==1736== 
-==1736== Conditional jump or move depends on uninitialised value(s)
-==1736==    at 0x48ED958: __vfprintf_internal (vfprintf-internal.c:1687)
-==1736==    by 0x48FB0F8: __vsprintf_internal (iovsprintf.c:95)
-==1736==    by 0x48D7EC7: sprintf (sprintf.c:30)
-==1736==    by 0x10AA47: greet_player (in-game.c:63)
-==1736==    by 0x10AE80: ig_interact (in-game.c:141)
-==1736==    by 0x10DB75: interact (lobby.c:196)
-==1736==    by 0x10D3F7: handle_client (server.c:37)
-==1736==    by 0x485B608: start_thread (pthread_create.c:477)
-==1736==    by 0x4995132: clone (clone.S:95)
-==1736== 
-==1736== Use of uninitialised value of size 8
-==1736==    at 0x48D169B: _itoa_word (_itoa.c:179)
-==1736==    by 0x48ED574: __vfprintf_internal (vfprintf-internal.c:1687)
-==1736==    by 0x48FB0F8: __vsprintf_internal (iovsprintf.c:95)
-==1736==    by 0x48D7EC7: sprintf (sprintf.c:30)
-==1736==    by 0x10AA47: greet_player (in-game.c:63)
-==1736==    by 0x10AE80: ig_interact (in-game.c:141)
-==1736==    by 0x10DB75: interact (lobby.c:196)
-==1736==    by 0x10D3F7: handle_client (server.c:37)
-==1736==    by 0x485B608: start_thread (pthread_create.c:477)
-==1736==    by 0x4995132: clone (clone.S:95)
-==1736== 
-==1736== Conditional jump or move depends on uninitialised value(s)
-==1736==    at 0x48D16AD: _itoa_word (_itoa.c:179)
-==1736==    by 0x48ED574: __vfprintf_internal (vfprintf-internal.c:1687)
-==1736==    by 0x48FB0F8: __vsprintf_internal (iovsprintf.c:95)
-==1736==    by 0x48D7EC7: sprintf (sprintf.c:30)
-==1736==    by 0x10AA47: greet_player (in-game.c:63)
-==1736==    by 0x10AE80: ig_interact (in-game.c:141)
-==1736==    by 0x10DB75: interact (lobby.c:196)
-==1736==    by 0x10D3F7: handle_client (server.c:37)
-==1736==    by 0x485B608: start_thread (pthread_create.c:477)
-==1736==    by 0x4995132: clone (clone.S:95)
-==1736== 
-==1736== Conditional jump or move depends on uninitialised value(s)
-==1736==    at 0x48EE228: __vfprintf_internal (vfprintf-internal.c:1687)
-==1736==    by 0x48FB0F8: __vsprintf_internal (iovsprintf.c:95)
-==1736==    by 0x48D7EC7: sprintf (sprintf.c:30)
-==1736==    by 0x10AA47: greet_player (in-game.c:63)
-==1736==    by 0x10AE80: ig_interact (in-game.c:141)
-==1736==    by 0x10DB75: interact (lobby.c:196)
-==1736==    by 0x10D3F7: handle_client (server.c:37)
-==1736==    by 0x485B608: start_thread (pthread_create.c:477)
-==1736==    by 0x4995132: clone (clone.S:95)
-==1736== 
-==1736== Conditional jump or move depends on uninitialised value(s)
-==1736==    at 0x48ED6EE: __vfprintf_internal (vfprintf-internal.c:1687)
-==1736==    by 0x48FB0F8: __vsprintf_internal (iovsprintf.c:95)
-==1736==    by 0x48D7EC7: sprintf (sprintf.c:30)
-==1736==    by 0x10AA47: greet_player (in-game.c:63)
-==1736==    by 0x10AE80: ig_interact (in-game.c:141)
-==1736==    by 0x10DB75: interact (lobby.c:196)
-==1736==    by 0x10D3F7: handle_client (server.c:37)
-==1736==    by 0x485B608: start_thread (pthread_create.c:477)
-==1736==    by 0x4995132: clone (clone.S:95)
-==1736== 
-==1736== 
-==1736== Process terminating with default action of signal 2 (SIGINT)
-==1736==    at 0x48664FF: accept (accept.c:26)
-==1736==    by 0x10D4B5: main (server.c:65)
-==1736== 
-==1736== HEAP SUMMARY:
-==1736==     in use at exit: 544 bytes in 2 blocks
-==1736==   total heap usage: 21 allocs, 19 frees, 14,750 bytes allocated
-==1736== 
-==1736== Thread 1:
-==1736== 544 bytes in 2 blocks are possibly lost in loss record 1 of 1
-==1736==    at 0x483DD99: calloc (in /usr/lib/x86_64-linux-gnu/valgrind/vgpreload_memcheck-amd64-linux.so)
-==1736==    by 0x40149DA: allocate_dtv (dl-tls.c:286)
-==1736==    by 0x40149DA: _dl_allocate_tls (dl-tls.c:532)
-==1736==    by 0x485C322: allocate_stack (allocatestack.c:622)
-==1736==    by 0x485C322: pthread_create@@GLIBC_2.2.5 (pthread_create.c:660)
-==1736==    by 0x10D52B: main (server.c:77)
-==1736== 
-==1736== LEAK SUMMARY:
-==1736==    definitely lost: 0 bytes in 0 blocks
-==1736==    indirectly lost: 0 bytes in 0 blocks
-==1736==      possibly lost: 544 bytes in 2 blocks
-==1736==    still reachable: 0 bytes in 0 blocks
-==1736==         suppressed: 0 bytes in 0 blocks
-==1736== 
-==1736== Use --track-origins=yes to see where uninitialised values come from
-==1736== For lists of detected and suppressed errors, rerun with: -s
-==1736== ERROR SUMMARY: 21 errors from 11 contexts (suppressed: 0 from 0)
+==24442== Memcheck, a memory error detector
+==24442== Copyright (C) 2002-2017, and GNU GPL'd, by Julian Seward et al.
+==24442== Using Valgrind-3.15.0 and LibVEX; rerun with -h for copyright info
+==24442== Command: ./server
+==24442== Parent PID: 1594
+==24442== 
+==24442== Thread 2:
+==24442== Conditional jump or move depends on uninitialised value(s)
+==24442==    at 0x48ED958: __vfprintf_internal (vfprintf-internal.c:1687)
+==24442==    by 0x48D7D3E: printf (printf.c:33)
+==24442==    by 0x10A9C0: greet_player (in-game.c:60)
+==24442==    by 0x10AE80: ig_interact (in-game.c:141)
+==24442==    by 0x10DBDC: interact (lobby.c:196)
+==24442==    by 0x10D45E: handle_client (server.c:37)
+==24442==    by 0x485B608: start_thread (pthread_create.c:477)
+==24442==    by 0x4995132: clone (clone.S:95)
+==24442== 
+==24442== Use of uninitialised value of size 8
+==24442==    at 0x48D169B: _itoa_word (_itoa.c:179)
+==24442==    by 0x48ED574: __vfprintf_internal (vfprintf-internal.c:1687)
+==24442==    by 0x48D7D3E: printf (printf.c:33)
+==24442==    by 0x10A9C0: greet_player (in-game.c:60)
+==24442==    by 0x10AE80: ig_interact (in-game.c:141)
+==24442==    by 0x10DBDC: interact (lobby.c:196)
+==24442==    by 0x10D45E: handle_client (server.c:37)
+==24442==    by 0x485B608: start_thread (pthread_create.c:477)
+==24442==    by 0x4995132: clone (clone.S:95)
+==24442== 
+==24442== Conditional jump or move depends on uninitialised value(s)
+==24442==    at 0x48D16AD: _itoa_word (_itoa.c:179)
+==24442==    by 0x48ED574: __vfprintf_internal (vfprintf-internal.c:1687)
+==24442==    by 0x48D7D3E: printf (printf.c:33)
+==24442==    by 0x10A9C0: greet_player (in-game.c:60)
+==24442==    by 0x10AE80: ig_interact (in-game.c:141)
+==24442==    by 0x10DBDC: interact (lobby.c:196)
+==24442==    by 0x10D45E: handle_client (server.c:37)
+==24442==    by 0x485B608: start_thread (pthread_create.c:477)
+==24442==    by 0x4995132: clone (clone.S:95)
+==24442== 
+==24442== Conditional jump or move depends on uninitialised value(s)
+==24442==    at 0x48EE228: __vfprintf_internal (vfprintf-internal.c:1687)
+==24442==    by 0x48D7D3E: printf (printf.c:33)
+==24442==    by 0x10A9C0: greet_player (in-game.c:60)
+==24442==    by 0x10AE80: ig_interact (in-game.c:141)
+==24442==    by 0x10DBDC: interact (lobby.c:196)
+==24442==    by 0x10D45E: handle_client (server.c:37)
+==24442==    by 0x485B608: start_thread (pthread_create.c:477)
+==24442==    by 0x4995132: clone (clone.S:95)
+==24442== 
+==24442== Conditional jump or move depends on uninitialised value(s)
+==24442==    at 0x48ED6EE: __vfprintf_internal (vfprintf-internal.c:1687)
+==24442==    by 0x48D7D3E: printf (printf.c:33)
+==24442==    by 0x10A9C0: greet_player (in-game.c:60)
+==24442==    by 0x10AE80: ig_interact (in-game.c:141)
+==24442==    by 0x10DBDC: interact (lobby.c:196)
+==24442==    by 0x10D45E: handle_client (server.c:37)
+==24442==    by 0x485B608: start_thread (pthread_create.c:477)
+==24442==    by 0x4995132: clone (clone.S:95)
+==24442== 
+==24442== Conditional jump or move depends on uninitialised value(s)
+==24442==    at 0x48ED958: __vfprintf_internal (vfprintf-internal.c:1687)
+==24442==    by 0x48FB0F8: __vsprintf_internal (iovsprintf.c:95)
+==24442==    by 0x48D7EC7: sprintf (sprintf.c:30)
+==24442==    by 0x10AA47: greet_player (in-game.c:63)
+==24442==    by 0x10AE80: ig_interact (in-game.c:141)
+==24442==    by 0x10DBDC: interact (lobby.c:196)
+==24442==    by 0x10D45E: handle_client (server.c:37)
+==24442==    by 0x485B608: start_thread (pthread_create.c:477)
+==24442==    by 0x4995132: clone (clone.S:95)
+==24442== 
+==24442== Use of uninitialised value of size 8
+==24442==    at 0x48D169B: _itoa_word (_itoa.c:179)
+==24442==    by 0x48ED574: __vfprintf_internal (vfprintf-internal.c:1687)
+==24442==    by 0x48FB0F8: __vsprintf_internal (iovsprintf.c:95)
+==24442==    by 0x48D7EC7: sprintf (sprintf.c:30)
+==24442==    by 0x10AA47: greet_player (in-game.c:63)
+==24442==    by 0x10AE80: ig_interact (in-game.c:141)
+==24442==    by 0x10DBDC: interact (lobby.c:196)
+==24442==    by 0x10D45E: handle_client (server.c:37)
+==24442==    by 0x485B608: start_thread (pthread_create.c:477)
+==24442==    by 0x4995132: clone (clone.S:95)
+==24442== 
+==24442== Conditional jump or move depends on uninitialised value(s)
+==24442==    at 0x48D16AD: _itoa_word (_itoa.c:179)
+==24442==    by 0x48ED574: __vfprintf_internal (vfprintf-internal.c:1687)
+==24442==    by 0x48FB0F8: __vsprintf_internal (iovsprintf.c:95)
+==24442==    by 0x48D7EC7: sprintf (sprintf.c:30)
+==24442==    by 0x10AA47: greet_player (in-game.c:63)
+==24442==    by 0x10AE80: ig_interact (in-game.c:141)
+==24442==    by 0x10DBDC: interact (lobby.c:196)
+==24442==    by 0x10D45E: handle_client (server.c:37)
+==24442==    by 0x485B608: start_thread (pthread_create.c:477)
+==24442==    by 0x4995132: clone (clone.S:95)
+==24442== 
+==24442== Conditional jump or move depends on uninitialised value(s)
+==24442==    at 0x48EE228: __vfprintf_internal (vfprintf-internal.c:1687)
+==24442==    by 0x48FB0F8: __vsprintf_internal (iovsprintf.c:95)
+==24442==    by 0x48D7EC7: sprintf (sprintf.c:30)
+==24442==    by 0x10AA47: greet_player (in-game.c:63)
+==24442==    by 0x10AE80: ig_interact (in-game.c:141)
+==24442==    by 0x10DBDC: interact (lobby.c:196)
+==24442==    by 0x10D45E: handle_client (server.c:37)
+==24442==    by 0x485B608: start_thread (pthread_create.c:477)
+==24442==    by 0x4995132: clone (clone.S:95)
+==24442== 
+==24442== Conditional jump or move depends on uninitialised value(s)
+==24442==    at 0x48ED6EE: __vfprintf_internal (vfprintf-internal.c:1687)
+==24442==    by 0x48FB0F8: __vsprintf_internal (iovsprintf.c:95)
+==24442==    by 0x48D7EC7: sprintf (sprintf.c:30)
+==24442==    by 0x10AA47: greet_player (in-game.c:63)
+==24442==    by 0x10AE80: ig_interact (in-game.c:141)
+==24442==    by 0x10DBDC: interact (lobby.c:196)
+==24442==    by 0x10D45E: handle_client (server.c:37)
+==24442==    by 0x485B608: start_thread (pthread_create.c:477)
+==24442==    by 0x4995132: clone (clone.S:95)
+==24442== 
+==24442== Conditional jump or move depends on uninitialised value(s)
+==24442==    at 0x483EF49: strlen (in /usr/lib/x86_64-linux-gnu/valgrind/vgpreload_memcheck-amd64-linux.so)
+==24442==    by 0x48EED14: __vfprintf_internal (vfprintf-internal.c:1688)
+==24442==    by 0x48D7D3E: printf (printf.c:33)
+==24442==    by 0x10B57D: ig_interact (in-game.c:272)
+==24442==    by 0x10DBDC: interact (lobby.c:196)
+==24442==    by 0x10D45E: handle_client (server.c:37)
+==24442==    by 0x485B608: start_thread (pthread_create.c:477)
+==24442==    by 0x4995132: clone (clone.S:95)
+==24442== 
+==24442== Conditional jump or move depends on uninitialised value(s)
+==24442==    at 0x483EF49: strlen (in /usr/lib/x86_64-linux-gnu/valgrind/vgpreload_memcheck-amd64-linux.so)
+==24442==    by 0x48EED14: __vfprintf_internal (vfprintf-internal.c:1688)
+==24442==    by 0x48FB0F8: __vsprintf_internal (iovsprintf.c:95)
+==24442==    by 0x48D7EC7: sprintf (sprintf.c:30)
+==24442==    by 0x10B5B1: ig_interact (in-game.c:273)
+==24442==    by 0x10DBDC: interact (lobby.c:196)
+==24442==    by 0x10D45E: handle_client (server.c:37)
+==24442==    by 0x485B608: start_thread (pthread_create.c:477)
+==24442==    by 0x4995132: clone (clone.S:95)
+==24442== 
+==24442== Thread 3:
+==24442== Invalid free() / delete / delete[] / realloc()
+==24442==    at 0x483CA3F: free (in /usr/lib/x86_64-linux-gnu/valgrind/vgpreload_memcheck-amd64-linux.so)
+==24442==    by 0x10BB83: send_udp (udpsend.c:37)
+==24442==    by 0x10B683: ig_interact (in-game.c:285)
+==24442==    by 0x10DBDC: interact (lobby.c:196)
+==24442==    by 0x10D45E: handle_client (server.c:37)
+==24442==    by 0x485B608: start_thread (pthread_create.c:477)
+==24442==    by 0x4995132: clone (clone.S:95)
+==24442==  Address 0x666cb6d is on thread 3's stack
+==24442==  in frame #2, created by ig_interact (in-game.c:137)
+==24442== 
+==24442== Invalid free() / delete / delete[] / realloc()
+==24442==    at 0x483CA3F: free (in /usr/lib/x86_64-linux-gnu/valgrind/vgpreload_memcheck-amd64-linux.so)
+==24442==    by 0x10BB8F: send_udp (udpsend.c:38)
+==24442==    by 0x10B683: ig_interact (in-game.c:285)
+==24442==    by 0x10DBDC: interact (lobby.c:196)
+==24442==    by 0x10D45E: handle_client (server.c:37)
+==24442==    by 0x485B608: start_thread (pthread_create.c:477)
+==24442==    by 0x4995132: clone (clone.S:95)
+==24442==  Address 0x666cc41 is on thread 3's stack
+==24442==  in frame #2, created by ig_interact (in-game.c:137)
+==24442== 
+==24442== Invalid free() / delete / delete[] / realloc()
+==24442==    at 0x483CA3F: free (in /usr/lib/x86_64-linux-gnu/valgrind/vgpreload_memcheck-amd64-linux.so)
+==24442==    by 0x10BB9B: send_udp (udpsend.c:39)
+==24442==    by 0x10B683: ig_interact (in-game.c:285)
+==24442==    by 0x10DBDC: interact (lobby.c:196)
+==24442==    by 0x10D45E: handle_client (server.c:37)
+==24442==    by 0x485B608: start_thread (pthread_create.c:477)
+==24442==    by 0x4995132: clone (clone.S:95)
+==24442==  Address 0x666cc3d is on thread 3's stack
+==24442==  in frame #2, created by ig_interact (in-game.c:137)
+==24442== 
+==24442== 
+==24442== Process terminating with default action of signal 2 (SIGINT)
+==24442==    at 0x48664FF: accept (accept.c:26)
+==24442==    by 0x10D51C: main (server.c:65)
+==24442== 
+==24442== HEAP SUMMARY:
+==24442==     in use at exit: 4,672 bytes in 8 blocks
+==24442==   total heap usage: 23 allocs, 18 frees, 15,042 bytes allocated
+==24442== 
+==24442== Thread 1:
+==24442== 816 bytes in 3 blocks are possibly lost in loss record 4 of 5
+==24442==    at 0x483DD99: calloc (in /usr/lib/x86_64-linux-gnu/valgrind/vgpreload_memcheck-amd64-linux.so)
+==24442==    by 0x40149DA: allocate_dtv (dl-tls.c:286)
+==24442==    by 0x40149DA: _dl_allocate_tls (dl-tls.c:532)
+==24442==    by 0x485C322: allocate_stack (allocatestack.c:622)
+==24442==    by 0x485C322: pthread_create@@GLIBC_2.2.5 (pthread_create.c:660)
+==24442==    by 0x10D592: main (server.c:77)
+==24442== 
+==24442== LEAK SUMMARY:
+==24442==    definitely lost: 0 bytes in 0 blocks
+==24442==    indirectly lost: 0 bytes in 0 blocks
+==24442==      possibly lost: 816 bytes in 3 blocks
+==24442==    still reachable: 3,856 bytes in 5 blocks
+==24442==         suppressed: 0 bytes in 0 blocks
+==24442== Reachable blocks (those to which a pointer was found) are not shown.
+==24442== To see them, rerun with: --leak-check=full --show-leak-kinds=all
+==24442== 
+==24442== Use --track-origins=yes to see where uninitialised values come from
+==24442== For lists of detected and suppressed errors, rerun with: -s
+==24442== ERROR SUMMARY: 26 errors from 16 contexts (suppressed: 0 from 0)

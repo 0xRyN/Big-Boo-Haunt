@@ -10,14 +10,10 @@ public class UDPLISTEN extends Thread {
     private int port;
     private DatagramSocket socket;
 
-    public UDPLISTEN(int port) {
+    public UDPLISTEN(int port) throws SocketException {
         this.port = port;
-        try {
-            socket = new DatagramSocket(port);
-        } catch (SocketException e) {
-            System.out.println("error");
-            e.printStackTrace();
-        }
+        socket = new DatagramSocket(port);
+
     }
 
     public void run() {

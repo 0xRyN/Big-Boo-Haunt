@@ -1,6 +1,7 @@
 #include "game.h"
 
 int num_games = 0;
+int num_gameplayable = 0;
 int game_status[MAX_GAMES];
 Game *games[MAX_GAMES];
 pthread_mutex_t game_mutex;
@@ -45,6 +46,7 @@ PlayerInfo create_game(char *player, int socket, char *port,
     pthread_mutex_lock(&game_mutex);
     // Increase current game counter
     num_games++;
+    num_gameplayable++;
 
     // Fill in the Game struct
     games[id] = malloc(sizeof(Game));
@@ -231,6 +233,7 @@ int destroy_game(int id) {
     printf("Game %d destroyed\n", id);
 
     num_games--;
+    num_gameplayable--;
     game_status[id] = -1;
     free(games[id]);
 
@@ -245,7 +248,7 @@ int send_games(int sockfd) {
 
     // First, send number of games
     char num_games_str[11];
-    uint8_t num_games_int = num_games;
+    uint8_t num_games_int = num_gameplayable;
     snprintf(num_games_str, 11, "GAMES %hhu***", num_games_int);
     if (safe_send(sockfd, num_games_str, 10) < 0) {
         puts("Error sending number of games");
@@ -292,6 +295,7 @@ int increment_amout_of_ready_players(PlayerInfo info) {
     if (cur->amout_of_ready_players == cur->player_count &&
         cur->player_count > MIN_PLAYERS) {
         game_status[info.game_id] = 2;
+        num_gameplayable--;
         pthread_mutex_unlock(&game_mutex);
         return 1;
     }

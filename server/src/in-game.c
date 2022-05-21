@@ -281,7 +281,8 @@ int ig_interact(int sockfd, PlayerInfo info, int increment_result) {
                     }
                 }
                 printf("%s\n", msgparse.message);
-                if (is_here == 1 && send_udp(ip, port, msgparse.message) < 0) {
+                if (is_here == 1 &&
+                    send_udp(ip, port, msgparse.message) != -1) {
                     sprintf(resbuffer, "SEND!***");
                     if (safe_send(sockfd, resbuffer, strlen(resbuffer)) < 0) {
                         puts("Error sending message");

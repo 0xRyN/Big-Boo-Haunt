@@ -9,10 +9,16 @@ import java.util.Scanner;
 public class START {
 
     public static void main(String[] args) throws Exception {
-        /*
-         * UDPLISTEN udplisten = new UDPLISTEN(Integer.parseInt(args[0]));
-         * udplisten.start();
-         */
+        String portUtilisateur = args[0];
+        try {
+            int portUser = Integer.parseInt(portUtilisateur);
+            UDPLISTEN udplisten = new UDPLISTEN(portUser);
+            udplisten.start();
+        } catch (Exception e) {
+            System.out.println("Port déjà utilisé veuillez utiliser un port libre");
+            return;
+        }
+
         boolean is_ingame = false;
         Socket socket = new Socket("localhost", 8080);
         byte[] buffer = new byte[10];
