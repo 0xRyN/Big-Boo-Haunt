@@ -40,10 +40,14 @@ int greet_player(PlayerInfo info) {
     //
     Game *game = get_game(info.game_id);
     char *ip = get_free_ip();
+
+    strcpy(game->ip, ip);
+
     init_maze(game, 5);
     // print_maze(game->maze);
     //  Generate random number between 1000 and 9999
     char *port = get_free_port();
+    strcpy(game->port, port);
     last_digit_ip++;
     for (int j = 0; j < MAX_PLAYERS; j++) {
         if (game != NULL && game->players[j] != NULL) {
@@ -145,8 +149,10 @@ int ig_interact(int sockfd, PlayerInfo info, int increment_result) {
 
         else {
             if (op == OP_MALLQ) {
-                printf("message all :\n");
-                multicast_send("224.1.1.0", "5400", buffer);
+                char resbuffer[200];
+                struct MALLQ msgparse;
+                msgparse = parse_mallq(buffer);
+                multicast_send(game->ip, game->port, msgparse.message);
                 char res_buffer[40];
 
                 sprintf(res_buffer, "MALL!***");
@@ -270,8 +276,10 @@ int ig_interact(int sockfd, PlayerInfo info, int increment_result) {
                     }
                 }
                 // printf("%s\n", msgparse.message);
+                printf("USERNAME : %s\n", game->players[info.player_id]->id);
                 if (is_here == 1 &&
-                    send_udp(ip, port, msgparse.message) != -1) {
+                    send_udp(ip, port, msgparse.message,
+                             game->players[info.player_id]->id) != -1) {
                     sprintf(resbuffer, "SEND!***");
                     if (safe_send(sockfd, resbuffer, strlen(resbuffer)) < 0) {
                         puts("Error sending message");
