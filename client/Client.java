@@ -28,12 +28,13 @@ class Client {
             int read = socket.getInputStream().read(buffer);
             // Format : GAMES uint8_t***
             String message = new String(buffer, 0, 6);
+            System.out.println(message);
             byte b = buffer[6];
             nbGames = b & 0xFF;
             String fin = new String(buffer, 7, read - 7);
             System.out.println(message + nbGames + fin);
         } catch (Exception e) {
-            System.out.println("Erreur lors de la lecture du nombre de parties");
+            System.out.println("Erreur lors de la lecture du nombre de parties0");
         }
         for (int i = 0; i < nbGames; i++) {
             try {
@@ -49,7 +50,7 @@ class Client {
                 String fin = new String(buffer, 9, read - 9);
                 System.out.println(message + game_id + space + nbPlayers + fin);
             } catch (Exception e) {
-                System.out.println("Erreur lors de la lecture d'une partie");
+                System.out.println("Erreur lors de la lecture d'une partie1");
             }
         }
     }
@@ -143,11 +144,6 @@ class Client {
             try {
                 int rep = Integer.parseInt(commande);
                 if (rep == 0) {
-                    byte[] buffer = new byte[8];
-                    String ready = "START***";
-                    ByteBuffer byteBuffer = ByteBuffer.allocate(ready.length());
-                    byteBuffer.put(ready.getBytes());
-                    socket.getOutputStream().write(byteBuffer.array());
                     inGame(socket);
                 }
                 if (rep == 1) {
@@ -218,11 +214,37 @@ class Client {
     }
 
     public static void inGame(Socket socket) {
-
-        byte[] buffer = new byte[39];
+        String ready = "START***";
         try {
+            ByteBuffer byteBuffer = ByteBuffer.allocate(ready.length());
+            byteBuffer.put(ready.getBytes());
+            socket.getOutputStream().write(byteBuffer.array());
+            byte[] buffer = new byte[39];
             int read = socket.getInputStream().read(buffer);
-
+            String start = new String(buffer, 0, 6);
+            byte a = buffer[6];
+            int m = a & 0xFF;
+            String space = new String(buffer, 7, 1);
+            byte b = buffer[8];
+            byte c = buffer[9];
+            int h = (b & 0xff) + (c & 0xff) * 0x100;
+            String space2 = new String(buffer, 10, 1);
+            byte b2 = buffer[11];
+            byte c2 = buffer[12];
+            int w = (b2 & 0xff) + (c2 & 0xff) * 0x100;
+            String space3 = new String(buffer, 13, 1);
+            byte b3 = buffer[14];
+            int f = b3 & 0xFF;
+            String space4 = new String(buffer, 15, 1);
+            String ip = new String(buffer, 16, 15);
+            String ip_parsed = ip.substring(0, 9);
+            String space5 = new String(buffer, 31, 1);
+            String port = new String(buffer, 32, 4);
+            int port_parsed = Integer.parseInt(port);
+            String fin = new String(buffer, 36, read - 36);
+            System.out.println(
+                    start + m + space + h + space2 + w + space3 + f + space4 + ip_parsed + space5 + port_parsed + fin);
+            Thread.sleep(30000);
         } catch (Exception e) {
             // TODO: handle exception
         }
@@ -234,7 +256,15 @@ class Client {
     }
 
     public static void gamesList(Socket socket) {
-        // send a msg to the server format : GAMESLIST***
+        String a = "GAME?***";
+        ByteBuffer byteBuffer = ByteBuffer.allocate(a.length());
+        byteBuffer.put(a.getBytes());
+        try {
+            socket.getOutputStream().write(byteBuffer.array());
+            readGames(socket);
+        } catch (Exception e) {
+            System.out.println("Erreur lors de l'affichage des parties");
+        }
     }
 
     public static void main(String[] args) throws Exception {
