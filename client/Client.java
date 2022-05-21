@@ -324,7 +324,7 @@ class Client {
             String end = new String(buffer, 7, read - 7);
             System.out.println(start + m + end);
             for (int i = 0; i < m; i++) {
-                byte[] buffer2 = new byte[27];
+                byte[] buffer2 = new byte[30];
                 read = socket.getInputStream().read(buffer2);
                 String start2 = new String(buffer2);
                 System.out.println(start2);
