@@ -75,7 +75,7 @@ int interact(Thread_Args *args) {
                           &(args->client_addr));
             if (join_result.game_id < 0) {
                 puts("Error joining game");
-                char res_buffer[40];
+                char res_buffer[8];
                 sprintf(res_buffer, "REGNO***");
                 if (safe_send(sockfd, res_buffer, 8) < 0) {
                     puts("Error sending registration result");

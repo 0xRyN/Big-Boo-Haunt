@@ -23,12 +23,13 @@ struct REGIS parse_regis(char* str) {
     res.opcode = OP_REGIS;
     memcpy(res.id, str + 6, 8);
     res.id[8] = '\0';
+    printf("ID : %s\n", res.id);
 
     // Convert port to int
-    char port[5];
     memcpy(res.port, str + 15, 4);
-    port[4] = '\0';
+    res.port[4] = '\0';
     u_int8_t game_id;
+    printf("%s\n", res.port);
     memcpy(&game_id, str + 20, 1);
     res.game_id = game_id;
     printf("game id=%hu\n", res.game_id);
