@@ -287,7 +287,7 @@ class Client {
                     }
                 } else if (rep == 2) {
                     try {
-                        // playersList(socket);
+                        playersList(socket);
                     } catch (Exception e) {
                         System.out.println("Erreur lors de l'affichage des joueurs");
                     }
@@ -307,6 +307,30 @@ class Client {
             } catch (Exception e) {
                 System.out.println("Veuillez entrer une valeur correcte");
             }
+        }
+    }
+
+    public static void playersList(Socket socket) {
+        try {
+            String message = "GLIS?***";
+            ByteBuffer byteBuffer = ByteBuffer.allocate(message.length());
+            byteBuffer.put(message.getBytes());
+            socket.getOutputStream().write(byteBuffer.array());
+            byte[] buffer = new byte[10];
+            int read = socket.getInputStream().read(buffer);
+            String start = new String(buffer, 0, 6);
+            byte a = buffer[6];
+            int m = a & 0xFF;
+            String end = new String(buffer, 7, read - 7);
+            System.out.println(start + m + end);
+            for (int i = 0; i < m; i++) {
+                byte[] buffer2 = new byte[27];
+                read = socket.getInputStream().read(buffer2);
+                String start2 = new String(buffer2);
+                System.out.println(start2);
+            }
+        } catch (Exception e) {
+            System.out.println("Erreur lors de l'envoi du message LIST");
         }
     }
 

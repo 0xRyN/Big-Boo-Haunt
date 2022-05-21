@@ -155,41 +155,41 @@ int send_player_position(PlayerInfo info, int return_val) {
         memcpy(buf + 6, &(info.player_id), 8);
         memcpy(buf + 14, " ", 1);
         char score[5];
-        if(game->players[info.player_id]->score < 10) {
+        if (game->players[info.player_id]->score < 10) {
             sprintf(score, "000%d", game->players[info.player_id]->score);
         }
-        if(game->players[info.player_id]->score < 100 &&
-           game->players[info.player_id]->score >= 10) {
+        if (game->players[info.player_id]->score < 100 &&
+            game->players[info.player_id]->score >= 10) {
             sprintf(score, "00%d", game->players[info.player_id]->score);
         }
-        if(game->players[info.player_id]->score < 1000 &&
-           game->players[info.player_id]->score >= 100) {
+        if (game->players[info.player_id]->score < 1000 &&
+            game->players[info.player_id]->score >= 100) {
             sprintf(score, "0%d", game->players[info.player_id]->score);
         }
-        if(game->players[info.player_id]->score >= 1000) {
+        if (game->players[info.player_id]->score >= 1000) {
             sprintf(score, "%d", game->players[info.player_id]->score);
         }
         memcpy(buf + 15, score, 4);
         char x[4];
         char y[4];
-        if(game->players[info.player_id]->x < 10) {
+        if (game->players[info.player_id]->x < 10) {
             sprintf(x, "00%d", game->players[info.player_id]->x);
         }
-        if(game->players[info.player_id]->x < 100 &&
-           game->players[info.player_id]->x >= 10) {
+        if (game->players[info.player_id]->x < 100 &&
+            game->players[info.player_id]->x >= 10) {
             sprintf(x, "0%d", game->players[info.player_id]->x);
         }
-        if(game->players[info.player_id]->x >= 100) {
+        if (game->players[info.player_id]->x >= 100) {
             sprintf(x, "%d", game->players[info.player_id]->x);
         }
-        if(game->players[info.player_id]->y < 10) {
+        if (game->players[info.player_id]->y < 10) {
             sprintf(y, "00%d", game->players[info.player_id]->y);
         }
-        if(game->players[info.player_id]->y < 100 &&
-           game->players[info.player_id]->y >= 10) {
+        if (game->players[info.player_id]->y < 100 &&
+            game->players[info.player_id]->y >= 10) {
             sprintf(y, "0%d", game->players[info.player_id]->y);
         }
-        if(game->players[info.player_id]->y >= 100) {
+        if (game->players[info.player_id]->y >= 100) {
             sprintf(y, "%d", game->players[info.player_id]->y);
         }
         memcpy(buf + 19, x, 3);
@@ -269,7 +269,7 @@ int ig_interact(int sockfd, PlayerInfo info, int increment_result) {
                         game->amountOfGhosts--;
                         return_val = 2;
                     }
-                    game->players[info.player_id]->y-1;
+                    game->players[info.player_id]->y - 1;
                 }
                 send_player_position(info, return_val);
             }
@@ -293,7 +293,7 @@ int ig_interact(int sockfd, PlayerInfo info, int increment_result) {
                         game->amountOfGhosts--;
                         return_val = 2;
                     }
-                    game->players[info.player_id]->y+1;
+                    game->players[info.player_id]->y + 1;
                 }
                 send_player_position(info, return_val);
             }
@@ -317,7 +317,7 @@ int ig_interact(int sockfd, PlayerInfo info, int increment_result) {
                         game->amountOfGhosts--;
                         return_val = 2;
                     }
-                    game->players[info.player_id]->x-1;
+                    game->players[info.player_id]->x - 1;
                 }
                 send_player_position(info, return_val);
             }
@@ -342,9 +342,9 @@ int ig_interact(int sockfd, PlayerInfo info, int increment_result) {
                         game->amountOfGhosts--;
                         return_val = 2;
                     }
-                    game->players[info.player_id]->x+1;
+                    game->players[info.player_id]->x + 1;
                 }
-                
+
                 send_player_position(info, return_val);
             }
 
@@ -394,17 +394,58 @@ int ig_interact(int sockfd, PlayerInfo info, int increment_result) {
 
             else if (op == OP_GLISQ) {
                 int game_id = info.game_id;
-                char firstres[12];
+                char firstres[10];
                 uint8_t amount_players = game->amout_of_ready_players;
-                sprintf(firstres, "GLIS!%hu***", amount_players);
+                memcpy(firstres, "GLIS! ", 6);
+                memcpy(firstres + 6, &amount_players, 1);
+                memcpy(firstres + 7, "***", 3);
                 if (safe_send(sockfd, firstres, strlen(firstres)) < 0) {
                     puts("Error sending message");
                     return -1;
                 }
                 for (int i = 0; i < MAX_PLAYERS; i++) {
                     if (game->players[i] != NULL) {
-                        char resbuffer[200];
-                        sprintf(resbuffer, "GLIS!%s***", game->players[i]->id);
+                        char score[5];
+                        if (game->players[i]->score < 10) {
+                            sprintf(score, "000%d", game->players[i]->score);
+                        }
+                        if (game->players[i]->score < 100 &&
+                            game->players[i]->score >= 10) {
+                            sprintf(score, "00%d", game->players[i]->score);
+                        }
+                        if (game->players[i]->score < 1000 &&
+                            game->players[i]->score >= 100) {
+                            sprintf(score, "0%d", game->players[i]->score);
+                        }
+                        if (game->players[i]->score >= 1000) {
+                            sprintf(score, "%d", game->players[i]->score);
+                        }
+                        char x[4];
+                        char y[4];
+                        if (game->players[i]->x < 10) {
+                            sprintf(x, "00%d", game->players[i]->x);
+                        }
+                        if (game->players[i]->x < 100 &&
+                            game->players[i]->x >= 10) {
+                            sprintf(x, "0%d", game->players[i]->x);
+                        }
+                        if (game->players[i]->x >= 100) {
+                            sprintf(x, "%d", game->players[i]->x);
+                        }
+                        if (game->players[i]->y < 10) {
+                            sprintf(y, "00%d", game->players[i]->y);
+                        }
+                        if (game->players[i]->y < 100 &&
+                            game->players[i]->y >= 10) {
+                            sprintf(y, "0%d", game->players[i]->y);
+                        }
+                        if (game->players[i]->y >= 100) {
+                            sprintf(y, "%d", game->players[i]->y);
+                        }
+
+                        char resbuffer[30];
+                        sprintf(resbuffer, "GPLYR %s %s %s %s***",
+                                game->players[i]->id, score, x, y);
                         if (safe_send(sockfd, resbuffer, strlen(resbuffer)) <
                             0) {
                             puts("Error sending message");
