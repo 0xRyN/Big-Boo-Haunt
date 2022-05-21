@@ -27,6 +27,7 @@ typedef struct Player {
     int x;
     int y;
     struct sockaddr_in *addr;
+    int score;
 } Player;
 typedef struct Game {
     int id;

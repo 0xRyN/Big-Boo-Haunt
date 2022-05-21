@@ -2,6 +2,7 @@
 #include <stdio.h>
 #include <string.h>
 #include <sys/socket.h>
+#include <stdlib.h>
 
 int send_udp(char *ip, char *port, char *message, char *id_send) {
     char porto[4 + 1];

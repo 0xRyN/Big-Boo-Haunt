@@ -8,6 +8,7 @@
 #include "recieve.h"
 #include "send.h"
 #include "udpsend.h"
+#include "parser.h"
 
 int greet_player(PlayerInfo info);
 int ig_interact(int sockfd, PlayerInfo info, int increment_result);

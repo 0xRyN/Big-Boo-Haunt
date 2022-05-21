@@ -94,6 +94,7 @@ PlayerInfo create_game(char *player, int socket, char *port,
     memcpy(cur->players[0]->port, port, 4);
     cur->players[0]->port[4] = '\0';
     cur->players[0]->addr = addr;
+    cur->players[0]->score = 0;
     cur->player_count = 1;
     cur->amout_of_ready_players = 0;
 
@@ -168,6 +169,7 @@ PlayerInfo join_game(int id, int socket, char *port, char *player,
     memcpy(cur->players[player_id]->port, port, 4);
     cur->players[player_id]->port[4] = '\0';
     cur->players[player_id]->addr = addr;
+    cur->players[player_id]->score = 0;
 
     // We finished checking / modifying values
     pthread_mutex_unlock(&game_mutex);

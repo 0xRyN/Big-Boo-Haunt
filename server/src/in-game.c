@@ -144,6 +144,61 @@ int send_player_position(PlayerInfo info, int return_val) {
     // Send position to player
     if (return_val == 2) {
         sprintf(buffer, "MOVEF %s %s***", pos_x, pos_y);
+        // Player collided a ghost, need to send multicast message to all
+        // players.
+        char buf[31];
+        //[SCORE␣id␣p␣x␣y+++]
+        // if score(p) is 1 digit, add 000 before.
+        // if score(p) is 2 digits, add 00 before.
+        // if score(p) is 3 digits, add 0 before.
+        memcpy(buf, "SCORE ", 6);
+        memcpy(buf + 6, &(info.player_id), 8);
+        memcpy(buf + 14, " ", 1);
+        char score[5];
+        if(game->players[info.player_id]->score < 10) {
+            sprintf(score, "000%d", game->players[info.player_id]->score);
+        }
+        if(game->players[info.player_id]->score < 100 &&
+           game->players[info.player_id]->score >= 10) {
+            sprintf(score, "00%d", game->players[info.player_id]->score);
+        }
+        if(game->players[info.player_id]->score < 1000 &&
+           game->players[info.player_id]->score >= 100) {
+            sprintf(score, "0%d", game->players[info.player_id]->score);
+        }
+        if(game->players[info.player_id]->score >= 1000) {
+            sprintf(score, "%d", game->players[info.player_id]->score);
+        }
+        memcpy(buf + 15, score, 4);
+        char x[4];
+        char y[4];
+        if(game->players[info.player_id]->x < 10) {
+            sprintf(x, "00%d", game->players[info.player_id]->x);
+        }
+        if(game->players[info.player_id]->x < 100 &&
+           game->players[info.player_id]->x >= 10) {
+            sprintf(x, "0%d", game->players[info.player_id]->x);
+        }
+        if(game->players[info.player_id]->x >= 100) {
+            sprintf(x, "%d", game->players[info.player_id]->x);
+        }
+        if(game->players[info.player_id]->y < 10) {
+            sprintf(y, "00%d", game->players[info.player_id]->y);
+        }
+        if(game->players[info.player_id]->y < 100 &&
+           game->players[info.player_id]->y >= 10) {
+            sprintf(y, "0%d", game->players[info.player_id]->y);
+        }
+        if(game->players[info.player_id]->y >= 100) {
+            sprintf(y, "%d", game->players[info.player_id]->y);
+        }
+        memcpy(buf + 19, x, 3);
+        memcpy(buf + 22, " ", 1);
+        memcpy(buf + 23, y, 3);
+        memcpy(buf + 26, "+++", 3);
+        buf[30] = '\0';
+        Game *game = get_game(info.game_id);
+        multicast_send(game->ip, game->port, buffer);
     }
 
     else {
@@ -210,6 +265,7 @@ int ig_interact(int sockfd, PlayerInfo info, int increment_result) {
 
                     else if (move_res == -2) {
                         puts("Colliding a ghost");
+                        game->players[info.player_id]->score++;
                         return_val = 2;
                     }
                 }
@@ -232,6 +288,7 @@ int ig_interact(int sockfd, PlayerInfo info, int increment_result) {
 
                     else if (move_res == -2) {
                         puts("Colliding a ghost");
+                        game->players[info.player_id]->score++;
                         return_val = 2;
                     }
                 }
@@ -254,6 +311,7 @@ int ig_interact(int sockfd, PlayerInfo info, int increment_result) {
 
                     else if (move_res == -2) {
                         puts("Colliding a ghost");
+                        game->players[info.player_id]->score++;
                         return_val = 2;
                     }
                 }
@@ -276,6 +334,9 @@ int ig_interact(int sockfd, PlayerInfo info, int increment_result) {
 
                     else if (move_res == -2) {
                         puts("Colliding a ghost");
+                        // Increment player score
+                        game->players[info.player_id]->score++;
+                        
                         return_val = 2;
                     }
                 }
