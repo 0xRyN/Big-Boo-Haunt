@@ -29,10 +29,9 @@ struct REGIS parse_regis(char* str) {
     memcpy(res.port, str + 15, 4);
     port[4] = '\0';
     u_int8_t game_id;
-    memcpy(&game_id, str + 19, 1);
-    puts("I am here - here");
+    memcpy(&game_id, str + 20, 1);
     res.game_id = game_id;
-    printf("%d\n", res.game_id);
+    printf("game id=%hu\n", res.game_id);
 
     return res;
 }

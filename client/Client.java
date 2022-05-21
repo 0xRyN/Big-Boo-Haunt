@@ -76,6 +76,33 @@ class Client {
 
     }
 
+
+    public static void regis(Socket socket, String username, String port, int game_id) {
+        //send a msg to the server format : REGIS username port game_id***
+        try {
+            String a = "REGIS "+username+" "+port+" ";
+            ByteBuffer byteBuffer = ByteBuffer.allocate(a.length()+1+3);
+            byteBuffer.put(a.getBytes());
+            game_id = game_id & 0xFF;
+            byteBuffer.put((byte) game_id);
+            byteBuffer.put(("***").getBytes());
+            socket.getOutputStream().write(byteBuffer.array());
+            byte[] buffer = new byte[5];
+            int read = socket.getInputStream().read(buffer);
+            String message = new String(buffer, 0, 5);
+            System.out.println(message);
+            /*byte b = buffer[6];
+            int player_id = b & 0xFF;
+            String fin = new String(buffer, 7, read - 7);
+            System.out.println(message + player_id + fin);*/
+
+        } catch (Exception e) {
+            System.out.println("Erreur lors de l'envoi du message REGIS");
+        }
+
+    }
+
+    
     public static void main(String[] args) throws Exception {
         String portUtilisateur;
         Socket socket;
@@ -102,5 +129,6 @@ class Client {
             return;
         }
         newPl(socket, nomUtilisateur, portUtilisateur);
+        regis(socket, nomUtilisateur, portUtilisateur, 9);
     }
 }
