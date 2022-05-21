@@ -20,24 +20,18 @@ int init_maze(Game *game, int nb_ghosts) {
 
     // for evry player in game put all the player_id in the maze with
     // put_player_id
-    print_maze(game->maze);
     for (int i = 0; i < MAX_PLAYERS; i++) {
         if (game->players[i] != NULL) {
             int **pos = put_player_id(i, &(game->maze));
             game->players[i]->x = *(pos[0]);
             game->players[i]->y = *(pos[1]);
-            printf("x: %d\n", game->players[i]->x);
-            printf("y: %d\n", game->players[i]->y);
+
             free(pos[0]);
             free(pos[1]);
             free(pos);
-            printf("POSITION X: %d\n", game->players[i]->x);
-            printf("POSITION Y: %d\n", game->players[i]->y);
         }
     }
-    print_maze(game->maze);
     put_ghosts(nb_ghosts, &(game->maze));
-    print_maze(game->maze);
 
     return 0;
 }
@@ -54,16 +48,9 @@ int greet_player(PlayerInfo info) {
     for (int j = 0; j < MAX_PLAYERS; j++) {
         if (game != NULL && game->players[j] != NULL) {
             char buffer[80];
-            printf("info.player_id: %d\n", info.player_id);
-            printf("mazeHeight: %d\n", game->mazeHeight);
-            printf("mazeWidth: %d\n", game->mazeWidth);
-            printf("amountOfGhosts: %d\n", game->amountOfGhosts);
-            printf("ip: %s\n", ip);
-            printf("port: %s\n", port);
             sprintf(buffer, "WELCO %d %hu %hu %d %s %s***", info.game_id,
                     game->mazeHeight, game->mazeWidth, game->amountOfGhosts, ip,
                     port);
-            printf("%s***\n", port);
             if (safe_send(game->players[j]->socket, buffer, strlen(buffer)) <
                 0) {
                 free(ip);
@@ -141,7 +128,6 @@ int ig_interact(int sockfd, PlayerInfo info, int increment_result) {
         greet_player(info);
     }
     while (1) {
-        printf("Waiting for message\n");
         char buffer[100];
         int res = safe_receive(sockfd, buffer, 100);
         if (res < 0) {
@@ -267,12 +253,13 @@ int ig_interact(int sockfd, PlayerInfo info, int increment_result) {
                 for (int i = 0; i < MAX_PLAYERS; i++) {
                     printf("%s ET %s\n", game->players[i]->id, msgparse.id);
                     if (game->players[i] != NULL) {
+                        printf("port : %s\n", game->players[i]->port);
                         if (strcmp(game->players[i]->id, msgparse.id) == 0) {
                             is_here = 1;
-                            printf("port : %s\n", game->players[i]->port);
+                            // printf("port : %s\n", game->players[i]->port);
                             sprintf(port, "%s", game->players[i]->port);
-                            printf("ip : %s\n",
-                                   inet_ntoa(game->players[i]->addr->sin_addr));
+                            // printf("ip :
+                            // %s\n",inet_ntoa(game->players[i]->addr->sin_addr));
                             sprintf(
                                 ip, "%s",
                                 inet_ntoa(game->players[i]->addr->sin_addr));
@@ -280,7 +267,7 @@ int ig_interact(int sockfd, PlayerInfo info, int increment_result) {
                         }
                     }
                 }
-                printf("%s\n", msgparse.message);
+                // printf("%s\n", msgparse.message);
                 if (is_here == 1 &&
                     send_udp(ip, port, msgparse.message) != -1) {
                     sprintf(resbuffer, "SEND!***");
@@ -329,7 +316,6 @@ int ig_interact(int sockfd, PlayerInfo info, int increment_result) {
                     return -1;
                 }
             }
-            printf("ICI\n");
         }
     }
 }

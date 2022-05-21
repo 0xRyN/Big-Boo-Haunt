@@ -155,8 +155,8 @@ PlayerInfo join_game(int id, int socket, char *port, char *player,
     // Fill in the player's info (id, socket, port)
     strcpy(cur->players[player_id]->id, player);
     cur->players[player_id]->socket = socket;
-    memcpy(cur->players[0]->port, port, 4);
-    cur->players[0]->port[4] = '\0';
+    memcpy(cur->players[player_id]->port, port, 4);
+    cur->players[player_id]->port[4] = '\0';
     cur->players[player_id]->addr = addr;
 
     // We finished checking / modifying values
