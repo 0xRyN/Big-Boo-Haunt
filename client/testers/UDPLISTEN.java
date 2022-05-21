@@ -18,7 +18,7 @@ public class UDPLISTEN extends Thread {
 
     public void run() {
         while (true) {
-            byte[] buffer = new byte[10];
+            byte[] buffer = new byte[300];
             DatagramPacket packet = new DatagramPacket(buffer, buffer.length);
             try {
                 socket.receive(packet);

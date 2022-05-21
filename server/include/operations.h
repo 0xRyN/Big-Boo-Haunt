@@ -70,6 +70,11 @@ struct SENDQ {
     char message[200 + 1];
 };
 
+struct MALLQ {
+    int opcode;
+    char message[200 + 1];
+};
+
 struct PLMOV {
     char distance[3 + 1];
 };

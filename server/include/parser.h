@@ -13,6 +13,7 @@ struct LISTQ parse_listq(char* str);
 struct SIZEQ parse_sizeq(char* str);
 struct PLMOV parse_plmov(char* str);
 struct SENDQ parse_sendq(char* str);
+struct MALLQ parse_mallq(char* str);
 int parse_operation(char* str);
 
 #endif

@@ -63,6 +63,15 @@ struct SENDQ parse_sendq(char* str) {
     return res;
 }
 
+struct MALLQ parse_mallq(char* str) {
+    struct MALLQ res;
+    res.opcode = OP_MALLQ;
+    char* token;
+    token = strtok(str, "***");
+    strcpy(res.message, token + 6);
+    return res;
+}
+
 struct PLMOV parse_plmov(char* str) {
     struct PLMOV res;
     strncpy(res.distance, str + 6, 3);

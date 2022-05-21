@@ -3,7 +3,7 @@
 #include <string.h>
 #include <sys/socket.h>
 
-int send_udp(char *ip, char *port, char *message) {
+int send_udp(char *ip, char *port, char *message, char *id_send) {
     char porto[4 + 1];
     memcpy(&porto, port, 4);
     porto[4] = '\0';
@@ -28,8 +28,9 @@ int send_udp(char *ip, char *port, char *message) {
     server_addr.sin_addr.s_addr = inet_addr(ip);
 
     // Send the message to server:
-    printf("ICI\n");
-    if (sendto(socket_desc, message, strlen(message), 0,
+    char res_buffer[strlen(message) + 18];
+    sprintf(res_buffer, "MESSP %s %s+++", id_send, message);
+    if (sendto(socket_desc, res_buffer, strlen(message) + 18, 0,
                (struct sockaddr *)&server_addr, server_struct_length) < 0) {
         printf("Unable to send message\n");
         return -1;
@@ -37,8 +38,6 @@ int send_udp(char *ip, char *port, char *message) {
     free(message);
     free(ip);
     free(port);
-    printf("DANY\n");
-
     // Close the socket:
     close(socket_desc);
 

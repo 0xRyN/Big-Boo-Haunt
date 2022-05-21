@@ -38,6 +38,8 @@ typedef struct Game {
     int mazeHeight;  // PUT INTO U_INT16_T
     int amountOfGhosts;
     Maze maze;
+    char ip[15 + 1];
+    char port[4 + 1];
 } Game;
 typedef struct PlayerInfo {
     int player_id;
