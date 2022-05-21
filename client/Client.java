@@ -162,14 +162,51 @@ class Client {
                         System.out.println("Erreur lors de l'affichage des parties");
                     }
                 } else if (rep == 3) {
-                    System.out.println("Veuillez entrer 1 ou 2");
+                    System.out.println("Veuillez entrer l'id dont vous voulez voir les joueur");
+                    String id = scanner.nextLine();
+                    try {
+                        int game_id = Integer.parseInt(id);
+                        playerInAGame(socket, game_id);
+                    } catch (Exception e) {
+                        System.out.println("Veuillez entrer un id de partie valide");
+                    }
                 } else if (rep == 4) {
                     System.out.println("Vous avez quitte la partie");
+                    leavelobby(socket);
                     break;
                 }
             } catch (Exception e) {
                 System.out.println("Veuillez entrer un nombre correct");
             }
+        }
+    }
+
+    public static void leavelobby(Socket socket) {
+        try {
+            String a = "UNREG***";
+            ByteBuffer byteBuffer = ByteBuffer.allocate(a.length());
+            byteBuffer.put(a.getBytes());
+            socket.getOutputStream().write(byteBuffer.array());
+            byte[] buffer = new byte[5];
+            int read = socket.getInputStream().read(buffer);
+            String message = new String(buffer, 0, 5);
+            if (message.equals("UNROK")) {
+                buffer = new byte[5];
+                read = socket.getInputStream().read(buffer);
+                String first = new String(buffer, 0, 1);
+                byte b = buffer[1];
+                int idGame = b & 0xFF;
+                String fin = new String(buffer, 2, read - 2);
+                System.out.println(message + first + idGame + fin);
+                System.out.println("Vous avez quitte la partie");
+            } else {
+                buffer = new byte[3];
+                read = socket.getInputStream().read(buffer);
+                String fin = new String(buffer);
+                System.out.println(message + fin);
+            }
+        } catch (Exception e) {
+            System.out.println("Erreur lors de l'envoi du message UNREG");
         }
     }
 
@@ -300,13 +337,28 @@ class Client {
                         System.out.println("Erreur lors de l'envoi du message");
                     }
                 } else if (rep == 4) {
-                    // leavegame(socket);
+                    leavegame(socket);
                     System.out.println("Vous avez quitte la partie");
-                    break;
+                    System.exit(0);
                 }
             } catch (Exception e) {
                 System.out.println("Veuillez entrer une valeur correcte");
             }
+        }
+    }
+
+    public static void leavegame(Socket socket) {
+        String leave = "IQUIT***";
+        try {
+            ByteBuffer byteBuffer = ByteBuffer.allocate(leave.length());
+            byteBuffer.put(leave.getBytes());
+            socket.getOutputStream().write(byteBuffer.array());
+            byte[] buffer = new byte[8];
+            int read = socket.getInputStream().read(buffer);
+            String start = new String(buffer);
+            System.out.println(start);
+        } catch (Exception e) {
+            System.out.println("Erreur lors de l'envoi du message LEAVE");
         }
     }
 
@@ -331,6 +383,48 @@ class Client {
             }
         } catch (Exception e) {
             System.out.println("Erreur lors de l'envoi du message LIST");
+        }
+    }
+
+    public static void playerInAGame(Socket socket, int id) {
+        int amount = 0;
+        try {
+            String message = "LIST? ";
+            ByteBuffer byteBuffer = ByteBuffer.allocate(message.length() + 4);
+            byteBuffer.put(message.getBytes());
+            id = id & 0xFF;
+            byteBuffer.put((byte) id);
+            byteBuffer.put(("***").getBytes());
+            socket.getOutputStream().write(byteBuffer.array());
+            byte[] buffer = new byte[5];
+            int read = socket.getInputStream().read(buffer);
+            String start = new String(buffer, 0, 5);
+            if (start.equals("LIST!")) {
+                byte[] buffer2 = new byte[7];
+                read = socket.getInputStream().read(buffer2);
+                String space = new String(buffer2, 0, 1);
+                byte a = buffer2[1];
+                int m = a & 0xFF;
+                String space2 = new String(buffer2, 2, 1);
+                byte b = buffer2[3];
+                int s = b & 0xFF;
+                amount = s;
+                String end = new String(buffer2, 3, read - 3);
+                System.out.println(start + space + m + space2 + s + end);
+            } else {
+                byte[] buffer2 = new byte[3];
+                read = socket.getInputStream().read(buffer2);
+                String end = new String(buffer2);
+                System.out.println(start + end);
+            }
+            for (int i = 0; i < amount; i++) {
+                byte[] buffer2 = new byte[17];
+                read = socket.getInputStream().read(buffer2);
+                String start2 = new String(buffer2);
+                System.out.println(start2);
+            }
+        } catch (Exception e) {
+            System.out.println("Erreur lors de l'affichage des parties");
         }
     }
 
