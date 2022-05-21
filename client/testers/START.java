@@ -120,6 +120,20 @@ public class START {
                     byteBuffer.put(start.getBytes());
                     byteBuffer.put((byte) Integer.parseInt(Character.toString(a.split(" ")[1].charAt(0))));
                     byteBuffer.put("***".getBytes());
+                } else if (a.split(" ")[0].equals("GLIS?***")) {
+                    byteBuffer = ByteBuffer.allocate(a.length());
+                    byteBuffer.put(a.getBytes());
+                    socket.getOutputStream().write(byteBuffer.array());
+                    buffer = new byte[1024];
+                    read = socket.getInputStream().read(buffer);
+                    System.out.print(new String(buffer));
+                    int amount = Integer.parseInt(Character.toString((new String(buffer)).charAt(5)));
+                    for (int i = 0; i < amount; i++) {
+                        buffer = new byte[16];
+                        read = socket.getInputStream().read(buffer);
+                        System.out.print(new String(buffer));
+                    }
+                    System.out.println();
                 } else {
                     byteBuffer.put(a.getBytes());
 

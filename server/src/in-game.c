@@ -281,18 +281,39 @@ int ig_interact(int sockfd, PlayerInfo info, int increment_result) {
                     }
                 }
                 printf("%s\n", msgparse.message);
-                if (is_here == 1 &&
-                    multicast_send(ip, port, msgparse.message) < 0) {
-                    sprintf(resbuffer, "!SEND***");
+                if (is_here == 1 && send_udp(ip, port, msgparse.message) < 0) {
+                    sprintf(resbuffer, "SEND!***");
                     if (safe_send(sockfd, resbuffer, strlen(resbuffer)) < 0) {
                         puts("Error sending message");
                         return -1;
                     }
                 } else {
-                    sprintf(resbuffer, "SEND!***");
+                    sprintf(resbuffer, "NSEND***");
                     if (safe_send(sockfd, resbuffer, strlen(resbuffer)) < 0) {
                         puts("Error sending message");
                         return -1;
+                    }
+                }
+            }
+
+            else if (op == OP_GLISQ) {
+                int game_id = info.game_id;
+                char firstres[12];
+                uint8_t amount_players = game->amout_of_ready_players;
+                sprintf(firstres, "GLIS!%hu***", amount_players);
+                if (safe_send(sockfd, firstres, strlen(firstres)) < 0) {
+                    puts("Error sending message");
+                    return -1;
+                }
+                for (int i = 0; i < MAX_PLAYERS; i++) {
+                    if (game->players[i] != NULL) {
+                        char resbuffer[200];
+                        sprintf(resbuffer, "GLIS!%s***", game->players[i]->id);
+                        if (safe_send(sockfd, resbuffer, strlen(resbuffer)) <
+                            0) {
+                            puts("Error sending message");
+                            return -1;
+                        }
                     }
                 }
             }
