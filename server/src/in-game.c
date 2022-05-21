@@ -242,7 +242,9 @@ int ig_interact(int sockfd, PlayerInfo info, int increment_result) {
                 }
 
                 send_player_position(info, return_val);
-            } else if (op == OP_SENDQ) {
+            }
+
+            else if (op == OP_SENDQ) {
                 char resbuffer[200];
                 struct SENDQ msgparse;
                 msgparse = parse_sendq(buffer);
@@ -304,6 +306,22 @@ int ig_interact(int sockfd, PlayerInfo info, int increment_result) {
                         }
                     }
                 }
+            }
+
+            else if (op == OP_IQUIT) {
+                game->maze.grid[game->players[info.player_id]->x]
+                               [game->players[info.player_id]->y] = -2;
+                leave_game(info);
+                info.player_id = -1;
+                info.game_id = -1;
+                // Send GOBYE to player
+                char buffer[100];
+                sprintf(buffer, "GOBYE***");
+                if (safe_send(sockfd, buffer, strlen(buffer)) < 0) {
+                    puts("Error sending GOBYE");
+                    return -1;
+                }
+                return 0;
             }
 
             else {
