@@ -258,6 +258,105 @@ class Client {
         }
 
         while (true) {
+            System.out.println("Que voulez vous faire ?");
+            System.out.println("1 : Se déplacer");
+            System.out.println("2 : Afficher la liste des joueurs de cette partie");
+            System.out.println("3 : Envoyer un message");
+            System.out.println("4 : Quitter la partie");
+
+            Scanner scanner = new Scanner(System.in);
+            String commande = scanner.nextLine();
+            try {
+                int rep = Integer.parseInt(commande);
+                if (rep == 1) {
+                    System.out.println(
+                            "Veuillez entrer la direction dans laquelle vous souhaitez vous déplacer sous la forme : 'H/B/G/D NB_CASES'");
+                    String direction = scanner.nextLine();
+                    try {
+                        if (direction.split(" ")[0].equals("H") || direction.split(" ")[0].equals("B")
+                                || direction.split(" ")[0].equals("G")
+                                || direction.split(" ")[0].equals("D") && Integer.parseInt(split(" ")[1]) > 0
+                                        && Integer.parseInt(split(" ")[1]) < 15) {
+                            move(socket, direction.split(regex(" "))[0],
+                                    Integer.parseInt(direction.split(regex(" "))[1]));
+                        }
+                        move(socket, direction);
+                    } catch (Exception e) {
+                        System.out.println(
+                                "Veuillez entrer une direction valide de la forme : 'H/B/G/D NB_CASES' NB_CASES : un nombre entier entre 1 et 15");
+                    }
+                } else if (rep == 2) {
+                    try {
+                        playersList(socket);
+                    } catch (Exception e) {
+                        System.out.println("Erreur lors de l'affichage des joueurs");
+                    }
+                } else if (rep == 3) {
+                    System.out.println("Veuillez entrer votre message");
+                    String message = scanner.nextLine();
+                    try {
+                        sendMessage(socket, message);
+                    } catch (Exception e) {
+                        System.out.println("Erreur lors de l'envoi du message");
+                    }
+                } else if (rep == 4) {
+                    leavegame(socket);
+                    System.out.println("Vous avez quitte la partie");
+                    break;
+                }
+            } catch (Exception e) {
+                System.out.println("Veuillez entrer une valeur correcte");
+            }
+        }
+    }
+
+    public static void move(Socket socket, String direction, int nbCases) {
+        String a = "";
+        if (direction == "H") {
+            a = "UPMOV ";
+        } else if (direction == "B") {
+            a = "DOMOV ";
+        } else if (direction == "G") {
+            a = "LEMOV ";
+        } else if (direction == "D") {
+            a = "RIMOV ";
+        }
+        try {
+            ByteBuffer byteBuffer = ByteBuffer.allocate(a.length() + 6);
+            byteBuffer.put(a.getBytes());
+            if (nbCases < 10) {
+                String tmp = "00" + nbCases + "***";
+                byteBuffer.put(tmp.getBytes());
+            } else if (nbCases < 100) {
+                String tmp = "0" + nbCases + "***";
+                byteBuffer.put(tmp.getBytes());
+            } else {
+                byteBuffer.put(Integer.toString(nbCases).getBytes());
+                byteBuffer.put("***".getBytes());
+            }
+            socket.getOutputStream().write(byteBuffer.array());
+            byte[] buffer = new byte[5];
+            int read = socket.getInputStream().read(buffer);
+            String start = new String(buffer, 0, 5);
+            System.out.println(start);
+            if (start.equals("MOVE! ")) {
+                System.out.println("Vous avez bien déplacé");
+                buffer = new byte[10];
+                read = socket.getInputStream().read(buffer);
+                String start2 = new String(buffer, 0, 10);
+                System.out.println(start + start2);
+            } else if (start.equals("MOVEF ")) {
+                System.out.println("Vous avez trouvé un fantome");
+                buffer = new byte[15];
+                read = socket.getInputStream().read(buffer);
+                String start2 = new String(buffer, 0, 15);
+                System.out.println(start + start2);
+            }
+
+            byteBuffer.putInt(nbCases);
+        } catch (Exception e) {
+            System.out.println("Erreur lors du deplacement");
+
         }
     }
 
