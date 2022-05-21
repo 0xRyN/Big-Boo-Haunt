@@ -131,6 +131,16 @@ PlayerInfo join_game(int id, int socket, char *port, char *player,
         return (PlayerInfo){.player_id = -1, .game_id = -1};
     }
 
+    // Check if there isn't a player with the same name
+    for (int i = 0; i < MAX_PLAYERS; i++) {
+        if (cur->players[i] != NULL &&
+            strcmp(cur->players[i]->id, player) == 0) {
+            puts("Player already exists");
+            pthread_mutex_unlock(&game_mutex);
+            return (PlayerInfo){.player_id = -1, .game_id = -1};
+        }
+    }
+
     // Add the player to the game
     int player_id = -1;
     for (int i = 0; i < MAX_PLAYERS; i++) {
@@ -173,8 +183,8 @@ int leave_game(PlayerInfo info) {
         puts("Game does not exist (ID out of bounds)");
         return -1;
     }
-    // We are checking different values of the struct, therefore we need to lock
-    // the mutex
+    // We are checking different values of the struct, therefore we need
+    // to lock the mutex
     pthread_mutex_lock(&game_mutex);
     Game *cur = games[info.game_id];
     if (cur == NULL) {
@@ -278,8 +288,8 @@ int increment_amout_of_ready_players(PlayerInfo info) {
         puts("Game does not exist (ID out of bounds)");
         return -1;
     }
-    // We are checking different values of the struct, therefore we need to lock
-    // the mutex
+    // We are checking different values of the struct, therefore we need
+    // to lock the mutex
     pthread_mutex_lock(&game_mutex);
     Game *cur = games[info.game_id];
     if (cur == NULL) {
@@ -348,7 +358,8 @@ int send_game(int sockfd, char *buffer) {
         for (int i = 0; i < MAX_PLAYERS; i++) {
             // CHECK IF THE GAME HAVE PLAYERS IN IT
             if (games[game_id]->players[i] !=
-                NULL) {  // TODO VOIR PQ FAUT BOUCLER PR N MESSAGE ET PAS DANS
+                NULL) {  // TODO VOIR PQ FAUT BOUCLER PR N MESSAGE ET
+                         // PAS DANS
                 char res_buffer[18];
                 snprintf(res_buffer, 18, "PLAYR %s***",
                          games[game_id]->players[i]->id);
@@ -373,7 +384,8 @@ Game *get_game(int id) { return games[id]; }
 
 void print_games() {
     printf(
-        "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n"
+        "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n"
+        "\n\n\n\n"
         "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n");
     for (int i = 0; i < MAX_GAMES; i++) {
         if (game_status[i] == 1) {
