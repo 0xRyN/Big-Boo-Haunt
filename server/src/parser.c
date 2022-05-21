@@ -54,6 +54,15 @@ struct SIZEQ parse_sizeq(char* str) {
     return res;
 }
 
+struct SENDQ parse_sendq(char* str) {
+    struct SENDQ res;
+    res.opcode = OP_SENDQ;
+    char* token;
+    token = strtok(str, "***");
+    strcpy(res.message, token + 15);
+    return res;
+}
+
 struct PLMOV parse_plmov(char* str) {
     struct PLMOV res;
     strncpy(res.distance, str + 6, 3);

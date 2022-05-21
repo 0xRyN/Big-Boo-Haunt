@@ -64,6 +64,12 @@ struct SIZEQ {
     u_int8_t game_id;
 };
 
+struct SENDQ {
+    int opcode;
+    char id[8 + 1];
+    char message[200 + 1];
+};
+
 struct PLMOV {
     char distance[3 + 1];
 };
