@@ -62,13 +62,27 @@ class Client {
             byteBuffer.put(a.getBytes());
             // System.out.println(a);
             socket.getOutputStream().write(byteBuffer.array());
-            byte[] buffer = new byte[10];
+            byte[] buffer = new byte[5];
             int read = socket.getInputStream().read(buffer);
-            String message = new String(buffer, 0, 6);
-            byte b = buffer[6];
-            int game_id = b & 0xFF;
-            String fin = new String(buffer, 7, read - 7);
-            System.out.println(message + game_id + fin);
+            String message = new String(buffer, 0, 5);
+            System.out.println(message);
+            if (message.equals("REGNO")) {
+                buffer = new byte[3];
+                read = socket.getInputStream().read(buffer);
+                String fin = new String(buffer);
+                System.out.println(message + fin);
+                System.out.println("Vous n'avez pas pu vous inscrire dans cette partie");
+            } else if (message.equals("REGOK")) {
+                buffer = new byte[5];
+                read = socket.getInputStream().read(buffer);
+                String first = new String(buffer, 0, 1);
+                byte b = buffer[1];
+                int idGame = b & 0xFF;
+                String fin = new String(buffer, 2, read - 2);
+                System.out.println(message + first + idGame + fin);
+                System.out.println("Vous êtes inscrit dans la partie : " + idGame);
+                lobbyWait(socket);
+            }
 
         } catch (Exception e) {
             System.out.println("Erreur lors de l'envoi du message NEWPL");
@@ -86,9 +100,6 @@ class Client {
             byteBuffer.put((byte) game_id);
             byteBuffer.put(("***").getBytes());
             socket.getOutputStream().write(byteBuffer.array());
-            File file = new File("output.txt");
-            FileOutputStream fos = new FileOutputStream(file);
-            fos.write(byteBuffer.array());
             byte[] buffer = new byte[5];
             int read = socket.getInputStream().read(buffer);
             String message = new String(buffer, 0, 5);
@@ -105,23 +116,125 @@ class Client {
                 String first = new String(buffer, 0, 1);
                 byte b = buffer[1];
                 int idGame = b & 0xFF;
-                String space = new String(buffer, 0, 1);
                 String fin = new String(buffer, 2, read - 2);
                 System.out.println(message + first + idGame + fin);
                 System.out.println("Vous êtes inscrit dans la partie : " + idGame);
+                lobbyWait(socket);
             }
-            /*
-             * byte b = buffer[6];
-             * int player_id = b & 0xFF;
-             * String fin = new String(buffer, 7, read - 7);
-             * System.out.println(message + player_id + fin);
-             */
 
         } catch (Exception e) {
             e.printStackTrace();
             // System.out.println("Erreur lors de l'envoi du message REGIS");
         }
 
+    }
+
+    public static void lobbyWait(Socket socket) {
+        while (true) {
+            System.out.println("Que voulez vous faire :");
+            System.out.println(
+                    "0 : Se mettre 'Pret' (Attention vous ne pourrez plus quitter la partie avant son départ)");
+            System.out.println("1 :  Afficher la taille d'un labyrinthe");
+            System.out.println("2 : Afficher la liste des parties disponnibles");
+            System.out.println("3 : Afficher la liste des joueurs dans une partie");
+            System.out.println("4 : Quitter la partie");
+            Scanner scanner = new Scanner(System.in);
+            String commande = scanner.nextLine();
+            try {
+                int rep = Integer.parseInt(commande);
+                if (rep == 0) {
+                    byte[] buffer = new byte[8];
+                    String ready = "START***";
+                    ByteBuffer byteBuffer = ByteBuffer.allocate(ready.length());
+                    byteBuffer.put(ready.getBytes());
+                    socket.getOutputStream().write(byteBuffer.array());
+                    inGame(socket);
+                }
+                if (rep == 1) {
+                    System.out.println("Du labyrinthe de quelle partie voulez vous connaitre la taille ?");
+                    String id = scanner.nextLine();
+                    try {
+                        int game_id = Integer.parseInt(id);
+                        sizeq(socket, game_id);
+                    } catch (Exception e) {
+                        System.out.println("Veuillez entrer un id de partie valide");
+                    }
+                } else if (rep == 2) {
+                    try {
+                        gamesList(socket);
+                    } catch (Exception e) {
+                        System.out.println("Erreur lors de l'affichage des parties");
+                    }
+                } else if (rep == 3) {
+                    System.out.println("Veuillez entrer 1 ou 2");
+                } else if (rep == 4) {
+                    System.out.println("Vous avez quitte la partie");
+                    break;
+                }
+            } catch (Exception e) {
+                System.out.println("Veuillez entrer un nombre correct");
+            }
+        }
+    }
+
+    public static void sizeq(Socket socket, int game_id) {
+        // send a msg to the server format : SIZEQ game_id***
+        try {
+            String a = "SIZE? ";
+            ByteBuffer byteBuffer = ByteBuffer.allocate(a.length() + 4);
+            byteBuffer.put(a.getBytes());
+            game_id = game_id & 0xFF;
+            byteBuffer.put((byte) game_id);
+            byteBuffer.put(("***").getBytes());
+            socket.getOutputStream().write(byteBuffer.array());
+            byte[] buffer = new byte[5];
+            int read = socket.getInputStream().read(buffer);
+            String message = new String(buffer, 0, 5);
+            System.out.println(message);
+            if (message.equals("SIZE!")) {
+                buffer = new byte[11];
+                read = socket.getInputStream().read(buffer);
+                String space = new String(buffer, 0, 1);
+                byte b = buffer[1];
+                int idGame = b & 0xFF;
+                String space2 = new String(buffer, 2, 1);
+                byte b2 = buffer[3];
+                byte b3 = buffer[4];
+                int h = (b2 & 0xff) + (b3 & 0xff) * 0x100;
+                String space3 = new String(buffer, 5, 1);
+                byte b4 = buffer[6];
+                byte b5 = buffer[7];
+                int w = (b4 & 0xff) + (b5 & 0xff) * 0x100;
+                String fin = new String(buffer, 8, read - 8);
+                System.out.println(message + space + idGame + space2 + h + space3 + w + fin);
+                System.out.println("La taille du labyrinthe est : " + fin);
+            } else {
+
+            }
+
+        } catch (Exception e) {
+            System.out.println("Erreur lors de l'envoi du message SIZEQ");
+        }
+    }
+
+    public static void inGame(Socket socket) {
+
+        byte[] buffer = new byte[39];
+        try {
+            int read = socket.getInputStream().read(buffer);
+
+        } catch (Exception e) {
+            // TODO: handle exception
+        }
+
+        while (true) {
+            System.out.println("Que voulez vous faire :");
+            System.out.println("0 : Afficher la taille d'un labyrinthe");
+        }
+    }
+
+    public static void gamesList(Socket socket) {
+        // send a msg to the server format : GAMESLIST***
     }
 
     public static void main(String[] args) throws Exception {
@@ -160,14 +273,12 @@ class Client {
                 int rep = Integer.parseInt(commande);
                 if (rep == 1) {
                     newPl(socket, nomUtilisateur, portUtilisateur);
-                    break;
                 } else if (rep == 2) {
                     System.out.println("Veuillez entrer l'id de la partie que vous voulez rejoindre");
                     String id = scanner.nextLine();
                     try {
                         int game_id = Integer.parseInt(id);
                         regis(socket, nomUtilisateur, portUtilisateur, game_id);
-                        break;
                     } catch (Exception e) {
                         System.out.println("Veuillez entrer un id de partie valide");
                     }
