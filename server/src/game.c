@@ -131,6 +131,16 @@ PlayerInfo join_game(int id, int socket, char *port, char *player,
         return (PlayerInfo){.player_id = -1, .game_id = -1};
     }
 
+    // Check if there isn't a player with the same name
+    for (int i = 0; i < MAX_PLAYERS; i++) {
+        if (cur->players[i] != NULL &&
+            strcmp(cur->players[i]->id, player) == 0) {
+            puts("Player already exists");
+            pthread_mutex_unlock(&game_mutex);
+            return (PlayerInfo){.player_id = -1, .game_id = -1};
+        }
+    }
+
     // Add the player to the game
     int player_id = -1;
     for (int i = 0; i < MAX_PLAYERS; i++) {
@@ -264,12 +274,13 @@ int send_games(int sockfd) {
             char game_str[12];
             uint8_t game_id = games[i]->id;
             uint8_t player_count = games[i]->player_count;
-            memcpy(game_str, "OGAME ", 6);	
+            memcpy(game_str, "OGAME ", 6);
             memcpy(game_str + 6, &game_id, 1);
             memcpy(game_str + 7, " ", 1);
             memcpy(game_str + 8, &player_count, 1);
             memcpy(game_str + 9, "***", 3);
-            //snprintf(game_str, 13, "OGAME %hhu %hhu***", game_id, player_count);
+            // snprintf(game_str, 13, "OGAME %hhu %hhu***", game_id,
+            // player_count);
             if (safe_send(sockfd, game_str, 12) < 0) {
                 puts("Error sending game");
                 return -1;
