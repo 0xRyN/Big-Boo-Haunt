@@ -243,7 +243,9 @@ int destroy_game(int id) {
     printf("Game %d destroyed\n", id);
 
     num_games--;
-    num_gameplayable--;
+    if (game_status[id] == 1) {
+        num_gameplayable--;
+    }
     game_status[id] = -1;
     free(games[id]);
 
