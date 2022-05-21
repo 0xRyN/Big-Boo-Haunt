@@ -129,9 +129,11 @@ int interact(Thread_Args *args) {
 
             // We successfully created the game, so we can send the response
             info = create_result;
-            char res_buffer[40];
+            char res_buffer[10];
             uint8_t int_id = create_result.game_id;
-            sprintf(res_buffer, "REGOK %hhu***", int_id);
+            memcpy(res_buffer, "REGOK ", 6);
+            memcpy(res_buffer + 6, &int_id, 1);
+            memcpy(res_buffer + 7, "***", 3);
 
             // Send the response to the client and if there is an error, stop
             // the connection
