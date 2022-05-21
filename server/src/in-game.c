@@ -269,8 +269,8 @@ int ig_interact(int sockfd, PlayerInfo info, int increment_result) {
                         game->amountOfGhosts--;
                         return_val = 2;
                     }
+                    game->players[info.player_id]->y-1;
                 }
-                game->players[info.player_id]->y-1;
                 send_player_position(info, return_val);
             }
 
@@ -293,8 +293,8 @@ int ig_interact(int sockfd, PlayerInfo info, int increment_result) {
                         game->amountOfGhosts--;
                         return_val = 2;
                     }
+                    game->players[info.player_id]->y+1;
                 }
-                game->players[info.player_id]->y+1;
                 send_player_position(info, return_val);
             }
 
@@ -317,8 +317,8 @@ int ig_interact(int sockfd, PlayerInfo info, int increment_result) {
                         game->amountOfGhosts--;
                         return_val = 2;
                     }
+                    game->players[info.player_id]->x-1;
                 }
-                game->players[info.player_id]->x-1;
                 send_player_position(info, return_val);
             }
 
@@ -342,8 +342,9 @@ int ig_interact(int sockfd, PlayerInfo info, int increment_result) {
                         game->amountOfGhosts--;
                         return_val = 2;
                     }
+                    game->players[info.player_id]->x+1;
                 }
-                game->players[info.player_id]->x+1;
+                
                 send_player_position(info, return_val);
             }
 
