@@ -85,9 +85,12 @@ int interact(Thread_Args *args) {
                 info = join_result;
 
                 // We successfully joined the game, so we can send the response
-                char res_buffer[40];
+                char res_buffer[10];
                 uint8_t int_id = regis.game_id;
-                sprintf(res_buffer, "REGOK %hhu***", int_id);
+                memcpy(res_buffer, "REGOK ", 6);
+                memcpy(res_buffer + 6, &int_id, 1);
+                memcpy(res_buffer + 7, "***", 3);
+
                 if (safe_send(sockfd, res_buffer, 10) < 0) {
                     puts("Error sending registration result");
                     return -1;
