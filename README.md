@@ -1,6 +1,6 @@
 # Big Boo's Haunt
 
-![Drag Racing](img.jpeg)
+![SM64](img.jpeg)
 
 ## A Multiplayer Game - TCP / UDP / Multicast / Multithreaded Ghost Game
 
@@ -19,6 +19,8 @@ First of all, you need to clone the repository.
     git clone https://github.com/0xRyN/Big-Boo-Haunt
     cd Big-Boo-Haunt
 
+### 1. The Server
+
 The project contains two directories:
 
 -   client (the client side of the game)
@@ -32,6 +34,10 @@ The server is written in C. In order to compile, we provided a Makefile.
 This will compile the server and create a binary called `server`. Run it using the following command:
 
     ./server
+
+Of course, you can change the IP address and the port of the server. In order to do so, you need to edit the `server.c` file.
+
+### 2. The Client
 
 The client is written in Java. In order to compile, you can use the following command:
 
@@ -101,3 +107,9 @@ Will send and receive data according to the protocol.
 **HAMIMI Dany** - UDP, Multicast Server implementation, Java Client
 
 **KAABECHE Rayane** - Maze parsing, Maze movement, Maze struct, Connecting maze to game
+
+## License
+
+    This project is free and open source. You can use it, modify it, redistribute it, etc...
+
+![pacman](pacman.jpg)

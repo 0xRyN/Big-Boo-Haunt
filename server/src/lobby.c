@@ -158,7 +158,7 @@ int interact(Thread_Args *args) {
             // Unregister the user from the game
             if (has_joined == 0) {
                 // Write an error message to the client
-                char res_buffer[40];
+                char res_buffer[8];
                 sprintf(res_buffer, "DUNNO***");
                 if (safe_send(sockfd, res_buffer, 8) < 0) {
                     puts("Error sending registration result");
@@ -169,10 +169,12 @@ int interact(Thread_Args *args) {
             }
             // Leave the game
             leave_game(info);
-            char res_buffer[40];
+            char res_buffer[10];
             uint8_t int_id = info.game_id;
-            sprintf(res_buffer, "UNROK %hhu***", int_id);
-
+            memcpy(res_buffer, "UNROK ", 6);
+            memcpy(res_buffer + 6, &int_id, 1);
+            memcpy(res_buffer + 7, "***", 3);
+            res_buffer[10] = '\0';
             if (safe_send(sockfd, res_buffer, 10) < 0) {
                 puts("Error sending registration result");
                 return -1;
