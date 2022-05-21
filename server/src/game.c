@@ -368,7 +368,12 @@ int send_game(int sockfd, char *buffer) {
         char game_str[13];
         uint8_t game_id = games[game_id]->id;
         uint8_t player_count = games[game_id]->player_count;
-        snprintf(game_str, 13, "LIST! %hhu %hhu***", game_id, player_count);
+        memcpy(game_str, "LIST! ", 6);
+        memcpy(game_str + 6, &game_id, 1);
+        memcpy(game_str + 7, " ", 1);
+        memcpy(game_str + 8, &player_count, 1);
+        memcpy(game_str + 9, "***", 3);
+        game_str[12] = '\0';
         if (safe_send(sockfd, game_str, 12) < 0) {
             puts("Error sending game");
             return -1;

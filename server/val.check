@@ -1,50 +1,44 @@
-==8006== Memcheck, a memory error detector
-==8006== Copyright (C) 2002-2017, and GNU GPL'd, by Julian Seward et al.
-==8006== Using Valgrind-3.15.0 and LibVEX; rerun with -h for copyright info
-==8006== Command: ./server
-==8006== Parent PID: 1677
-==8006== 
-==8006== Thread 3:
-==8006== Syscall param socketcall.sendto(msg) points to uninitialised byte(s)
-==8006==    at 0x48667DC: __libc_send (send.c:28)
-==8006==    by 0x48667DC: send (send.c:23)
-==8006==    by 0x10EECD: safe_send (send.c:8)
-==8006==    by 0x10A9D4: greet_player (in-game.c:70)
-==8006==    by 0x10B45D: ig_interact (in-game.c:220)
-==8006==    by 0x10ED98: interact (lobby.c:201)
-==8006==    by 0x10E5C2: handle_client (server.c:37)
-==8006==    by 0x485B608: start_thread (pthread_create.c:477)
-==8006==    by 0x4995132: clone (clone.S:95)
-==8006==  Address 0x5e6b8ee is on thread 3's stack
-==8006==  in frame #2, created by greet_player (in-game.c:39)
-==8006== 
-==8006== 
-==8006== Process terminating with default action of signal 2 (SIGINT)
-==8006==    at 0x48664FF: accept (accept.c:26)
-==8006==    by 0x10E680: main (server.c:65)
-==8006== 
-==8006== HEAP SUMMARY:
-==8006==     in use at exit: 5,528 bytes in 11 blocks
-==8006==   total heap usage: 65 allocs, 54 frees, 45,314 bytes allocated
-==8006== 
-==8006== Thread 1:
-==8006== 1,632 bytes in 6 blocks are possibly lost in loss record 4 of 5
-==8006==    at 0x483DD99: calloc (in /usr/lib/x86_64-linux-gnu/valgrind/vgpreload_memcheck-amd64-linux.so)
-==8006==    by 0x40149DA: allocate_dtv (dl-tls.c:286)
-==8006==    by 0x40149DA: _dl_allocate_tls (dl-tls.c:532)
-==8006==    by 0x485C322: allocate_stack (allocatestack.c:622)
-==8006==    by 0x485C322: pthread_create@@GLIBC_2.2.5 (pthread_create.c:660)
-==8006==    by 0x10E6F6: main (server.c:77)
-==8006== 
-==8006== LEAK SUMMARY:
-==8006==    definitely lost: 0 bytes in 0 blocks
-==8006==    indirectly lost: 0 bytes in 0 blocks
-==8006==      possibly lost: 1,632 bytes in 6 blocks
-==8006==    still reachable: 3,896 bytes in 5 blocks
-==8006==         suppressed: 0 bytes in 0 blocks
-==8006== Reachable blocks (those to which a pointer was found) are not shown.
-==8006== To see them, rerun with: --leak-check=full --show-leak-kinds=all
-==8006== 
-==8006== Use --track-origins=yes to see where uninitialised values come from
-==8006== For lists of detected and suppressed errors, rerun with: -s
-==8006== ERROR SUMMARY: 7 errors from 2 contexts (suppressed: 0 from 0)
+==29351== Memcheck, a memory error detector
+==29351== Copyright (C) 2002-2017, and GNU GPL'd, by Julian Seward et al.
+==29351== Using Valgrind-3.15.0 and LibVEX; rerun with -h for copyright info
+==29351== Command: ./server
+==29351== Parent PID: 1677
+==29351== 
+==29351== Thread 2:
+==29351== Use of uninitialised value of size 8
+==29351==    at 0x10D90B: send_game (game.c:369)
+==29351==    by 0x10EC18: interact (lobby.c:150)
+==29351==    by 0x10E614: handle_client (server.c:37)
+==29351==    by 0x485B608: start_thread (pthread_create.c:477)
+==29351==    by 0x4995132: clone (clone.S:95)
+==29351== 
+==29351== 
+==29351== Process terminating with default action of signal 2 (SIGINT)
+==29351==    at 0x48664FF: accept (accept.c:26)
+==29351==    by 0x10E6D2: main (server.c:65)
+==29351== 
+==29351== HEAP SUMMARY:
+==29351==     in use at exit: 4,092 bytes in 4 blocks
+==29351==   total heap usage: 8 allocs, 4 frees, 9,804 bytes allocated
+==29351== 
+==29351== Thread 1:
+==29351== 272 bytes in 1 blocks are possibly lost in loss record 3 of 4
+==29351==    at 0x483DD99: calloc (in /usr/lib/x86_64-linux-gnu/valgrind/vgpreload_memcheck-amd64-linux.so)
+==29351==    by 0x40149DA: allocate_dtv (dl-tls.c:286)
+==29351==    by 0x40149DA: _dl_allocate_tls (dl-tls.c:532)
+==29351==    by 0x485C322: allocate_stack (allocatestack.c:622)
+==29351==    by 0x485C322: pthread_create@@GLIBC_2.2.5 (pthread_create.c:660)
+==29351==    by 0x10E748: main (server.c:77)
+==29351== 
+==29351== LEAK SUMMARY:
+==29351==    definitely lost: 0 bytes in 0 blocks
+==29351==    indirectly lost: 0 bytes in 0 blocks
+==29351==      possibly lost: 272 bytes in 1 blocks
+==29351==    still reachable: 3,820 bytes in 3 blocks
+==29351==         suppressed: 0 bytes in 0 blocks
+==29351== Reachable blocks (those to which a pointer was found) are not shown.
+==29351== To see them, rerun with: --leak-check=full --show-leak-kinds=all
+==29351== 
+==29351== Use --track-origins=yes to see where uninitialised values come from
+==29351== For lists of detected and suppressed errors, rerun with: -s
+==29351== ERROR SUMMARY: 4 errors from 2 contexts (suppressed: 0 from 0)
