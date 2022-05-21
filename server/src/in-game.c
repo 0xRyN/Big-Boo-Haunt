@@ -51,25 +51,36 @@ int greet_player(PlayerInfo info) {
     last_digit_ip++;
     for (int j = 0; j < MAX_PLAYERS; j++) {
         if (game != NULL && game->players[j] != NULL) {
-            char buffer[80];
-            sprintf(buffer, "WELCO %d %hu %hu %d %s %s***", info.game_id,
-                    game->mazeHeight, game->mazeWidth, game->amountOfGhosts, ip,
-                    port);
-            if (safe_send(game->players[j]->socket, buffer, strlen(buffer)) <
-                0) {
+            char buffer[39];
+            uint16_t mazeh = game->mazeHeight;
+            uint16_t mazew = game->mazeWidth;
+            memcpy(buffer, "WELCO ", 6);
+            memcpy(buffer + 6, &(info.game_id), 1);
+            memcpy(buffer + 7, " ", 1);
+            memcpy(buffer + 8, &(mazeh), 2);
+            memcpy(buffer + 10, " ", 1);
+            memcpy(buffer + 11, &(mazew), 2);
+            memcpy(buffer + 13, " ", 1);
+            memcpy(buffer + 14, &(game->amountOfGhosts), 1);
+            memcpy(buffer + 15, " ", 1);
+            memcpy(buffer + 16, ip, 15);
+            memcpy(buffer + 31, " ", 1);
+            memcpy(buffer + 32, port, 4);
+            memcpy(buffer + 36, "***", 3);
+            if (safe_send(game->players[j]->socket, buffer, 39) < 0) {
                 free(ip);
                 free(port);
                 puts("Error sending greeting");
                 return -1;
             }
             char buffer2[80];
-            sprintf(buffer2, "POSIT %d %d %d***", info.player_id,
+            /*sprintf(buffer2, "POSIT %d %d %d***", info.player_id,
                     game->players[j]->x, game->players[j]->y);
             if (safe_send(game->players[j]->socket, buffer2, strlen(buffer2)) <
                 0) {
                 puts("Error sending greeting");
                 return -1;
-            }
+            }*/
         }
     }
     free(ip);

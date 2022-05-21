@@ -244,14 +244,11 @@ class Client {
             String fin = new String(buffer, 36, read - 36);
             System.out.println(
                     start + m + space + h + space2 + w + space3 + f + space4 + ip_parsed + space5 + port_parsed + fin);
-            Thread.sleep(30000);
         } catch (Exception e) {
-            // TODO: handle exception
+            e.printStackTrace();
         }
 
         while (true) {
-            System.out.println("Que voulez vous faire :");
-            System.out.println("0 : Afficher la taille d'un labyrinthe");
         }
     }
 
