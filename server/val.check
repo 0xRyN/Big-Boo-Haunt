@@ -1,50 +1,19 @@
-==10248== Memcheck, a memory error detector
-==10248== Copyright (C) 2002-2017, and GNU GPL'd, by Julian Seward et al.
-==10248== Using Valgrind-3.15.0 and LibVEX; rerun with -h for copyright info
-==10248== Command: ./server
-==10248== Parent PID: 1677
-==10248== 
-==10248== Thread 2:
-==10248== Syscall param socketcall.sendto(msg) points to uninitialised byte(s)
-==10248==    at 0x48667DC: __libc_send (send.c:28)
-==10248==    by 0x48667DC: send (send.c:23)
-==10248==    by 0x10F136: safe_send (send.c:8)
-==10248==    by 0x10A82C: greet_player (in-game.c:70)
-==10248==    by 0x10B2B5: ig_interact (in-game.c:220)
-==10248==    by 0x10F001: interact (lobby.c:203)
-==10248==    by 0x10E7F8: handle_client (server.c:37)
-==10248==    by 0x485B608: start_thread (pthread_create.c:477)
-==10248==    by 0x4995132: clone (clone.S:95)
-==10248==  Address 0x566a88e is on thread 2's stack
-==10248==  in frame #2, created by greet_player (in-game.c:39)
-==10248== 
-==10248== 
-==10248== Process terminating with default action of signal 2 (SIGINT)
-==10248==    at 0x48664FF: accept (accept.c:26)
-==10248==    by 0x10E8B6: main (server.c:65)
-==10248== 
-==10248== HEAP SUMMARY:
-==10248==     in use at exit: 4,092 bytes in 4 blocks
-==10248==   total heap usage: 15 allocs, 11 frees, 14,418 bytes allocated
-==10248== 
-==10248== Thread 1:
-==10248== 272 bytes in 1 blocks are possibly lost in loss record 3 of 4
-==10248==    at 0x483DD99: calloc (in /usr/lib/x86_64-linux-gnu/valgrind/vgpreload_memcheck-amd64-linux.so)
-==10248==    by 0x40149DA: allocate_dtv (dl-tls.c:286)
-==10248==    by 0x40149DA: _dl_allocate_tls (dl-tls.c:532)
-==10248==    by 0x485C322: allocate_stack (allocatestack.c:622)
-==10248==    by 0x485C322: pthread_create@@GLIBC_2.2.5 (pthread_create.c:660)
-==10248==    by 0x10E92C: main (server.c:77)
-==10248== 
-==10248== LEAK SUMMARY:
-==10248==    definitely lost: 0 bytes in 0 blocks
-==10248==    indirectly lost: 0 bytes in 0 blocks
-==10248==      possibly lost: 272 bytes in 1 blocks
-==10248==    still reachable: 3,820 bytes in 3 blocks
-==10248==         suppressed: 0 bytes in 0 blocks
-==10248== Reachable blocks (those to which a pointer was found) are not shown.
-==10248== To see them, rerun with: --leak-check=full --show-leak-kinds=all
-==10248== 
-==10248== Use --track-origins=yes to see where uninitialised values come from
-==10248== For lists of detected and suppressed errors, rerun with: -s
-==10248== ERROR SUMMARY: 2 errors from 2 contexts (suppressed: 0 from 0)
+==10681== Memcheck, a memory error detector
+==10681== Copyright (C) 2002-2017, and GNU GPL'd, by Julian Seward et al.
+==10681== Using Valgrind-3.15.0 and LibVEX; rerun with -h for copyright info
+==10681== Command: ./server
+==10681== Parent PID: 1677
+==10681== 
+==10681== 
+==10681== Process terminating with default action of signal 2 (SIGINT)
+==10681==    at 0x48664C7: accept (accept.c:26)
+==10681==    by 0x10E8B6: main (server.c:65)
+==10681== 
+==10681== HEAP SUMMARY:
+==10681==     in use at exit: 0 bytes in 0 blocks
+==10681==   total heap usage: 0 allocs, 0 frees, 0 bytes allocated
+==10681== 
+==10681== All heap blocks were freed -- no leaks are possible
+==10681== 
+==10681== For lists of detected and suppressed errors, rerun with: -s
+==10681== ERROR SUMMARY: 0 errors from 0 contexts (suppressed: 0 from 0)
