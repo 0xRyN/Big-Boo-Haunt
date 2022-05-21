@@ -240,7 +240,7 @@ class Client {
                 int w = (b4 & 0xff) + (b5 & 0xff) * 0x100;
                 String fin = new String(buffer, 8, read - 8);
                 System.out.println(message + space + idGame + space2 + h + space3 + w + fin);
-                System.out.println("La taille du labyrinthe est : " + fin);
+                System.out.println("La taille du labyrinthe est : " + h + ":" + w);
             } else {
 
             }
@@ -329,10 +329,31 @@ class Client {
                         System.out.println("Erreur lors de l'affichage des joueurs");
                     }
                 } else if (rep == 3) {
-                    System.out.println("Veuillez entrer votre message");
-                    String message = scanner.nextLine();
+                    System.out.println("Que voulez vous faire ?");
+                    System.out.println("1 : Envoyer un message à tous les joueurs");
+                    System.out.println("2 : Envoyer un message à un joueur spécifique");
+
+                    Scanner scannerB = new Scanner(System.in);
+                    String message = scannerB.nextLine();
                     try {
-                        // sendMessage(socket, message);
+                        int rep2 = Integer.parseInt(message);
+                        if (rep2 == 1) {
+                            System.out.print("Entrez le message à envoyer : ");
+                            String message2 = scanner.nextLine();
+                            sendMessage(socket, "ALL", message2);
+                        } else if (rep2 == 2) {
+                            System.out.println("A quel joueur souhaitez vous envoyer un message ?");
+                            String playerToS = scanner.nextLine();
+                            if (playerToS.length() != 8) {
+                                System.out
+                                        .println("Le nom du joueur doit être de 8 caractères retour au menu précédent");
+                            } else {
+                                scanner = new Scanner(System.in);
+                                System.out.println("Quel message souhaitez vous envoyer ?");
+                                String messageToS = scanner.nextLine();
+                                sendMessage(socket, playerToS, messageToS);
+                            }
+                        }
                     } catch (Exception e) {
                         System.out.println("Erreur lors de l'envoi du message");
                     }
@@ -344,6 +365,52 @@ class Client {
             } catch (Exception e) {
                 System.out.println("Veuillez entrer une valeur correcte");
             }
+        }
+    }
+
+    public static void sendMessage(Socket socket, String playerToS, String messagetoS) {
+        if (playerToS.equals("ALL")) {
+            String a = "MALL? ";
+            try {
+                ByteBuffer byteBuffer = ByteBuffer.allocate(a.length() + messagetoS.length() + 3);
+                byteBuffer.put(a.getBytes());
+                byteBuffer.put(messagetoS.getBytes());
+                byteBuffer.put("***".getBytes());
+                socket.getOutputStream().write(byteBuffer.array());
+                byte[] buffer = new byte[8];
+                int read = socket.getInputStream().read(buffer);
+                String start = new String(buffer);
+                System.out.println(new String(buffer));
+
+            } catch (Exception e) {
+                System.out.println("Erreur lors de l'envoi du message");
+            }
+        } else {
+            String a = "SEND? ";
+            try {
+                ByteBuffer byteBuffer = ByteBuffer
+                        .allocate(a.length() + playerToS.length() + messagetoS.length() + 3 + 1);
+                byteBuffer.put(a.getBytes());
+                byteBuffer.put(playerToS.getBytes());
+                String space = " ";
+                byteBuffer.put(space.getBytes());
+                byteBuffer.put(messagetoS.getBytes());
+                byteBuffer.put("***".getBytes());
+                socket.getOutputStream().write(byteBuffer.array());
+
+                byte[] buffer = new byte[8];
+                int read = socket.getInputStream().read(buffer);
+                String start = new String(buffer);
+                System.out.println(new String(buffer));
+                if (start == "SEND!***") {
+                    System.out.println("le message a bien été envoyé");
+                } else {
+                    System.out.println("le message n'a pas été envoyé");
+                }
+            } catch (Exception e) {
+                System.out.println("Erreur lors de l'envoi du message");
+            }
+
         }
     }
 
