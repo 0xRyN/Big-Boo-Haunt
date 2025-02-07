@@ -100,14 +100,6 @@ It contains every operation handled by the server.
 
 Will send and receive data according to the protocol.
 
-## Authors
-
-**AL AZAWI Rayan** - Project Structure, Project's Structs, TCP Server, Multithreading implementation
-
-**HAMIMI Dany** - UDP, Multicast Server implementation, Java Client
-
-**KAABECHE Rayane** - Maze parsing, Maze movement, Maze struct, Connecting maze to game
-
 ## License
 
     This project is free and open source. You can use it, modify it, redistribute it, etc...
